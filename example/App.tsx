@@ -16,6 +16,7 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+import {KomojuSDK} from 'react-native-komoju';
 
 import {
   Colors,

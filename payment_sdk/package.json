@@ -1,8 +1,8 @@
 {
-  "name": "yes",
+  "name": "react-native-komoju",
   "version": "1.0.0",
   "description": "degica payment SDK",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -1,3 +1,1 @@
-export default function example(): string {
-  return "Hello, SDK!";
-}
+export const KomojuSDK = {};
