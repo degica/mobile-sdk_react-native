@@ -71,3 +71,4 @@ android/app/build/
 *.xcuserdatad
 *.xcuserdata
 *.xcuserstate
+/payment_sdk/.yarn
