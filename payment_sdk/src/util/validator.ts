@@ -34,12 +34,11 @@ export const validateCardExpiry = (expiry: string) => {
     const expiryMonthValue = expiry.slice(0, 2);
     const expiryYearValue = expiry.slice(3, 5);
     const expiryMonth = parseInt(expiryMonthValue, 10);
-    const expiryYear = parseInt(expiryYearValue[1], 10);
-    const hasUserEnteredYear = expiryYearValue[1]?.length === 2;
+    const expiryYear = parseInt(expiryYearValue, 10);
+    const hasUserEnteredYear = expiryYearValue?.length === 2;
     if (expiryMonth > 12) {
       return false;
     }
-
     if (hasUserEnteredYear) {
       if (expiryYear > 99) {
         return false;
