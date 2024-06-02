@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
   input: {
     height: '100%',
     paddingLeft: 16,
+    fontSize: 16,
   },
   withBorder: {
     borderColor: '#CAD6E1',

@@ -1,4 +1,4 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
 
 type Props = {
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   buttonWrapper: {
     backgroundColor: '#0B82EE',
     borderRadius: 8,
-    maxHeight: 50,
+    minHeight: 50,
     marginHorizontal: 16,
     flex: 1,
     justifyContent: 'center',

@@ -1,40 +1,50 @@
-import React, {useRef, forwardRef, useImperativeHandle} from 'react';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import Sheet, {SheetRefProps} from './Sheet';
-import PillContainer from './PillContainer';
+import React, { useRef, forwardRef, useImperativeHandle } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { StyleSheet } from "react-native";
+
+import Sheet, { SheetRefProps } from "./Sheet";
+import PillContainer from "./PillContainer";
+import CardSection from "./sections/CardSection";
+import PayPaySection from "./sections/PayPaySection";
 
 export type PaymentSheetRefProps = {
-  open: (params: {sessionId: string; amount: number; currency: string}) => void;
+  open: () => void;
 };
 
 const PaymentSheet = forwardRef<PaymentSheetRefProps, {}>((props, ref) => {
   const sheetRef = useRef<SheetRefProps>(null);
+  const [selectedPill, setSelectedPill] = React.useState(0);
+
+  const handlePillSelect = (index: number) => {
+    setSelectedPill(index);
+  };
 
   useImperativeHandle(
     ref,
     () => ({
-      open: ({sessionId, amount, currency}) => {
-        sheetRef.current?.open({sessionId, amount, currency});
+      open: () => {
+        sheetRef.current?.open();
       },
     }),
-    [sheetRef],
+    [sheetRef]
   );
 
   return (
-    <GestureHandlerRootView
-      style={{
-        backgroundColor: 'red',
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-      }}>
+    <GestureHandlerRootView style={styles.container}>
       <Sheet ref={sheetRef}>
-        <PillContainer />
+        <PillContainer
+          onSelect={handlePillSelect}
+          selectedItem={selectedPill}
+        />
+        {selectedPill === 0 && <CardSection />}
+        {selectedPill === 2 && <PayPaySection />}
       </Sheet>
     </GestureHandlerRootView>
   );
+});
+
+const styles = StyleSheet.create({
+  container: { flex: 1 },
 });
 
 export default PaymentSheet;

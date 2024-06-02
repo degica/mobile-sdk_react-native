@@ -1,7 +1,8 @@
 import { useContext } from "react";
 import { View } from "react-native";
 
-import { KomojuContext, KomojuProvider } from "./KomojuProvider";
+import { KomojuProvider } from "./KomojuProvider";
+import { KomojuContext } from "./state";
 
 export const KomojuSDK = {
   useKomoju: () => useContext(KomojuContext), // for functional components use this

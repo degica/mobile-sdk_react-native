@@ -1,5 +1,6 @@
-import { StyleSheet, Text, View } from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+
 import SubmitButton from '../SubmitButton';
 import LightBox from '../LightBox';
 
@@ -18,7 +19,7 @@ const PayPaySection = () => {
           icon="📱"
         />
       </View>
-      <SubmitButton onPress={() => { }} label="Continue to Paypay" />
+      <SubmitButton onPress={() => {}} label="Continue to Paypay" />
     </View>
   );
 };
@@ -48,5 +49,5 @@ const styles = StyleSheet.create({
     minHeight: 80,
     marginHorizontal: 16,
     marginBottom: 24,
-  }
+  },
 });
