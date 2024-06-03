@@ -1,19 +1,63 @@
 import React from 'react';
-import {ScrollView} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import Pill from './Pill';
+import {FlatList} from 'react-native-gesture-handler';
 
-const PillContainer = () => {
+type Props = {
+  onSelect: (index: number) => void;
+  selectedItem: number;
+};
+
+const options = [
+  {
+    label: 'Credit Card',
+    icon: '💳',
+    color: '#e0e0e0',
+  },
+  {
+    label: 'Konbini',
+    icon: '🏪',
+    color: '#a5d6a7',
+  },
+  {
+    label: 'Paypay',
+    icon: '💰',
+    color: '#ef9a9a',
+  },
+];
+
+const PillContainer = ({onSelect, selectedItem}: Props) => {
+  const renderItem = ({item, index}) => {
+    return (
+      <Pill
+        isSelected={index === selectedItem}
+        label={item.label}
+        icon={item.icon}
+        onPress={() => onSelect(index)}
+      />
+    );
+  };
+
   return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      contentContainerStyle={{paddingLeft: 8}}>
-      <Pill label="Credit Card" icon="💳" color="#e0e0e0" />
-      <Pill label="Konbini" icon="🏪" color="#a5d6a7" />
-      <Pill label="Konbini" icon="🏪" color="#a5d6a7" />
-      <Pill label="Paypay" icon="💰" color="#ef9a9a" />
-    </ScrollView>
+    <View style={styles.container}>
+      <FlatList
+        data={options}
+        renderItem={renderItem}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.contentContainer}
+      />
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: 16,
+  },
+  contentContainer: {
+    paddingLeft: 8,
+  },
+});
 
 export default PillContainer;

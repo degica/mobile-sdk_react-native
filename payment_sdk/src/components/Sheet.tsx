@@ -1,14 +1,11 @@
-/* eslint-disable react-native/no-inline-styles */
 import React, {
   useCallback,
-  useEffect,
   useImperativeHandle,
-  useRef,
   useState,
   ForwardRefRenderFunction,
-} from 'react';
-import {Dimensions, StyleSheet, Text, View} from 'react-native';
-import {Gesture, GestureDetector} from 'react-native-gesture-handler';
+} from "react";
+import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -17,9 +14,11 @@ import Animated, {
   useSharedValue,
   withSpring,
   withTiming,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 
-const {height: SCREEN_HEIGHT} = Dimensions.get('window');
+import StateProvider from "./paymentState/stateProvider";
+
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 50;
 
@@ -29,27 +28,23 @@ type SheetProps = {
 };
 
 export type SheetRefProps = {
-  open: (params: {sessionId: string; amount: number; currency: string}) => void;
+  open: () => void;
   scrollTo: (destination: number) => void;
   isActive: () => boolean;
 };
 
 const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
-  {children, swipeClose},
-  ref,
+  { children, swipeClose },
+  ref
 ) => {
   const translateY = useSharedValue(0);
   const active = useSharedValue(false);
 
-  const [sessionId, setSessionId] = useState<string | null>(null);
-  const [amount, setAmount] = useState<number | null>(null);
-  const [currency, setCurrency] = useState<string | null>(null);
-
   const scrollTo = useCallback((destination: number) => {
-    'worklet';
+    "worklet";
     active.value = destination !== 0;
 
-    translateY.value = withSpring(destination, {damping: 50});
+    translateY.value = withSpring(destination, { damping: 50 });
   }, []);
 
   const isActive = useCallback(() => {
@@ -59,24 +54,21 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
   useImperativeHandle(
     ref,
     () => ({
-      open: ({sessionId, amount, currency}) => {
-        setSessionId(sessionId);
-        setAmount(amount);
-        setCurrency(currency);
+      open: () => {
         scrollTo(MAX_TRANSLATE_Y);
       },
       scrollTo,
       isActive,
     }),
-    [scrollTo, isActive],
+    [scrollTo, isActive]
   );
 
-  const context = useSharedValue({y: 0});
+  const context = useSharedValue({ y: 0 });
   const gesture = Gesture.Pan()
     .onStart(() => {
-      context.value = {y: translateY.value};
+      context.value = { y: translateY.value };
     })
-    .onUpdate(event => {
+    .onUpdate((event) => {
       translateY.value = event.translationY + context.value.y;
       translateY.value = Math.max(translateY.value, MAX_TRANSLATE_Y);
     })
@@ -93,12 +85,12 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
       translateY.value,
       [MAX_TRANSLATE_Y + 50, MAX_TRANSLATE_Y],
       [25, 5],
-      Extrapolation.CLAMP,
+      Extrapolation.CLAMP
     );
 
     return {
       borderRadius,
-      transform: [{translateY: translateY.value}],
+      transform: [{ translateY: translateY.value }],
     };
   });
 
@@ -110,25 +102,18 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
 
   const rBackdropProps = useAnimatedProps(() => {
     return {
-      pointerEvents: active.value ? 'auto' : 'none',
+      pointerEvents: active.value ? "auto" : "none",
     } as any;
   }, []);
 
   return (
-    <>
+    <StateProvider>
       <Animated.View
         onTouchStart={() => {
-          // Dismiss the Sheet
           swipeClose ? scrollTo(0) : null;
         }}
         animatedProps={rBackdropProps}
-        style={[
-          {
-            ...StyleSheet.absoluteFillObject,
-            backgroundColor: 'rgba(0,0,0,0.6)',
-          },
-          rBackdropStyle,
-        ]}
+        style={[styles.backDrop, rBackdropStyle]}
       />
       <Animated.View style={[styles.bottomSheetContainer, rSheetStyle]}>
         <GestureDetector gesture={gesture}>
@@ -141,33 +126,42 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
             </View>
           </Animated.View>
         </GestureDetector>
-        <View>{children}</View>
+        <ScrollView>{children}</ScrollView>
       </Animated.View>
-    </>
+    </StateProvider>
   );
 };
 
 const styles = StyleSheet.create({
+  backDrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.6)",
+  },
   bottomSheetContainer: {
     height: SCREEN_HEIGHT,
-    width: '100%',
-    backgroundColor: 'white',
-    position: 'absolute',
+    width: "100%",
+    backgroundColor: "white",
+    position: "absolute",
     top: SCREEN_HEIGHT,
     borderRadius: 25,
   },
   line: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginVertical: 20,
     marginHorizontal: 16,
   },
   headerLabel: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 18,
+    fontWeight: "bold",
+    flex: 1,
+    alignItems: "center",
+    textAlign: "center",
+    color: "#172E44",
   },
   crossBtn: {
+    position: "absolute",
+    right: 0,
     padding: 10,
     fontSize: 16,
   },
