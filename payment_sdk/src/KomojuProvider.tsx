@@ -1,6 +1,7 @@
 import React, {
   ReactNode,
   useCallback,
+  useContext,
   useMemo,
   useRef,
   useState,
@@ -9,13 +10,27 @@ import React, {
 import { InitPrams, KomojuContext as KomjouContextType } from "./util/types";
 import PaymentSheet, { PaymentSheetRefProps } from "./components/PaymentSheet";
 
-import { KomojuContext } from "./state";
+import { KomojuContext, StateContext } from "./state";
+import StateProvider from "./components/paymentState/stateProvider";
 
 type KomojuProviderIprops = {
   children?: ReactNode | ReactNode[];
 } & InitPrams;
 
 export const KomojuProvider = (props: KomojuProviderIprops) => {
+  return (
+    <StateProvider>
+      <MainStateProvider
+        urlScheme={props.urlScheme}
+        pubickKey={props.pubickKey}
+      >
+        {props.children}
+      </MainStateProvider>
+    </StateProvider>
+  );
+};
+
+export const MainStateProvider = (props: KomojuProviderIprops) => {
   const [showPaymentSheet, setShowPaymentSheet] = useState(false);
   const [komojuState, setKomojuState] = useState<InitPrams>({
     urlScheme: "",
@@ -27,7 +42,6 @@ export const KomojuProvider = (props: KomojuProviderIprops) => {
   const createPayment = useCallback(() => {
     // here call the session pay
     // take params from state or props
-    console.log("calling create payment", props.urlScheme, props.pubickKey);
     sheetRef?.current?.open();
   }, [props]);
 
@@ -40,7 +54,9 @@ export const KomojuProvider = (props: KomojuProviderIprops) => {
   const renderPaymentUI = useMemo(() => {
     const UI = <PaymentSheet ref={sheetRef} />;
     return UI;
-  }, []);
+  }, [sheetRef]);
+
+  const renderChildren = useMemo(() => props?.children, [props.children]);
 
   return (
     <KomojuContext.Provider
@@ -50,7 +66,7 @@ export const KomojuProvider = (props: KomojuProviderIprops) => {
         initializeKomoju,
       }}
     >
-      {props.children}
+      {renderChildren}
       {renderPaymentUI}
     </KomojuContext.Provider>
   );
