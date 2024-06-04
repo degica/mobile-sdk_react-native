@@ -107,7 +107,7 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
   }, []);
 
   return (
-    <StateProvider>
+    <>
       <Animated.View
         onTouchStart={() => {
           swipeClose ? scrollTo(0) : null;
@@ -128,7 +128,7 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
         </GestureDetector>
         <ScrollView>{children}</ScrollView>
       </Animated.View>
-    </StateProvider>
+    </>
   );
 };
 
