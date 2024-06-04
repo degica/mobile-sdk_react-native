@@ -10,6 +10,12 @@ export const formatExpiry = (expiry: string, previousString: string) => {
   return expiry;
 };
 
+export const getMonthYearFromExpiry = (expiry: string) => {
+  const splitValues = expiry.split("/");
+
+  return { month: splitValues[0], year: splitValues[1] };
+};
+
 export const formatCrediCardNumber = (cardNumber: string) => {
   const formatCardNumberArray = [];
   const cardNumberArray = cardNumber.replaceAll("-", "").split("");

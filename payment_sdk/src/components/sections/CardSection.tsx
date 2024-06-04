@@ -1,26 +1,42 @@
-import {StyleSheet, View} from 'react-native';
-import React from 'react';
-import Input from '../Input';
-import CardInputGroup from '../CardInputGroup';
-import SubmitButton from '../SubmitButton';
+import React, { useContext } from "react";
+import { StyleSheet, View } from "react-native";
+
+import Input from "../Input";
+import CardInputGroup from "../CardInputGroup";
+import SubmitButton from "../SubmitButton";
+import { Actions, DispatchContext, StateContext } from "../../state";
+import { PaymentType } from "../../util/types";
 
 type Props = {};
 
 const CardSection = (props: Props) => {
+  const { sessionPay, cardholderName, cardCVV, cardNumber, cardExpiredDate } =
+    useContext(StateContext);
+  const dispatch = useContext(DispatchContext);
+
+  const onPay = async () => {
+    await sessionPay({
+      paymentType: PaymentType.CREDIT,
+      cardDetails: { cardholderName, cardCVV, cardNumber, cardExpiredDate },
+    });
+  };
+
   return (
     <View style={styles.cardContainer}>
       <View style={styles.cardNameContainer}>
         <Input
-          value=""
+          value={cardholderName}
           label="Cardholder name"
           placeholder="Full name on card"
-          onChangeText={() => {}}
+          onChangeText={(text: string) => {
+            dispatch({ type: Actions.SET_CARDHOLDER_NAME, payload: text });
+          }}
           hasBorder
           inputStyle={styles.inputStyle}
         />
       </View>
       <CardInputGroup />
-      <SubmitButton label="Pay $100" onPress={() => {}} />
+      <SubmitButton label="Pay $100" onPress={onPay} />
     </View>
   );
 };

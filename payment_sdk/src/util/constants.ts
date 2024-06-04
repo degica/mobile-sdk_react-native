@@ -1,2 +1,2 @@
 export const noop = () => {};
-const BASE_URL = ""; // add base URL here
+export const BASE_URL = "https://komoju.com/api/v1";

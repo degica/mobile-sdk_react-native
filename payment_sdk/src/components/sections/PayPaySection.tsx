@@ -1,10 +1,18 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import { StyleSheet, Text, View } from "react-native";
+import React, { useContext } from "react";
 
-import SubmitButton from '../SubmitButton';
-import LightBox from '../LightBox';
+import SubmitButton from "../SubmitButton";
+import LightBox from "../LightBox";
+import { StateContext } from "../../state";
+import { PaymentType } from "../../util/types";
 
 const PayPaySection = () => {
+  const { sessionPay } = useContext(StateContext);
+
+  const onPay = async () => {
+    await sessionPay({ paymentType: PaymentType.PAY_PAY });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.textContent}>
@@ -19,7 +27,7 @@ const PayPaySection = () => {
           icon="📱"
         />
       </View>
-      <SubmitButton onPress={() => {}} label="Continue to Paypay" />
+      <SubmitButton onPress={onPay} label="Continue to Paypay" />
     </View>
   );
 };
@@ -37,13 +45,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#172E44',
+    fontWeight: "bold",
+    color: "#172E44",
     marginBottom: 8,
   },
   description: {
     fontSize: 16,
-    color: '#172E44',
+    color: "#172E44",
   },
   lbWrapper: {
     minHeight: 80,

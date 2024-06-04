@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "pack": "npm uninstall react-native-komoju && cd .. && cd payment_sdk && npm pack && cd .. && cd example && npm i file:../payment_sdk/react-native-komoju-1.0.0.tgz",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "lint": "eslint .",
@@ -13,8 +14,9 @@
     "react": "18.2.0",
     "react-native": "0.74.1",
     "react-native-gesture-handler": "^2.16.2",
-    "react-native-komoju": "../payment_sdk",
-    "react-native-reanimated": "^3.11.0"
+    "react-native-komoju": "file:../payment_sdk/react-native-komoju-1.0.0.tgz",
+    "react-native-reanimated": "^3.11.0",
+    "react-native-webview": "^13.10.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -30,6 +32,7 @@
     "eslint": "^8.19.0",
     "jest": "^29.6.3",
     "prettier": "2.8.8",
+    "react-native-dotenv": "^3.4.11",
     "react-test-renderer": "18.2.0",
     "typescript": "5.0.4"
   },
