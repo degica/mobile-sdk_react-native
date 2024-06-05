@@ -1,4 +1,4 @@
-export const formatExpiry = (expiry: string, previousString: string) => {
+export const formatExpiry = (expiry: string, previousString?: string) => {
   let constructedExpiry = expiry.replace("/", "");
   const seperatorAppended = previousString?.includes("/");
   if (constructedExpiry?.length >= 2 && !seperatorAppended) {

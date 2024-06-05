@@ -1,7 +1,5 @@
 module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
-  transform: {
-    '^.+\.tsx?$': 'ts-jest',
-  },
+  prese: "react-native",
+  testEnvironment: "node",
+  modulePathIgnorePatterns: ["<rootDir>/node_modules"],
 };
