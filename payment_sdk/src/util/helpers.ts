@@ -16,7 +16,7 @@ export const formatExpiry = (expiry: string) => {
   const prevExpiry = expiry.split(" / ").join("/");
 
   if (!prevExpiry) return null;
-  let expiryDate = prevExpiry;
+  let expiryDate: any = prevExpiry;
   if (/^[2-9]$/.test(expiryDate)) {
     expiryDate = `0${expiryDate}`;
   }
