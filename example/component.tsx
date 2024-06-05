@@ -5,8 +5,10 @@ import {KomojuSDK} from 'react-native-komoju';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import createSession from './services/sessionService';
 
+const PAYMENT_AMOUNT = '2000';
+
 function Component(): React.JSX.Element {
-  const [sessionId, setSessionId] = useState('');
+  const [sessionId, setSessionId] = useState<string | null>('');
 
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -18,7 +20,7 @@ function Component(): React.JSX.Element {
 
   useEffect(() => {
     const fetchSession = async () => {
-      const sessionData = await createSession('20');
+      const sessionData = await createSession(PAYMENT_AMOUNT);
       setSessionId(sessionData);
     };
 
@@ -26,9 +28,10 @@ function Component(): React.JSX.Element {
   }, []);
 
   const handleOpenSheet = () => {
-    createPayment({
-      sessionId,
-    });
+    sessionId &&
+      createPayment({
+        sessionId,
+      });
   };
 
   return (

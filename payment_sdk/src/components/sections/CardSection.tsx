@@ -6,16 +6,24 @@ import CardInputGroup from "../CardInputGroup";
 import SubmitButton from "../SubmitButton";
 import { Actions, DispatchContext, StateContext } from "../../state";
 import { PaymentType } from "../../util/types";
+import { formatCurrency } from "../../util/helpers";
 
 type Props = {};
 
 const CardSection = (props: Props) => {
-  const { sessionPay, cardholderName, cardCVV, cardNumber, cardExpiredDate } =
-    useContext(StateContext);
+  const {
+    sessionPay,
+    cardholderName,
+    cardCVV,
+    cardNumber,
+    cardExpiredDate,
+    amount,
+    currency,
+  } = useContext(StateContext);
   const dispatch = useContext(DispatchContext);
 
-  const onPay = async () => {
-    await sessionPay({
+  const onPay = () => {
+    sessionPay({
       paymentType: PaymentType.CREDIT,
       cardDetails: { cardholderName, cardCVV, cardNumber, cardExpiredDate },
     });
@@ -36,7 +44,10 @@ const CardSection = (props: Props) => {
         />
       </View>
       <CardInputGroup />
-      <SubmitButton label="Pay $100" onPress={onPay} />
+      <SubmitButton
+        label={`Pay ${formatCurrency({ amount, currency })}`}
+        onPress={onPay}
+      />
     </View>
   );
 };

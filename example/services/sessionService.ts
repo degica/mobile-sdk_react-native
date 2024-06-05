@@ -1,7 +1,7 @@
 import {Alert} from 'react-native';
 import {SECRET_KEY} from '@env';
 
-const createSession = async (amount: string) => {
+const createSession = async (amount: string): Promise<string | null> => {
   try {
     const url = 'https://komoju.com/api/v1/sessions';
     const options = {

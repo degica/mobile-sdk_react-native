@@ -4,17 +4,11 @@ import React, { memo, useContext, useEffect, useRef } from "react";
 import Input from "./Input";
 import { Actions, DispatchContext, StateContext } from "../state";
 import { isCardNumberValid, validateCardExpiry } from "../util/validator";
-import { formatCrediCardNumber, formatExpiry } from "../util/helpers";
+import { formatCreditCardNumber, formatExpiry } from "../util/helpers";
 
 const CardInputGroup = memo(() => {
   const dispatch = useContext(DispatchContext);
   const { cardCVV, cardNumber, cardExpiredDate } = useContext(StateContext);
-
-  const previousState = useRef({ cardExpiredDate });
-
-  useEffect(() => {
-    previousState.current.cardExpiredDate = cardExpiredDate;
-  }, [cardExpiredDate]);
 
   return (
     <View style={styles.parentContainer}>
@@ -26,7 +20,7 @@ const CardInputGroup = memo(() => {
             placeholder="1234 1234 1234 1234"
             onChangeText={(text: string) => {
               if (isCardNumberValid(text)) {
-                let derivedText = formatCrediCardNumber(text);
+                let derivedText = formatCreditCardNumber(text);
                 dispatch({
                   type: Actions.SET_CARD_NUMBER,
                   payload: derivedText,
@@ -44,10 +38,7 @@ const CardInputGroup = memo(() => {
                 if (validateCardExpiry(text)) {
                   dispatch({
                     type: Actions.SET_CARD_EXPIRED_DATE,
-                    payload: formatExpiry(
-                      text,
-                      previousState.current.cardExpiredDate
-                    ),
+                    payload: formatExpiry(text),
                   });
                 }
               }}

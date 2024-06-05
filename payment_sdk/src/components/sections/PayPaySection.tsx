@@ -9,8 +9,8 @@ import { PaymentType } from "../../util/types";
 const PayPaySection = () => {
   const { sessionPay } = useContext(StateContext);
 
-  const onPay = async () => {
-    await sessionPay({ paymentType: PaymentType.PAY_PAY });
+  const onPay = () => {
+    sessionPay({ paymentType: PaymentType.PAY_PAY });
   };
 
   return (

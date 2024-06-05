@@ -18,6 +18,9 @@ export const Actions = {
   SET_CARD_EXPIRED_DATE: "SET_CARD_EXPIRED_DATE",
   SET_CARD_CVV: "SET_CARD_CVV",
   SET_WEBVIEW_LINK: "SET_WEBVIEW_LINK",
+  SET_LOADING: "SET_LOADING",
+  SET_CURRENCY: "SET_CURRENCY",
+  SET_AMOUNT: "SET_AMOUNT",
   SESSION_PAY: "SESSION_PAY",
 };
 
@@ -28,6 +31,11 @@ export function reducer(state: State, action: ActionType) {
       return {
         ...state,
         paymentType: action.type as PaymentType,
+      };
+    case Actions.SET_LOADING:
+      return {
+        ...state,
+        loading: action.payload,
       };
     case Actions.SET_CARDHOLDER_NAME:
       return {
@@ -58,6 +66,16 @@ export function reducer(state: State, action: ActionType) {
       return {
         ...state,
         sessionPay: action.payload,
+      };
+    case Actions.SET_AMOUNT:
+      return {
+        ...state,
+        amount: action.payload,
+      };
+    case Actions.SET_CURRENCY:
+      return {
+        ...state,
+        currency: action.payload,
       };
     default:
       throw new Error();

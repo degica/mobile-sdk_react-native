@@ -27,6 +27,16 @@ export enum PaymentStatuses {
   PENDING = "pending",
 }
 
+export enum CurrencySign {
+  JPY = "¥",
+  USD = "$",
+}
+
+export enum CurrencyTypes {
+  JPY = "JPY",
+  USD = "USD",
+}
+
 export type payForSessionProps = {
   publicKey: string;
   sessionId: string;
@@ -48,6 +58,8 @@ export type State = CardDetailsType & {
   loading: boolean;
   sessionPay: Function;
   webViewLink: string;
+  amount: string;
+  currency: CurrencyTypes;
 };
 
 export type sessionPayProps = {
@@ -65,5 +77,7 @@ export const initialState: State = {
   cardExpiredDate: "",
   sessionPay: () => {},
   webViewLink: "",
+  amount: "",
+  currency: CurrencyTypes.JPY,
 };
 export type ActionType = { type: string; payload: any };

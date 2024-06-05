@@ -1,6 +1,5 @@
-// create payments must be implmented here
 import { BASE_URL } from "../util/constants";
-import { getMonthYearFromExpiry } from "../util/helpers";
+import { getMonthYearFromExpiry, printLog } from "../util/helpers";
 import { payForSessionProps, PaymentType } from "../util/types";
 
 const payForSession = async ({
@@ -19,7 +18,7 @@ const payForSession = async ({
         const { month, year } = getMonthYearFromExpiry(
           cardDetails?.cardExpiredDate || ""
         );
-        const number = cardDetails?.cardNumber.replace(/-/g, "");
+        const number = cardDetails?.cardNumber.replaceAll(" ", "");
 
         paymentDetails = {
           type: "credit_card",
@@ -53,14 +52,14 @@ const payForSession = async ({
     };
 
     const response = await fetch(url, options);
-    const rspJson = await response.json();
+    const data = await response.json();
 
-    console.log("response>>");
-    console.log(options);
-    console.log(rspJson);
-    return rspJson;
+    return data;
   } catch (e) {
-    console.warn("Unable to Process Payment");
+    printLog({
+      logName: "Error:",
+      message: "Unable to Process Payment",
+    });
     return null;
   }
 };
