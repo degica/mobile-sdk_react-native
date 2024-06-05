@@ -22,7 +22,6 @@ const createSession = async (amount: string): Promise<string | null> => {
 
     return id;
   } catch (e) {
-    console.warn('Unable to fetch session. Is your server running?');
     Alert.alert('Error', 'Unable to fetch session. Is your server running?');
     return null;
   }
