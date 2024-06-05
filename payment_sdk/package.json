@@ -4,7 +4,8 @@
   "description": "degica payment SDK",
   "main": "src/index.ts",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint . --ignore-pattern babel.config.js --ignore-pattern jest.config.js --ignore-pattern setupTests.js"
   },
   "author": "",
   "license": "MIT",
@@ -14,12 +15,17 @@
     "@babel/preset-env": "^7.24.6",
     "@babel/preset-react": "^7.24.6",
     "@babel/preset-typescript": "^7.24.6",
+    "@eslint/compat": "^1.0.3",
+    "@eslint/js": "^9.4.0",
     "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react-native": "^12.5.1",
     "@types/jest": "^29.5.5",
     "@types/react": "^18.3.3",
+    "@typescript-eslint/parser": "^7.12.0",
     "babel-jest": "^29.7.0",
-    "eslint": "^9.3.0",
+    "eslint": "9.x",
+    "eslint-plugin-react": "^7.34.2",
+    "globals": "^15.3.0",
     "jest": "^29.7.0",
     "react": "18.2.0",
     "react-native": "0.74.1",
@@ -28,7 +34,8 @@
     "react-native-webview": "^13.10.2",
     "react-test-renderer": "^18.2.0",
     "ts-jest": "^29.1.4",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.12.0"
   },
   "resolutions": {
     "@types/react": "^18.2.44"
