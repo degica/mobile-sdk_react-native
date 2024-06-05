@@ -1,7 +1,9 @@
+import { PaymentStatuses } from "./types";
+
 const MAX_CARD_LENGTH = 16;
 
 export const isCardNumberValid = (cardString: string) => {
-  const text = cardString.replaceAll("-", "");
+  const text = cardString.replaceAll(" ", "");
   try {
     if (text?.length <= 0) {
       return true;
@@ -27,12 +29,13 @@ export const validateCardExpiry = (expiry: string) => {
     if (expiry?.length <= 0) {
       return true;
     }
-    const derivedExpiry = expiry.replace("/", "");
+    const derivedExpiry = expiry.replace(" / ", "");
+
     if (derivedExpiry.length > 4) {
       return false;
     }
-    const expiryMonthValue = expiry.slice(0, 2);
-    const expiryYearValue = expiry.slice(3, 5);
+    const expiryMonthValue = derivedExpiry.slice(0, 2);
+    const expiryYearValue = derivedExpiry.slice(2, 4);
     const expiryMonth = parseInt(expiryMonthValue, 10);
     const expiryYear = parseInt(expiryYearValue, 10);
     const hasUserEnteredYear = expiryYearValue?.length === 2;
@@ -57,4 +60,14 @@ export const validateCardExpiry = (expiry: string) => {
   } catch {
     return false;
   }
+};
+
+export const validateSessionResponse = (sessionData: any) => {
+  return (
+    !sessionData ||
+    sessionData?.error ||
+    sessionData.expired ||
+    sessionData?.status === PaymentStatuses.SUCCESS ||
+    sessionData?.status === PaymentStatuses.ERROR
+  );
 };
