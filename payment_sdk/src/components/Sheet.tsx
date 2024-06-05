@@ -1,10 +1,10 @@
 import React, {
   useCallback,
   useImperativeHandle,
-  useState,
   ForwardRefRenderFunction,
+  useContext,
 } from "react";
-import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   Extrapolation,
@@ -16,7 +16,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-import StateProvider from "./paymentState/stateProvider";
+import { Actions, DispatchContext } from "../state";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -37,6 +37,8 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
   { children, swipeClose },
   ref
 ) => {
+  const dispatch = useContext(DispatchContext);
+
   const translateY = useSharedValue(0);
   const active = useSharedValue(false);
 
@@ -56,6 +58,15 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
     () => ({
       open: () => {
         scrollTo(MAX_TRANSLATE_Y);
+
+        //TODO find a better way to handle bellow reset
+        dispatch({
+          type: Actions.SET_WEBVIEW_LINK,
+          payload: "",
+        });
+      },
+      close: () => {
+        scrollTo(0);
       },
       scrollTo,
       isActive,
@@ -126,7 +137,7 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
             </View>
           </Animated.View>
         </GestureDetector>
-        <ScrollView>{children}</ScrollView>
+        {children}
       </Animated.View>
     </>
   );
