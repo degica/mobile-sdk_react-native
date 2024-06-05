@@ -11,17 +11,17 @@ type Props = {
 const options = [
   {
     label: 'Credit Card',
-    icon: '💳',
+    icon: require('../assets/images/cc.png'),
     color: '#e0e0e0',
   },
   {
     label: 'Konbini',
-    icon: '🏪',
+    icon: require('../assets/images/shop.png'),
     color: '#a5d6a7',
   },
   {
     label: 'Paypay',
-    icon: '💰',
+    icon: require('../assets/images/paypay.png'),
     color: '#ef9a9a',
   },
 ];

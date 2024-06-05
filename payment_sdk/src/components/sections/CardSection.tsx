@@ -56,6 +56,7 @@ export default CardSection;
 
 const styles = StyleSheet.create({
   cardContainer: {
+    position: 'relative',
     flex: 1,
   },
   cardNameContainer: {

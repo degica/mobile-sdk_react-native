@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
     minHeight: 130,
   },
   label: {
+    fontSize: 16,
     marginBottom: 8,
     color: "#172E44",
   },
