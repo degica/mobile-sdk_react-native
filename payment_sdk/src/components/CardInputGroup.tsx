@@ -17,6 +17,7 @@ const CardInputGroup = memo(() => {
         <View style={styles.cardNumberRow}>
           <Input
             value={cardNumber}
+            testID="cardNumberInput"
             placeholder="1234 1234 1234 1234"
             onChangeText={(text: string) => {
               if (isCardNumberValid(text)) {
@@ -33,6 +34,7 @@ const CardInputGroup = memo(() => {
           <View style={styles.firstSplitItem}>
             <Input
               value={cardExpiredDate}
+              testID="cardExpiryInput"
               placeholder="MM / YY"
               onChangeText={(text: string) => {
                 if (validateCardExpiry(text)) {
@@ -47,6 +49,7 @@ const CardInputGroup = memo(() => {
           <View style={styles.nextSplitItem}>
             <Input
               value={cardCVV}
+              testID="cardCVVInput"
               placeholder="CVV"
               onChangeText={(text: string) => {
                 dispatch({ type: Actions.SET_CARD_CVV, payload: text });
