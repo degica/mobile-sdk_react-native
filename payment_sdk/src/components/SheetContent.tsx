@@ -7,6 +7,7 @@ import CardSection from "./sections/CardSection";
 import PayPaySection from "./sections/PayPaySection";
 import { StateContext } from "../state";
 import Loader from "./Loader";
+import SheetFooter from "./sections/SheetFooter";
 
 const SheetContent = () => {
   const { webViewLink, loading } = useContext(StateContext);
@@ -27,6 +28,7 @@ const SheetContent = () => {
       {selectedPill === 0 && <CardSection />}
       {selectedPill === 2 && <PayPaySection />}
       {renderLoading}
+      <SheetFooter />
     </ScrollView>
   );
 };

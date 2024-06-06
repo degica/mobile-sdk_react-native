@@ -26,16 +26,10 @@ const PaymentSheet = forwardRef<PaymentSheetRefProps, {}>((props, ref) => {
   );
 
   return (
-    <GestureHandlerRootView style={styles.container}>
       <Sheet ref={sheetRef}>
         <SheetContent />
       </Sheet>
-    </GestureHandlerRootView>
   );
-});
-
-const styles = StyleSheet.create({
-  container: { flex: 1 },
 });
 
 export default PaymentSheet;

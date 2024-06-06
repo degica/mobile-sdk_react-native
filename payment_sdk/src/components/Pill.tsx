@@ -5,11 +5,12 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 
 interface PillProps {
   label: string;
-  icon: string;
+  icon: any;
   onPress: () => void;
   isSelected?: boolean;
 }
@@ -19,7 +20,7 @@ const Pill: React.FC<PillProps> = ({label, icon, onPress, isSelected}) => {
     <TouchableOpacity
       style={[styles.pill, isSelected && styles.activeDeco]}
       onPress={onPress}>
-      <Text style={styles.icon}>{icon}</Text>
+      <Image style={styles.icon} source={icon} />
       <Text style={styles.label}>{label}</Text>
     </TouchableOpacity>
   );
@@ -47,13 +48,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   icon: {
-    fontSize: 18,
     marginRight: 8,
   },
   label: {
     fontSize: 16,
     color: '#172E44',
-    fontWeight: 'bold',
+    fontWeight: '500',
   },
   activeDeco: {
     borderColor: '#172E44',

@@ -4,11 +4,9 @@ import React, {
   ForwardRefRenderFunction,
   useContext,
 } from "react";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
-  Extrapolation,
-  interpolate,
   useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
@@ -57,7 +55,7 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
     ref,
     () => ({
       open: () => {
-        scrollTo(MAX_TRANSLATE_Y);
+        scrollTo(MAX_TRANSLATE_Y + 50);
 
         //TODO find a better way to handle bellow reset
         dispatch({
@@ -81,7 +79,7 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
     })
     .onUpdate((event) => {
       translateY.value = event.translationY + context.value.y;
-      translateY.value = Math.max(translateY.value, MAX_TRANSLATE_Y);
+      translateY.value = Math.max(translateY.value, MAX_TRANSLATE_Y + 50);
     })
     .onEnd(() => {
       if (translateY.value > -SCREEN_HEIGHT / 1) {
@@ -92,15 +90,7 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
     });
 
   const rSheetStyle = useAnimatedStyle(() => {
-    const borderRadius = interpolate(
-      translateY.value,
-      [MAX_TRANSLATE_Y + 50, MAX_TRANSLATE_Y],
-      [25, 5],
-      Extrapolation.CLAMP
-    );
-
     return {
-      borderRadius,
       transform: [{ translateY: translateY.value }],
     };
   });
@@ -131,9 +121,11 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
           <Animated.View>
             <View style={styles.line}>
               <Text style={styles.headerLabel}>Payment Options</Text>
-              <Text style={styles.crossBtn} onPress={() => scrollTo(0)}>
-                ✖️
-              </Text>
+              <TouchableOpacity
+                style={styles.crossBtn}
+                onPress={() => scrollTo(0)}>
+                <Image source={require('../assets/images/close.png')} />
+              </TouchableOpacity>
             </View>
           </Animated.View>
         </GestureDetector>
@@ -149,12 +141,12 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.6)",
   },
   bottomSheetContainer: {
-    height: SCREEN_HEIGHT,
+    height: SCREEN_HEIGHT - 85,
     width: "100%",
     backgroundColor: "white",
     position: "absolute",
     top: SCREEN_HEIGHT,
-    borderRadius: 25,
+    borderRadius: 0,
   },
   line: {
     flexDirection: "row",
@@ -176,6 +168,9 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
   },
+  contentContainer: {
+    flex: 1,
+  }
 });
 
 export default React.forwardRef<SheetRefProps, SheetProps>(Sheet);
