@@ -2,9 +2,15 @@ import React, {
   useCallback,
   useImperativeHandle,
   ForwardRefRenderFunction,
-  useContext,
 } from "react";
-import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedProps,
@@ -14,7 +20,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
-import { Actions, DispatchContext } from "../state";
+const closeIcon = require("../assets/images/close.png");
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -35,8 +41,6 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
   { children, swipeClose },
   ref
 ) => {
-  const dispatch = useContext(DispatchContext);
-
   const translateY = useSharedValue(0);
   const active = useSharedValue(false);
 
@@ -56,12 +60,6 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
     () => ({
       open: () => {
         scrollTo(MAX_TRANSLATE_Y + 50);
-
-        //TODO find a better way to handle bellow reset
-        dispatch({
-          type: Actions.SET_WEBVIEW_LINK,
-          payload: "",
-        });
       },
       close: () => {
         scrollTo(0);
@@ -123,8 +121,9 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
               <Text style={styles.headerLabel}>Payment Options</Text>
               <TouchableOpacity
                 style={styles.crossBtn}
-                onPress={() => scrollTo(0)}>
-                <Image source={require('../assets/images/close.png')} />
+                onPress={() => scrollTo(0)}
+              >
+                <Image source={closeIcon} />
               </TouchableOpacity>
             </View>
           </Animated.View>
@@ -170,7 +169,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-  }
+  },
 });
 
 export default React.forwardRef<SheetRefProps, SheetProps>(Sheet);

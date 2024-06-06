@@ -12,6 +12,7 @@ import {
 } from "./util/types";
 
 export const Actions = {
+  RESET_STATES: "RESET_STATES",
   SET_CARDHOLDER_NAME: "SET_CARDHOLDER_NAME",
   SET_CARD_NUMBER: "SET_CARD_NUMBER",
   SET_PAYMENT_OPTION: "SET_PAYMENT_OPTION",
@@ -30,7 +31,12 @@ export function reducer(state: State, action: ActionType) {
     case Actions.SET_PAYMENT_OPTION:
       return {
         ...state,
-        paymentType: action.type as PaymentType,
+        paymentType: action.payload as PaymentType,
+      };
+    case Actions.RESET_STATES:
+      return {
+        ...state,
+        ...action.payload,
       };
     case Actions.SET_LOADING:
       return {

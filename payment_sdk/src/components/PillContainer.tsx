@@ -1,39 +1,50 @@
-import React from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
-import Pill from './Pill';
-import {FlatList} from 'react-native-gesture-handler';
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import Pill from "./Pill";
+import { FlatList } from "react-native-gesture-handler";
+import { PaymentType } from "../util/types";
 
 type Props = {
-  onSelect: (index: number) => void;
-  selectedItem: number;
+  onSelect: (type: PaymentType) => void;
+  selectedItem: PaymentType;
+};
+
+type itemType = {
+  label: string;
+  id: PaymentType;
+  icon: string;
+  color: string;
 };
 
 const options = [
   {
-    label: 'Credit Card',
-    icon: require('../assets/images/cc.png'),
-    color: '#e0e0e0',
+    label: "Credit Card",
+    id: PaymentType.CREDIT,
+    icon: require("../assets/images/cc.png"),
+    color: "#e0e0e0",
   },
   {
-    label: 'Konbini',
-    icon: require('../assets/images/shop.png'),
-    color: '#a5d6a7',
+    label: "Konbini",
+    id: PaymentType.KONBINI,
+    icon: require("../assets/images/shop.png"),
+    color: "#a5d6a7",
   },
   {
-    label: 'Paypay',
-    icon: require('../assets/images/paypay.png'),
-    color: '#ef9a9a',
+    label: "Paypay",
+    id: PaymentType.PAY_PAY,
+    icon: require("../assets/images/paypay.png"),
+    color: "#ef9a9a",
   },
 ];
 
-const PillContainer = ({onSelect, selectedItem}: Props) => {
-  const renderItem = ({item, index}) => {
+const PillContainer = ({ onSelect, selectedItem }: Props) => {
+  const renderItem = ({ item }: { item: itemType }) => {
     return (
       <Pill
-        isSelected={index === selectedItem}
+        isSelected={item.id === selectedItem}
         label={item.label}
         icon={item.icon}
-        onPress={() => onSelect(index)}
+        onPress={() => onSelect(item.id)}
       />
     );
   };

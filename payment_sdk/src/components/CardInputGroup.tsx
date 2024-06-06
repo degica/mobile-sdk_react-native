@@ -6,7 +6,16 @@ import { Actions, DispatchContext, StateContext } from "../state";
 import { isCardNumberValid, validateCardExpiry } from "../util/validator";
 import { formatCreditCardNumber, formatExpiry } from "../util/helpers";
 
-const CardInputGroup = memo(() => {
+type Props = {
+  inputErrors: {
+    number: boolean;
+    expiry: boolean;
+    cvv: boolean;
+  };
+  resetError: (type: string) => {};
+};
+
+const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
   const dispatch = useContext(DispatchContext);
   const { cardCVV, cardNumber, cardExpiredDate } = useContext(StateContext);
 
@@ -20,6 +29,7 @@ const CardInputGroup = memo(() => {
             testID="cardNumberInput"
             placeholder="1234 1234 1234 1234"
             onChangeText={(text: string) => {
+              resetError("number");
               if (isCardNumberValid(text)) {
                 let derivedText = formatCreditCardNumber(text);
                 dispatch({
@@ -28,15 +38,18 @@ const CardInputGroup = memo(() => {
                 });
               }
             }}
+            inputStyle={styles.numberInputStyle}
+            error={inputErrors.number}
           />
         </View>
         <View style={styles.splitRow}>
-          <View style={styles.firstSplitItem}>
+          <View style={styles.itemRow}>
             <Input
               value={cardExpiredDate}
               testID="cardExpiryInput"
               placeholder="MM / YY"
               onChangeText={(text: string) => {
+                resetError("expiry");
                 if (validateCardExpiry(text)) {
                   dispatch({
                     type: Actions.SET_CARD_EXPIRED_DATE,
@@ -44,16 +57,22 @@ const CardInputGroup = memo(() => {
                   });
                 }
               }}
+              inputStyle={styles.expiryInputStyle}
+              error={inputErrors.expiry}
             />
           </View>
-          <View style={styles.nextSplitItem}>
+          <View style={styles.itemRow}>
             <Input
               value={cardCVV}
               testID="cardCVVInput"
               placeholder="CVV"
               onChangeText={(text: string) => {
+                resetError("cvv");
+
                 dispatch({ type: Actions.SET_CARD_CVV, payload: text });
               }}
+              inputStyle={styles.cvvInputStyle}
+              error={inputErrors.cvv}
             />
           </View>
         </View>
@@ -79,28 +98,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#CAD6E1",
     maxHeight: 120,
   },
   cardNumberRow: {
     flex: 1,
     height: 60,
-    borderBottomWidth: 1,
-    borderColor: "#CAD6E1",
   },
   splitRow: {
     flex: 1,
     flexDirection: "row",
     height: 60,
   },
-  firstSplitItem: {
+  itemRow: {
     flex: 1,
-    borderRightWidth: 1,
-    borderColor: "#CAD6E1",
   },
-  nextSplitItem: {
-    flex: 1,
+  numberInputStyle: {
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+  },
+  expiryInputStyle: {
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0,
+  },
+  cvvInputStyle: {
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    borderBottomLeftRadius: 0,
   },
 });

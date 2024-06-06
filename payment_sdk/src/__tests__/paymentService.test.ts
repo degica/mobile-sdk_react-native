@@ -1,4 +1,4 @@
-import payForSession from "../services/paymentService";
+import payForSession from "../services/payForSessionService";
 import { PaymentType } from "../util/types";
 
 // Mock the fetch function

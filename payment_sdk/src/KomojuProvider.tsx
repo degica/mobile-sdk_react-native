@@ -9,6 +9,7 @@ import { Alert } from "react-native";
 
 import {
   CreatePaymentFuncType,
+  initialState,
   InitPrams,
   PaymentStatuses,
   sessionPayProps,
@@ -17,9 +18,10 @@ import PaymentSheet, { PaymentSheetRefProps } from "./components/PaymentSheet";
 
 import { Actions, DispatchContext, KomojuContext, StateContext } from "./state";
 import StateProvider from "./components/paymentState/stateProvider";
-import payForSession from "./services/paymentService";
+import payForSession from "./services/payForSessionService";
 import sessionShow from "./services/sessionShow";
 import { validateSessionResponse } from "./util/validator";
+import secureTokenService from "./services/secureTokenService";
 
 type KomojuProviderIprops = {
   children?: ReactNode | ReactNode[];
@@ -69,6 +71,34 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
     return async ({ paymentType, cardDetails }: sessionPayProps) => {
       dispatch({ type: Actions.SET_LOADING, payload: true });
 
+      //Note: this is for testing 3D Secure Without a Session purposes only, remove at production
+      if (paymentType === "CREDIT") {
+        const response = await secureTokenService({
+          cardDetails,
+        });
+
+        dispatch({ type: Actions.SET_LOADING, payload: false });
+
+        if (response?.verification_status === "NEEDS_VERIFY") {
+          dispatch({
+            type: Actions.SET_WEBVIEW_LINK,
+            payload: response.authentication_url,
+          });
+        } else if (response?.status === "ERRORED") {
+          onError
+            ? onError()
+            : Alert.alert("Error", "Unable to Process Payment");
+        } else {
+          sheetRef?.current?.close();
+          onSuccess
+            ? onSuccess()
+            : Alert.alert("Success", "The payment was confirmed successfully");
+        }
+
+        return;
+      }
+      //End Note
+
       const response = await payForSession({
         paymentType,
         sessionId,
@@ -96,6 +126,11 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
 
   const createPayment = useCallback(
     ({ sessionId, onError, onSuccess }: CreatePaymentFuncType) => {
+      dispatch({
+        type: Actions.RESET_STATES,
+        payload: initialState,
+      });
+
       validateSession(sessionId);
 
       dispatch({

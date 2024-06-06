@@ -1,53 +1,37 @@
 import { BASE_URL } from "../util/constants";
-import { getMonthYearFromExpiry, printLog } from "../util/helpers";
-import { payForSessionProps, PaymentType } from "../util/types";
+import { printLog } from "../util/helpers";
 
-const payForSession = async ({
-  publicKey,
-  sessionId,
-  paymentType,
-  cardDetails,
-}: payForSessionProps) => {
+import { SECRET_KEY } from "@env";
+
+type paymentServiceProps = {
+  token: string;
+  amount?: string;
+  tax?: string;
+  currency?: string;
+};
+
+const paymentService = async ({
+  token,
+  amount,
+  tax,
+  currency,
+}: paymentServiceProps) => {
   try {
-    const url = `${BASE_URL}/sessions/${sessionId}/pay`;
-
-    let paymentDetails = {};
-
-    switch (paymentType) {
-      case PaymentType.CREDIT:
-        const { month, year } = getMonthYearFromExpiry(
-          cardDetails?.cardExpiredDate || ""
-        );
-        const number = cardDetails?.cardNumber.replaceAll(" ", "");
-
-        paymentDetails = {
-          type: "credit_card",
-          name: cardDetails?.cardholderName,
-          number,
-          month,
-          year,
-          verification_value: cardDetails?.cardCVV,
-        };
-        break;
-      case PaymentType.PAY_PAY:
-        paymentDetails = {
-          type: "paypay",
-        };
-        break;
-      default:
-        break;
-    }
+    const url = `${BASE_URL}/payments`;
 
     const options = {
       method: "POST",
       headers: {
         accept: "application/json",
         "content-type": "application/json",
-        Authorization: `Basic ${btoa(publicKey + ":")}`,
+        Authorization: `Basic ${btoa(SECRET_KEY + ":")}`,
       },
       body: JSON.stringify({
-        capture: "auto",
-        payment_details: paymentDetails,
+        capture: true,
+        amount: "1000",
+        tax: "0",
+        currency: "JPY",
+        payment_details: token,
       }),
     };
 
@@ -64,4 +48,4 @@ const payForSession = async ({
   }
 };
 
-export default payForSession;
+export default paymentService;

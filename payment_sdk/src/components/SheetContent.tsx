@@ -5,17 +5,17 @@ import PillContainer from "./PillContainer";
 import WebView from "./WebView";
 import CardSection from "./sections/CardSection";
 import PayPaySection from "./sections/PayPaySection";
-import { StateContext } from "../state";
+import { Actions, DispatchContext, StateContext } from "../state";
 import Loader from "./Loader";
 import SheetFooter from "./sections/SheetFooter";
+import { PaymentType } from "../util/types";
 
 const SheetContent = () => {
-  const { webViewLink, loading } = useContext(StateContext);
+  const { paymentType, webViewLink, loading } = useContext(StateContext);
+  const dispatch = useContext(DispatchContext);
 
-  const [selectedPill, setSelectedPill] = React.useState(0);
-
-  const handlePillSelect = (index: number) => {
-    setSelectedPill(index);
+  const handlePillSelect = (type: PaymentType) => {
+    dispatch({ type: Actions.SET_PAYMENT_OPTION, payload: type });
   };
 
   const renderLoading = loading ? <Loader /> : null;
@@ -24,9 +24,9 @@ const SheetContent = () => {
 
   return (
     <ScrollView>
-      <PillContainer onSelect={handlePillSelect} selectedItem={selectedPill} />
-      {selectedPill === 0 && <CardSection />}
-      {selectedPill === 2 && <PayPaySection />}
+      <PillContainer onSelect={handlePillSelect} selectedItem={paymentType} />
+      {paymentType === PaymentType.CREDIT && <CardSection />}
+      {paymentType === PaymentType.PAY_PAY && <PayPaySection />}
       {renderLoading}
       <SheetFooter />
     </ScrollView>

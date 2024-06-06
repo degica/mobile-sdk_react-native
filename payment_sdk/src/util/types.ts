@@ -51,6 +51,14 @@ type CardDetailsType = {
   cardCVV: string;
 };
 
+export type cardValidationFuncProps = {
+  cardholderName: string;
+  cardNumber: string;
+  cardExpiredDate: string;
+  cardCVV: string;
+  setInputErrors: (data: object) => {};
+};
+
 export type Nullable<T> = T | null;
 
 export type State = CardDetailsType & {
