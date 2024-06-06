@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, TextInput, Text, StyleSheet, ViewStyle} from 'react-native';
+import React from "react";
+import { View, TextInput, Text, StyleSheet, ViewStyle } from "react-native";
 
 interface InputProps {
   value: string;
@@ -8,6 +8,7 @@ interface InputProps {
   placeholder?: string;
   hasBorder?: boolean;
   inputStyle?: ViewStyle;
+  testID?: string;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -17,6 +18,7 @@ const Input: React.FC<InputProps> = ({
   inputStyle,
   hasBorder,
   placeholder,
+  testID,
 }) => {
   return (
     <View>
@@ -26,6 +28,7 @@ const Input: React.FC<InputProps> = ({
         onChangeText={onChangeText}
         placeholder={placeholder}
         style={[styles.input, inputStyle, hasBorder && styles.withBorder]}
+        testID={testID}
       />
     </View>
   );
@@ -35,15 +38,15 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 8,
-    color: '#172E44',
+    color: "#172E44",
   },
   input: {
-    height: '100%',
+    height: "100%",
     paddingLeft: 16,
     fontSize: 16,
   },
   withBorder: {
-    borderColor: '#CAD6E1',
+    borderColor: "#CAD6E1",
     borderWidth: 1,
     borderRadius: 8,
   },

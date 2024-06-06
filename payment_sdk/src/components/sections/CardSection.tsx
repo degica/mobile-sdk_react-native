@@ -41,12 +41,14 @@ const CardSection = (props: Props) => {
           }}
           hasBorder
           inputStyle={styles.inputStyle}
+          testID="cardHolderName"
         />
       </View>
       <CardInputGroup />
       <SubmitButton
         label={`Pay ${formatCurrency({ amount, currency })}`}
         onPress={onPay}
+        testID="PayCTA"
       />
     </View>
   );
@@ -56,7 +58,7 @@ export default CardSection;
 
 const styles = StyleSheet.create({
   cardContainer: {
-    position: 'relative',
+    position: "relative",
     flex: 1,
   },
   cardNameContainer: {
