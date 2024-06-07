@@ -10,6 +10,12 @@ import { formatCurrency } from "../../util/helpers";
 
 type Props = {};
 
+/**
+ * CardSection component for displaying and handling the card payment form.
+ * @param {Props} props - The props for the CardSection component.
+ * @returns {JSX.Element} The CardSection component.
+ */
+
 const CardSection = (props: Props) => {
   const {
     sessionPay,
