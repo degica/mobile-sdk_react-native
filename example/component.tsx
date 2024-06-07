@@ -4,6 +4,7 @@ import {KomojuSDK} from 'react-native-komoju';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import createSession from './services/sessionService';
+import PaymentScreen from './PaymentScreen';
 
 const PAYMENT_AMOUNT = '2000';
 
@@ -16,6 +17,7 @@ function Component(): React.JSX.Element {
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    flex: 1,
   };
 
   useEffect(() => {
@@ -36,7 +38,8 @@ function Component(): React.JSX.Element {
 
   return (
     <SafeAreaView style={backgroundStyle}>
-      <Button title="Press me" onPress={handleOpenSheet} />
+      {/* <Button title="Press me" onPress={handleOpenSheet} /> */}
+      <PaymentScreen />
     </SafeAreaView>
   );
 }
