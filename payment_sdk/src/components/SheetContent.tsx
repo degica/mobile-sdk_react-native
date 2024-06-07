@@ -23,13 +23,18 @@ const SheetContent = () => {
   if (webViewLink) return <WebView link={webViewLink} />;
 
   return (
-    <ScrollView>
-      <PillContainer onSelect={handlePillSelect} selectedItem={selectedPill} />
-      {selectedPill === 0 && <CardSection />}
-      {selectedPill === 2 && <PayPaySection />}
-      {renderLoading}
+    <>
+      <ScrollView>
+        <PillContainer
+          onSelect={handlePillSelect}
+          selectedItem={selectedPill}
+        />
+        {selectedPill === 0 && <CardSection />}
+        {selectedPill === 2 && <PayPaySection />}
+        {renderLoading}
+      </ScrollView>
       <SheetFooter />
-    </ScrollView>
+    </>
   );
 };
 
