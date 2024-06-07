@@ -2,12 +2,26 @@ import { BASE_URL } from "../util/constants";
 import { getMonthYearFromExpiry, printLog } from "../util/helpers";
 import { payForSessionProps, PaymentType } from "../util/types";
 
+/**
+ * Processes a payment for a given session.
+ * @param {object} params - The parameters for processing the payment.
+ * @param {string} params.publicKey - The public key for authorization.
+ * @param {string} params.sessionId - The session ID for the payment.
+ * @param {PaymentType} params.paymentType - The type of payment to process.
+ * @param {object} params.cardDetails - The details of the card for credit card payments.
+ * @param {string} params.cardDetails.cardholderName - The name of the cardholder.
+ * @param {string} params.cardDetails.cardNumber - The card number.
+ * @param {string} params.cardDetails.cardExpiredDate - The expiration date of the card.
+ * @param {string} params.cardDetails.cardCVV - The CVV of the card.
+ * @returns {Promise<object|null>} The response data from the payment API or null if an error occurs.
+ */
+
 const payForSession = async ({
   publicKey,
   sessionId,
   paymentType,
   cardDetails,
-}: payForSessionProps) => {
+}: payForSessionProps): Promise<object | null> => {
   try {
     const url = `${BASE_URL}/sessions/${sessionId}/pay`;
 

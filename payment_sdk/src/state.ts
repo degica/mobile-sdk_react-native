@@ -11,6 +11,10 @@ import {
   initialState,
 } from "./util/types";
 
+/**
+ * Action types for the reducer
+ */
+
 export const Actions = {
   RESET_STATES: "RESET_STATES",
   SET_CARDHOLDER_NAME: "SET_CARDHOLDER_NAME",
@@ -25,7 +29,13 @@ export const Actions = {
   SESSION_PAY: "SESSION_PAY",
 };
 
-// Define the reducer function
+/**
+ * Reducer function to manage the state of the payment system.
+ * @param {State} state - The current state.
+ * @param {ActionType} action - The action to be processed.
+ * @returns {State} The new state after applying the action.
+ */
+
 export function reducer(state: State, action: ActionType) {
   switch (action.type) {
     case Actions.SET_PAYMENT_OPTION:
@@ -88,16 +98,40 @@ export function reducer(state: State, action: ActionType) {
   }
 }
 const defaultValue = {
+  /**
+   * Function to create a payment session.
+   * @param {CreatePaymentFuncType} data - The data for creating a payment session.
+   */
   createPayment: (data: CreatePaymentFuncType) => {},
+  /**
+   * Function to display the payment sheet UI.
+   */
   showPaymentSheetUI: noop,
+  /**
+   * Function to initialize Komoju without relying on props.
+   * @param {InitPrams} data - The initialization parameters.
+   */
   initializeKomoju: (data: InitPrams) => {},
 };
+/**
+ * State context for the Komoju payment system.
+ * @type {React.Context<State>}
+ */
 
 export const StateContext = createContext(initialState);
+/**
+ * Dispatch context for the Komoju payment system.
+ * @type {React.Context<(action: ActionType) => ActionType>}
+ */
 export const DispatchContext = createContext(
   ({ type, payload }: ActionType) => ({
     type,
     payload,
   })
 );
+
+/**
+ * Komoju context providing default functions for payment operations.
+ * @type {React.Context<typeof defaultValue>}
+ */
 export const KomojuContext = createContext(defaultValue);

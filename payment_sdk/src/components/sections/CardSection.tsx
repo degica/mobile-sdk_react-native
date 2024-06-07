@@ -16,8 +16,16 @@ const initialErrors = {
   cvv: false,
 };
 
-const CardSection = () => {
-  const [inputErrors, setInputErrors] = useState(initialErrors);
+/**
+ * CardSection component for displaying and handling the card payment form.
+ * @param {Props} props - The props for the CardSection component.
+ * @returns {JSX.Element} The CardSection component.
+ */
+
+const CardSection = (): JSX.Element => {
+  const [inputErrors, setInputErrors] = useState<{ [x: string]: boolean }>(
+    initialErrors
+  );
 
   const {
     sessionPay,
