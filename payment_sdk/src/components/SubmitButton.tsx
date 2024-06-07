@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
   buttonWrapper: {
     backgroundColor: "#0B82EE",
     borderRadius: 8,
+    height: 50,
     minHeight: 50,
     marginHorizontal: 16,
     flex: 1,
