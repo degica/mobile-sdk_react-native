@@ -21,7 +21,7 @@ const payForSession = async ({
   sessionId,
   paymentType,
   cardDetails,
-}: payForSessionProps): Promise<object | null> => {
+}: payForSessionProps) => {
   try {
     const url = `${BASE_URL}/sessions/${sessionId}/pay`;
 

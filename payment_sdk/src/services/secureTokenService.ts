@@ -1,8 +1,7 @@
-import { SECRET_KEY } from "@env";
 import { BASE_URL } from "../util/constants";
 import { getMonthYearFromExpiry, printLog } from "../util/helpers";
 
-const secureTokenService = async ({ cardDetails }: any) => {
+const secureTokenService = async ({ cardDetails, secretKey }: any) => {
   try {
     const url = `${BASE_URL}/secure_tokens`;
 
@@ -15,10 +14,10 @@ const secureTokenService = async ({ cardDetails }: any) => {
       headers: {
         accept: "application/json",
         "content-type": "application/json",
-        Authorization: `Basic ${btoa(SECRET_KEY + ":")}`,
+        Authorization: `Basic ${btoa(secretKey + ":")}`,
       },
       body: JSON.stringify({
-        amount: "1000",
+        amount: "2000",
         currency: "JPY",
         return_url: "https://example.com/complete",
         payment_details: {
@@ -45,7 +44,13 @@ const secureTokenService = async ({ cardDetails }: any) => {
   }
 };
 
-export const checkSecureTokenStatus = async (token: string) => {
+export const checkSecureTokenStatus = async ({
+  token,
+  secretKey,
+}: {
+  token: string;
+  secretKey: string;
+}) => {
   try {
     const url = `${BASE_URL}/secure_tokens/${token}`;
 
@@ -54,7 +59,7 @@ export const checkSecureTokenStatus = async (token: string) => {
       headers: {
         accept: "application/json",
         "content-type": "application/json",
-        Authorization: `Basic ${btoa(SECRET_KEY + ":")}`,
+        Authorization: `Basic ${btoa(secretKey + ":")}`,
       },
     };
 

@@ -23,9 +23,7 @@ const initialErrors = {
  */
 
 const CardSection = (): JSX.Element => {
-  const [inputErrors, setInputErrors] = useState<{ [x: string]: boolean }>(
-    initialErrors
-  );
+  const [inputErrors, setInputErrors] = useState(initialErrors);
 
   const {
     sessionPay,

@@ -1,21 +1,23 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
-import React, {useCallback, useMemo} from 'react';
-import SubmitButton from './SubmitButton';
+import { Image, StyleSheet, Text, View } from "react-native";
+import React, { useCallback, useMemo } from "react";
+
+import SubmitButton from "./SubmitButton";
+import { ResponseScreenStatuses } from "../util/types";
 
 type Props = {
-  status: 'success' | 'failed';
+  status: ResponseScreenStatuses.SUCCESS | ResponseScreenStatuses.FAILED;
   message?: string;
   onPressLabel: string;
   onPress: () => void;
 };
 
-const ResponseScreen = ({status, message, onPress, onPressLabel}: Props) => {
+const ResponseScreen = ({ status, message, onPress, onPressLabel }: Props) => {
   const renderMessageContent = useMemo(() => {
-    const title = status === 'success' ? 'Payment Success' : 'Payment Failed';
+    const title = status === ResponseScreenStatuses.SUCCESS ? "Payment Success" : "Payment Failed";
     const defaultMessage =
-      status === 'success'
-        ? 'Thank you for your order'
-        : 'Hey there, We tried to charge your card but, something went wrong. Please update your payment method below to continue';
+      status === ResponseScreenStatuses.SUCCESS
+        ? "Thank you for your order"
+        : "Hey there, We tried to charge your card but, something went wrong. Please update your payment method below to continue";
     const msg = message || defaultMessage;
 
     return (
@@ -28,9 +30,9 @@ const ResponseScreen = ({status, message, onPress, onPressLabel}: Props) => {
 
   const renderIcon = useMemo(() => {
     const source =
-      status === 'success'
-        ? require('../assets/images/success.png')
-        : require('../assets/images/error.png');
+      status === ResponseScreenStatuses.SUCCESS
+        ? require("../assets/images/success.png")
+        : require("../assets/images/error.png");
     return <Image source={source} style={styles.icon} />;
   }, [status]);
 
@@ -55,10 +57,10 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 16,
-    alignItems: 'center',
+    alignItems: "center",
   },
   imageContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 18,
   },
   icon: {
@@ -67,18 +69,18 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 16,
-    color: '#172E44',
+    color: "#172E44",
   },
   message: {
     fontSize: 16,
     marginBottom: 16,
-    textAlign: 'center',
+    textAlign: "center",
     paddingHorizontal: 32,
   },
   bottomButton: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 32,
     left: 0,
     right: 0,

@@ -1,7 +1,18 @@
 import {Alert} from 'react-native';
 import {SECRET_KEY} from '@env';
 
-const createSession = async (amount: string): Promise<string | null> => {
+// Refer documentation on https://doc.komoju.com/reference/post_sessions
+// for creating a session
+
+type createSessionProps = {
+  amount: string;
+  currency: string;
+};
+
+const createSession = async ({
+  amount,
+  currency,
+}: createSessionProps): Promise<string | null> => {
   try {
     const url = 'https://komoju.com/api/v1/sessions';
     const options = {
@@ -13,8 +24,8 @@ const createSession = async (amount: string): Promise<string | null> => {
       },
       body: JSON.stringify({
         default_locale: 'en',
-        amount: amount,
-        currency: 'USD',
+        amount,
+        currency,
       }),
     };
     const response = await fetch(url, options);

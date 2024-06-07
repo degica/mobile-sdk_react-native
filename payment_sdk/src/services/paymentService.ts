@@ -1,20 +1,20 @@
 import { BASE_URL } from "../util/constants";
 import { printLog } from "../util/helpers";
 
-import { SECRET_KEY } from "@env";
-
 type paymentServiceProps = {
   token: string;
   amount?: string;
   tax?: string;
   currency?: string;
+  secretKey?: string;
 };
 
 const paymentService = async ({
   token,
   amount,
-  tax,
+  tax = "0",
   currency,
+  secretKey,
 }: paymentServiceProps) => {
   try {
     const url = `${BASE_URL}/payments`;
@@ -24,13 +24,13 @@ const paymentService = async ({
       headers: {
         accept: "application/json",
         "content-type": "application/json",
-        Authorization: `Basic ${btoa(SECRET_KEY + ":")}`,
+        Authorization: `Basic ${btoa(secretKey + ":")}`,
       },
       body: JSON.stringify({
         capture: true,
-        amount: "1000",
-        tax: "0",
-        currency: "JPY",
+        amount,
+        tax,
+        currency,
         payment_details: token,
       }),
     };

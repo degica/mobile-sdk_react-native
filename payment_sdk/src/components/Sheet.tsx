@@ -2,6 +2,7 @@ import React, {
   useCallback,
   useImperativeHandle,
   ForwardRefRenderFunction,
+  useContext,
 } from "react";
 import {
   Dimensions,
@@ -19,6 +20,11 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+import ResponseScreen from "./ResponseScreen";
+import { Actions, DispatchContext, StateContext } from "../state";
+import SheetContent from "./SheetContent";
+import { paymentFailedCtaText, paymentSuccessCtaText } from "../util/constants";
+import { ResponseScreenStatuses } from "../util/types";
 
 const closeIcon = require("../assets/images/close.png");
 
@@ -41,6 +47,9 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
   { children, swipeClose },
   ref
 ) => {
+  const { paymentState } = useContext(StateContext);
+  const dispatch = useContext(DispatchContext);
+
   const translateY = useSharedValue(0);
   const active = useSharedValue(false);
 
@@ -105,6 +114,31 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
     } as any;
   }, []);
 
+  const getCtaText = () => {
+    switch (paymentState) {
+      case ResponseScreenStatuses.SUCCESS:
+        return paymentSuccessCtaText;
+      case ResponseScreenStatuses.FAILED:
+        return paymentFailedCtaText;
+      default:
+        return "";
+    }
+  };
+
+  const ctaOnPress = () => {
+    switch (paymentState) {
+      case ResponseScreenStatuses.SUCCESS:
+        return scrollTo(0);
+      case ResponseScreenStatuses.FAILED:
+        return dispatch({
+          type: Actions.SET_PAYMENT_STATE,
+          payload: "",
+        });
+      default:
+        return "";
+    }
+  };
+
   return (
     <>
       <Animated.View
@@ -118,7 +152,9 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
         <GestureDetector gesture={gesture}>
           <Animated.View>
             <View style={styles.line}>
-              <Text style={styles.headerLabel}>Payment Options</Text>
+              {!paymentState ? (
+                <Text style={styles.headerLabel}>Payment Options</Text>
+              ) : null}
               <TouchableOpacity
                 style={styles.crossBtn}
                 onPress={() => scrollTo(0)}
@@ -128,7 +164,15 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
             </View>
           </Animated.View>
         </GestureDetector>
-        {children}
+        {paymentState ? (
+          <ResponseScreen
+            status={paymentState}
+            onPress={ctaOnPress}
+            onPressLabel={getCtaText()}
+          />
+        ) : (
+          <SheetContent />
+        )}
       </Animated.View>
     </>
   );

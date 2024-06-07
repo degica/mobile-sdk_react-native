@@ -11,7 +11,7 @@ import SheetFooter from "./sections/SheetFooter";
 import { PaymentType } from "../util/types";
 
 const SheetContent = () => {
-  const { paymentType, webViewLink, loading } = useContext(StateContext);
+  const { paymentType, webViewData, loading } = useContext(StateContext);
   const dispatch = useContext(DispatchContext);
 
   const handlePillSelect = (type: PaymentType) => {
@@ -20,16 +20,24 @@ const SheetContent = () => {
 
   const renderLoading = loading ? <Loader /> : null;
 
-  if (webViewLink) return <WebView link={webViewLink} />;
+  if (webViewData?.link)
+    return (
+      <WebView
+        link={webViewData?.link}
+        onNavigationStateChange={webViewData?.onNavChange}
+      />
+    );
 
   return (
-    <ScrollView>
-      <PillContainer onSelect={handlePillSelect} selectedItem={paymentType} />
-      {paymentType === PaymentType.CREDIT && <CardSection />}
-      {paymentType === PaymentType.PAY_PAY && <PayPaySection />}
-      {renderLoading}
+    <>
+      <ScrollView>
+        <PillContainer onSelect={handlePillSelect} selectedItem={paymentType} />
+        {paymentType === PaymentType.CREDIT && <CardSection />}
+        {paymentType === PaymentType.PAY_PAY && <PayPaySection />}
+        {renderLoading}
+      </ScrollView>
       <SheetFooter />
-    </ScrollView>
+    </>
   );
 };
 
