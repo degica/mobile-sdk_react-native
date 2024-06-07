@@ -12,7 +12,7 @@ type Props = {
     expiry: boolean;
     cvv: boolean;
   };
-  resetError: (type: string) => {};
+  resetError: (type: string) => void;
 };
 
 const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
