@@ -4,7 +4,14 @@ import React, {
   ForwardRefRenderFunction,
   useContext,
 } from "react";
-import { Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedProps,
@@ -13,8 +20,13 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+import ResponseScreen from "./ResponseScreen";
+import { Actions, DispatchContext, StateContext } from "../state";
+import SheetContent from "./SheetContent";
+import { paymentFailedCtaText, paymentSuccessCtaText } from "../util/constants";
+import { ResponseScreenStatuses } from "../util/types";
 
-import { Actions, DispatchContext } from "../state";
+const closeIcon = require("../assets/images/close.png");
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -35,6 +47,7 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
   { children, swipeClose },
   ref
 ) => {
+  const { paymentState } = useContext(StateContext);
   const dispatch = useContext(DispatchContext);
 
   const translateY = useSharedValue(0);
@@ -56,12 +69,6 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
     () => ({
       open: () => {
         scrollTo(MAX_TRANSLATE_Y + 50);
-
-        //TODO find a better way to handle bellow reset
-        dispatch({
-          type: Actions.SET_WEBVIEW_LINK,
-          payload: "",
-        });
       },
       close: () => {
         scrollTo(0);
@@ -107,6 +114,31 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
     } as any;
   }, []);
 
+  const getCtaText = () => {
+    switch (paymentState) {
+      case ResponseScreenStatuses.SUCCESS:
+        return paymentSuccessCtaText;
+      case ResponseScreenStatuses.FAILED:
+        return paymentFailedCtaText;
+      default:
+        return "";
+    }
+  };
+
+  const ctaOnPress = () => {
+    switch (paymentState) {
+      case ResponseScreenStatuses.SUCCESS:
+        return scrollTo(0);
+      case ResponseScreenStatuses.FAILED:
+        return dispatch({
+          type: Actions.SET_PAYMENT_STATE,
+          payload: "",
+        });
+      default:
+        return "";
+    }
+  };
+
   return (
     <>
       <Animated.View
@@ -120,16 +152,27 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
         <GestureDetector gesture={gesture}>
           <Animated.View>
             <View style={styles.line}>
-              <Text style={styles.headerLabel}>Payment Options</Text>
+              {!paymentState ? (
+                <Text style={styles.headerLabel}>Payment Options</Text>
+              ) : null}
               <TouchableOpacity
                 style={styles.crossBtn}
-                onPress={() => scrollTo(0)}>
-                <Image source={require('../assets/images/close.png')} />
+                onPress={() => scrollTo(0)}
+              >
+                <Image source={closeIcon} />
               </TouchableOpacity>
             </View>
           </Animated.View>
         </GestureDetector>
-        {children}
+        {paymentState ? (
+          <ResponseScreen
+            status={paymentState}
+            onPress={ctaOnPress}
+            onPressLabel={getCtaText()}
+          />
+        ) : (
+          <SheetContent />
+        )}
       </Animated.View>
     </>
   );
@@ -170,7 +213,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-  }
+  },
 });
 
 export default React.forwardRef<SheetRefProps, SheetProps>(Sheet);

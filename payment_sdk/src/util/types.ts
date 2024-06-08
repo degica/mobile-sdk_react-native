@@ -5,8 +5,9 @@ export type InitPrams = {
 
 export type CreatePaymentFuncType = {
   sessionId: string;
-  onError?: () => void; // define the callback types here
-  onSuccess?: () => void; // define the callback types here
+  secretKey?: string;
+  onComplete?: (response: any) => void; // callback when transaction is complete status is passed as a prop
+  enablePayWithoutSession?: boolean;
 };
 
 export type KomojuContext = {
@@ -25,6 +26,18 @@ export enum PaymentStatuses {
   ERROR = "error",
   SUCCESS = "completed",
   PENDING = "pending",
+}
+
+export enum TokenResponseStatuses {
+  SUCCESS = "OK",
+  CAPTURED = "captured",
+  PENDING = "NEEDS_VERIFY",
+  ERROR = "ERRORED",
+}
+
+export enum ResponseScreenStatuses {
+  SUCCESS = "success",
+  FAILED = "failed",
 }
 
 export enum CurrencySign {
@@ -51,21 +64,48 @@ type CardDetailsType = {
   cardCVV: string;
 };
 
+export type newNavStateProps = {
+  url?: string;
+  title?: string;
+  loading?: boolean;
+  canGoBack?: boolean;
+  canGoForward?: boolean;
+};
+
+export type cardValidationFuncProps = {
+  cardholderName: string;
+  cardNumber: string;
+  cardExpiredDate: string;
+  cardCVV: string;
+  setInputErrors: (data: object) => {};
+};
+
 export type Nullable<T> = T | null;
+
+type webViewDataProps = {
+  link: string;
+  onNavChange: (data: newNavStateProps) => void;
+};
 
 export type State = CardDetailsType & {
   paymentType: PaymentType;
   loading: boolean;
   sessionPay: Function;
-  webViewLink: string;
+  webViewData: webViewDataProps;
   amount: string;
   currency: CurrencyTypes;
+  paymentState:
+    | ResponseScreenStatuses.SUCCESS
+    | ResponseScreenStatuses.FAILED
+    | "";
 };
 
 export type sessionPayProps = {
   paymentType: PaymentType;
   cardDetails?: CardDetailsType;
 };
+
+export const webViewDataInitialState = { link: "", onNavChange: ({}) => {} };
 
 // Define the initial state
 export const initialState: State = {
@@ -76,8 +116,9 @@ export const initialState: State = {
   cardNumber: "",
   cardExpiredDate: "",
   sessionPay: () => {},
-  webViewLink: "",
+  webViewData: webViewDataInitialState,
   amount: "",
   currency: CurrencyTypes.JPY,
+  paymentState: "",
 };
 export type ActionType = { type: string; payload: any };

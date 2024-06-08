@@ -26,6 +26,12 @@ const mockState = {
   cardExpiredDate: "",
 };
 
+const inputGroupMockValues = {
+  number: false,
+  expiry: false,
+  cvv: false,
+};
+
 const mockDispatch = jest.fn();
 
 describe("CardInputGroup Component", () => {
@@ -45,7 +51,12 @@ describe("CardInputGroup Component", () => {
   });
 
   it("renders correctly with initial state", () => {
-    const { getByTestId } = renderWithContext(<CardInputGroup />);
+    const { getByTestId } = renderWithContext(
+      <CardInputGroup
+        inputErrors={inputGroupMockValues}
+        resetError={(data: string) => {}}
+      />
+    );
 
     // Check if the inputs render with the initial values from context
     expect(getByTestId("cardNumberInput").props.value).toBe(
@@ -61,7 +72,12 @@ describe("CardInputGroup Component", () => {
     isCardNumberValid.mockReturnValue(true);
     formatCreditCardNumber.mockReturnValue("1234 1234 1234 1234");
 
-    const { getByTestId } = renderWithContext(<CardInputGroup />);
+    const { getByTestId } = renderWithContext(
+      <CardInputGroup
+        inputErrors={inputGroupMockValues}
+        resetError={(data: string) => {}}
+      />
+    );
 
     const cardNumberInput = getByTestId("cardNumberInput");
 
@@ -81,7 +97,12 @@ describe("CardInputGroup Component", () => {
   it("does not update card number when invalid", () => {
     isCardNumberValid.mockReturnValue(false);
 
-    const { getByTestId } = renderWithContext(<CardInputGroup />);
+    const { getByTestId } = renderWithContext(
+      <CardInputGroup
+        inputErrors={inputGroupMockValues}
+        resetError={(data: string) => {}}
+      />
+    );
 
     const cardNumberInput = getByTestId("cardNumberInput");
 
@@ -99,7 +120,12 @@ describe("CardInputGroup Component", () => {
     validateCardExpiry.mockReturnValue(true);
     formatExpiry.mockReturnValue("12 / 25");
 
-    const { getByTestId } = renderWithContext(<CardInputGroup />);
+    const { getByTestId } = renderWithContext(
+      <CardInputGroup
+        inputErrors={inputGroupMockValues}
+        resetError={(data: string) => {}}
+      />
+    );
 
     const cardExpiryInput = getByTestId("cardExpiryInput");
 
@@ -117,7 +143,12 @@ describe("CardInputGroup Component", () => {
   });
 
   it("updates card CVV and dispatches action", () => {
-    const { getByTestId } = renderWithContext(<CardInputGroup />);
+    const { getByTestId } = renderWithContext(
+      <CardInputGroup
+        inputErrors={inputGroupMockValues}
+        resetError={(data: string) => {}}
+      />
+    );
 
     const cardCVVInput = getByTestId("cardCVVInput");
 

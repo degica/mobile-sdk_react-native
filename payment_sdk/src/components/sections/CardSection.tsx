@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import { StyleSheet, View } from "react-native";
 
 import Input from "../Input";
@@ -7,8 +7,14 @@ import SubmitButton from "../SubmitButton";
 import { Actions, DispatchContext, StateContext } from "../../state";
 import { PaymentType } from "../../util/types";
 import { formatCurrency } from "../../util/helpers";
+import { validateCardFormFields } from "../../util/validator";
 
-type Props = {};
+const initialErrors = {
+  name: false,
+  number: false,
+  expiry: false,
+  cvv: false,
+};
 
 /**
  * CardSection component for displaying and handling the card payment form.
@@ -16,7 +22,9 @@ type Props = {};
  * @returns {JSX.Element} The CardSection component.
  */
 
-const CardSection = (props: Props) => {
+const CardSection = (): JSX.Element => {
+  const [inputErrors, setInputErrors] = useState(initialErrors);
+
   const {
     sessionPay,
     cardholderName,
@@ -28,11 +36,25 @@ const CardSection = (props: Props) => {
   } = useContext(StateContext);
   const dispatch = useContext(DispatchContext);
 
+  const resetError = (type: string) => {
+    setInputErrors((pre: object) => ({ ...pre, [type]: false }));
+  };
+
   const onPay = () => {
-    sessionPay({
-      paymentType: PaymentType.CREDIT,
-      cardDetails: { cardholderName, cardCVV, cardNumber, cardExpiredDate },
+    const isValid = validateCardFormFields({
+      cardholderName,
+      cardCVV,
+      cardNumber,
+      cardExpiredDate,
+      setInputErrors,
     });
+
+    if (isValid) {
+      sessionPay({
+        paymentType: PaymentType.CREDIT,
+        cardDetails: { cardholderName, cardCVV, cardNumber, cardExpiredDate },
+      });
+    }
   };
 
   return (
@@ -43,14 +65,15 @@ const CardSection = (props: Props) => {
           label="Cardholder name"
           placeholder="Full name on card"
           onChangeText={(text: string) => {
+            resetError("name");
             dispatch({ type: Actions.SET_CARDHOLDER_NAME, payload: text });
           }}
-          hasBorder
           inputStyle={styles.inputStyle}
+          error={inputErrors.name}
           testID="cardHolderName"
         />
       </View>
-      <CardInputGroup />
+      <CardInputGroup inputErrors={inputErrors} resetError={resetError} />
       <SubmitButton
         label={`Pay ${formatCurrency({ amount, currency })}`}
         onPress={onPay}

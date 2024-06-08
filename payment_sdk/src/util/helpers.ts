@@ -78,8 +78,16 @@ export const formatCurrency = ({
 }) => {
   const sign = CurrencySign[currency];
 
+  // Convert the string to a number
+  const number = parseFloat(amount);
+
+  // Check if the conversion was successful
+  if (isNaN(number)) {
+    return `${sign}0.00`;
+  }
+
   if (currency !== CurrencyTypes.JPY)
-    amount = (Number(amount) * 0.01).toString();
+    amount = (Number(amount) * 0.01).toFixed(2);
 
   return `${sign}${amount}`;
 };

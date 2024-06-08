@@ -10,9 +10,9 @@ import { PaymentType } from "../util/types";
 export const mockState = {
   sessionPay: jest.fn(),
   cardholderName: "John Doe",
-  cardCVV: "",
-  cardNumber: "",
-  cardExpiredDate: "",
+  cardCVV: "123",
+  cardNumber: "4100000000000100",
+  cardExpiredDate: "08/25",
   amount: 1000,
   currency: "USD",
 };

@@ -6,9 +6,9 @@ interface InputProps {
   onChangeText: (text: string) => void;
   label?: string;
   placeholder?: string;
-  hasBorder?: boolean;
   inputStyle?: ViewStyle;
   testID?: string;
+  error?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -16,10 +16,10 @@ const Input: React.FC<InputProps> = ({
   onChangeText,
   label,
   inputStyle,
-  hasBorder,
   placeholder,
   testID,
-}) => {
+  error = false,
+}: InputProps) => {
   return (
     <View>
       {label && <Text style={styles.label}>{label}</Text>}
@@ -27,7 +27,12 @@ const Input: React.FC<InputProps> = ({
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        style={[styles.input, inputStyle, hasBorder && styles.withBorder]}
+        style={[
+          styles.input,
+          styles.withBorder,
+          error && styles.withErrorBorder,
+          inputStyle,
+        ]}
         testID={testID}
       />
     </View>
@@ -44,11 +49,12 @@ const styles = StyleSheet.create({
     height: "100%",
     paddingLeft: 16,
     fontSize: 16,
-  },
-  withBorder: {
     borderColor: "#CAD6E1",
     borderWidth: 1,
     borderRadius: 8,
+  },
+  withErrorBorder: {
+    borderColor: "#F24D49",
   },
 });
 

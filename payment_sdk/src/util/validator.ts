@@ -1,4 +1,4 @@
-import { PaymentStatuses } from "./types";
+import { cardValidationFuncProps, PaymentStatuses } from "./types";
 
 const MAX_CARD_LENGTH = 16;
 
@@ -70,4 +70,33 @@ export const validateSessionResponse = (sessionData: any) => {
     sessionData?.status === PaymentStatuses.SUCCESS ||
     sessionData?.status === PaymentStatuses.ERROR
   );
+};
+
+export const validateCardFormFields = ({
+  cardholderName,
+  cardNumber,
+  cardExpiredDate,
+  cardCVV,
+  setInputErrors,
+}: cardValidationFuncProps): boolean => {
+  let valid = true;
+
+  if (!cardholderName) {
+    setInputErrors((pre: object) => ({ ...pre, name: true }));
+    valid = false;
+  }
+  if (!cardNumber) {
+    setInputErrors((pre: object) => ({ ...pre, number: true }));
+    valid = false;
+  }
+  if (!cardExpiredDate) {
+    setInputErrors((pre: object) => ({ ...pre, expiry: true }));
+    valid = false;
+  }
+  if (!cardCVV) {
+    setInputErrors((pre: object) => ({ ...pre, cvv: true }));
+    valid = false;
+  }
+
+  return valid;
 };

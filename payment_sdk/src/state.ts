@@ -16,6 +16,7 @@ import {
  */
 
 export const Actions = {
+  RESET_STATES: "RESET_STATES",
   SET_CARDHOLDER_NAME: "SET_CARDHOLDER_NAME",
   SET_CARD_NUMBER: "SET_CARD_NUMBER",
   SET_PAYMENT_OPTION: "SET_PAYMENT_OPTION",
@@ -25,6 +26,7 @@ export const Actions = {
   SET_LOADING: "SET_LOADING",
   SET_CURRENCY: "SET_CURRENCY",
   SET_AMOUNT: "SET_AMOUNT",
+  SET_PAYMENT_STATE: "SET_PAYMENT_STATE",
   SESSION_PAY: "SESSION_PAY",
 };
 
@@ -40,7 +42,12 @@ export function reducer(state: State, action: ActionType) {
     case Actions.SET_PAYMENT_OPTION:
       return {
         ...state,
-        paymentType: action.type as PaymentType,
+        paymentType: action.payload as PaymentType,
+      };
+    case Actions.RESET_STATES:
+      return {
+        ...state,
+        ...action.payload,
       };
     case Actions.SET_LOADING:
       return {
@@ -70,7 +77,7 @@ export function reducer(state: State, action: ActionType) {
     case Actions.SET_WEBVIEW_LINK:
       return {
         ...state,
-        webViewLink: action.payload,
+        webViewData: action.payload,
       };
     case Actions.SESSION_PAY:
       return {
@@ -86,6 +93,11 @@ export function reducer(state: State, action: ActionType) {
       return {
         ...state,
         currency: action.payload,
+      };
+    case Actions.SET_PAYMENT_STATE:
+      return {
+        ...state,
+        paymentState: action.payload,
       };
     default:
       throw new Error();
