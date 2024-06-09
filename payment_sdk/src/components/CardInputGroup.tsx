@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import React, { memo, useContext, useEffect, useRef } from "react";
 
 import Input from "./Input";
+import ScanCardButton from "./ScanCardButton";
 import { Actions, DispatchContext, StateContext } from "../state";
 import { isCardNumberValid, validateCardExpiry } from "../util/validator";
 import { formatCreditCardNumber, formatExpiry } from "../util/helpers";
@@ -21,7 +22,10 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
 
   return (
     <View style={styles.parentContainer}>
-      <Text style={styles.label}>Card Number</Text>
+      <View style={styles.titleScanRow}>
+        <Text style={styles.label}>Card Number</Text>
+        <ScanCardButton />
+      </View>
       <View style={styles.container}>
         <View style={styles.cardNumberRow}>
           <Input
@@ -126,4 +130,10 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 0,
     borderBottomLeftRadius: 0,
   },
+  titleScanRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  }
 });
