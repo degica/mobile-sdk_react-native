@@ -1,6 +1,9 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 
+// When press the scan card button it will open the camera and scan the card,
+// without manually typing the card number, this will automaticaly fill in the 
+// card field
 const ScanCardButton = () => {
   return (
     <TouchableOpacity
