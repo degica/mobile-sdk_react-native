@@ -19,7 +19,6 @@ import {
   TokenResponseStatuses,
   webViewDataInitialState,
 } from "./util/types";
-import { PaymentSheetRefProps } from "./components/PaymentSheet";
 
 import { Actions, DispatchContext, KomojuContext } from "./state";
 import StateProvider from "./components/paymentState/stateProvider";
@@ -29,9 +28,9 @@ import { validateSessionResponse } from "./util/validator";
 import secureTokenService, {
   checkSecureTokenStatus,
 } from "./services/secureTokenService";
-import { parameterName } from "./util/constants";
+import { sessionParameterName, tokenParameterName } from "./util/constants";
 import paymentService from "./services/paymentService";
-import Sheet from "./components/Sheet";
+import Sheet, { SheetRefProps } from "./components/Sheet";
 
 type KomojuProviderIprops = {
   children?: ReactNode | ReactNode[];
@@ -53,7 +52,11 @@ export const KomojuProvider = (props: KomojuProviderIprops) => {
 export const MainStateProvider = (props: KomojuProviderIprops) => {
   const dispatch = useContext(DispatchContext);
 
-  const sheetRef = useRef<PaymentSheetRefProps>(null);
+  const sheetRef = useRef<SheetRefProps>(null);
+  // ref to hold client provided onDismiss callback
+  const onDismissCallback = useRef(null);
+  // ref to hold client provided session Id
+  const sessionIdRef = useRef("");
 
   // when payment is success global state is rest and invoking the success screen
   const onPaymentSuccess = () => {
@@ -73,6 +76,20 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
       type: Actions.SET_PAYMENT_STATE,
       payload: ResponseScreenStatuses.FAILED,
     });
+
+  const onUserCancel = async () => {
+    if (onDismissCallback.current) {
+      const sessionShowPayload = {
+        publicKey: props?.publicKey,
+        sessionId: sessionIdRef.current,
+      };
+
+      // fetch session status to check if the payment is completed
+      let sessionResponse = await sessionShow(sessionShowPayload);
+      // invoking client provided onDismiss callback
+      onDismissCallback.current(sessionResponse);
+    }
+  };
 
   // showing overlay loading indicator disabling all interactions
   const startLoading = () =>
@@ -100,7 +117,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
 
     // validating the session data and closing the payment gateway if data is not valid
     if (validateSessionResponse(sessionData)) {
-      sheetRef?.current?.close();
+      sheetRef?.current?.close(false);
       Alert.alert("Error", "Session expired");
     } else {
       // if session is valid setting amount, currency type at global store for future use
@@ -125,8 +142,11 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
         const { url } = newNavState;
         if (!url) return;
 
-        // Check if URL includes secure_token_id=
-        if (url.includes(parameterName)) {
+        // Check if its credit card method URL includes secure_token_id=
+        if (
+          url.includes(tokenParameterName) &&
+          paymentType === PaymentType.CREDIT
+        ) {
           // CLose web view and start loading
           dispatch({
             type: Actions.SET_WEBVIEW_LINK,
@@ -159,18 +179,17 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
               TokenResponseStatuses.SUCCESS
             ) {
               onPaymentSuccess();
+              // calling user passed onComplete method with session response data
+              onComplete && onComplete(sessionResponse);
             } else {
               onPaymentFailed();
             }
-
-            // calling user passed onComplete method with session response data
-            onComplete && onComplete(sessionResponse);
           } else {
             //This is for manual 3D secure token handling flow
 
             // getting secure_token_id parameter from the web view URL
             const token = url.substring(
-              url.indexOf(parameterName) + parameterName.length
+              url.indexOf(tokenParameterName) + tokenParameterName.length
             );
 
             // checking token status if the 3D secure has passed
@@ -207,6 +226,34 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
 
           // after all api calls are done stopping the loading indicator
           stopLoading();
+
+          // if paypay payment method web view redirection flow
+        } else if (
+          url.includes(sessionParameterName) &&
+          paymentType === PaymentType.PAY_PAY
+        ) {
+          // if this is a session flow, check until session response changes from 'pending' to 'completed' or 'error'
+          const sessionShowPayload = {
+            publicKey: props.publicKey,
+            sessionId: sessionId,
+          };
+
+          // fetch session status to check if the payment is completed
+          let sessionResponse = await sessionShow(sessionShowPayload);
+
+          // Polling until session verification status changes
+          while (sessionResponse?.status === PaymentStatuses.PENDING) {
+            sessionResponse = await sessionShow(sessionShowPayload);
+          }
+
+          // if payment success showing success screen or if failed showing error screen
+          if (sessionResponse?.status === PaymentStatuses.SUCCESS) {
+            onPaymentSuccess();
+            // calling user passed onComplete method with session response data
+            onComplete && onComplete(sessionResponse);
+          } else {
+            onPaymentFailed();
+          }
         }
       };
 
@@ -271,6 +318,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
     ({
       sessionId,
       onComplete,
+      onDismiss,
       secretKey,
       enablePayWithoutSession,
     }: CreatePaymentFuncType) => {
@@ -278,6 +326,11 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
         type: Actions.RESET_STATES,
         payload: initialState,
       });
+
+      // setting client provided onDismiss callback into a ref
+      onDismissCallback.current = onDismiss;
+      // setting client provided session Id and into a ref
+      sessionIdRef.current = sessionId;
 
       if (!enablePayWithoutSession) validateSession(sessionId);
 
@@ -302,7 +355,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
   const initializeKomoju = useCallback((params: InitPrams) => {}, []);
 
   const renderPaymentUI = useMemo(() => {
-    const UI = <Sheet ref={sheetRef} />;
+    const UI = <Sheet ref={sheetRef} onDismiss={onUserCancel} />;
     return UI;
   }, [sheetRef]);
 

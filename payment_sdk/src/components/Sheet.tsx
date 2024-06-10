@@ -5,6 +5,7 @@ import React, {
   useContext,
 } from "react";
 import {
+  Alert,
   Dimensions,
   Image,
   StyleSheet,
@@ -14,6 +15,7 @@ import {
 } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
+  runOnJS,
   useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
@@ -35,6 +37,7 @@ const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 50;
 type SheetProps = {
   children?: React.ReactNode;
   swipeClose?: boolean;
+  onDismiss?: () => void;
 };
 
 export type SheetRefProps = {
@@ -44,7 +47,7 @@ export type SheetRefProps = {
 };
 
 const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
-  { children, swipeClose },
+  { swipeClose, onDismiss },
   ref
 ) => {
   const { paymentState } = useContext(StateContext);
@@ -64,15 +67,38 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
     return active.value;
   }, []);
 
+  const closeSheet = (showAlert = true) => {
+    if (showAlert) {
+      // showing an alert when user try to close the SDK modal
+      Alert.alert("Cancel Payment?", "", [
+        {
+          text: "No",
+          onPress: () => scrollTo(MAX_TRANSLATE_Y + 50),
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          onPress: () => {
+            // invoking client provided onDismiss() callback when closing the SDK modal
+            onDismiss && onDismiss();
+            scrollTo(0);
+          },
+        },
+      ]);
+    } else {
+      // invoking client provided callback when closing the SDK modal
+      onDismiss && onDismiss();
+      scrollTo(0);
+    }
+  };
+
   useImperativeHandle(
     ref,
     () => ({
       open: () => {
         scrollTo(MAX_TRANSLATE_Y + 50);
       },
-      close: () => {
-        scrollTo(0);
-      },
+      close: closeSheet,
       scrollTo,
       isActive,
     }),
@@ -90,7 +116,7 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
     })
     .onEnd(() => {
       if (translateY.value > -SCREEN_HEIGHT / 1) {
-        scrollTo(0);
+        runOnJS(closeSheet)(paymentState !== ResponseScreenStatuses.SUCCESS);
       } else if (translateY.value < -SCREEN_HEIGHT / 1.5) {
         scrollTo(MAX_TRANSLATE_Y);
       }
@@ -128,7 +154,7 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
   const ctaOnPress = () => {
     switch (paymentState) {
       case ResponseScreenStatuses.SUCCESS:
-        return scrollTo(0);
+        return closeSheet(false);
       case ResponseScreenStatuses.FAILED:
         return dispatch({
           type: Actions.SET_PAYMENT_STATE,
@@ -143,7 +169,7 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
     <>
       <Animated.View
         onTouchStart={() => {
-          swipeClose ? scrollTo(0) : null;
+          swipeClose ? closeSheet(false) : null;
         }}
         animatedProps={rBackdropProps}
         style={[styles.backDrop, rBackdropStyle]}
@@ -157,7 +183,9 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
               ) : null}
               <TouchableOpacity
                 style={styles.crossBtn}
-                onPress={() => scrollTo(0)}
+                onPress={() =>
+                  closeSheet(paymentState !== ResponseScreenStatuses.SUCCESS)
+                }
               >
                 <Image source={closeIcon} />
               </TouchableOpacity>
