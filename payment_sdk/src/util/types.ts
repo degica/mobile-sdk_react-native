@@ -7,6 +7,7 @@ export type CreatePaymentFuncType = {
   sessionId: string;
   secretKey?: string;
   onComplete?: (response: any) => void; // callback when transaction is complete status is passed as a prop
+  onDismiss?: (response: any) => void; // callback when user closes the SDK modal
   enablePayWithoutSession?: boolean;
 };
 

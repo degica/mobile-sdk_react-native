@@ -34,6 +34,7 @@ const PaymentScreen = () => {
       createPayment({
         sessionId,
         onComplete: onPaymentComplete,
+        onDismiss: onPaymentComplete,
       });
   };
 
@@ -41,6 +42,7 @@ const PaymentScreen = () => {
     createPayment({
       sessionId: '',
       onComplete: onPaymentComplete,
+      onDismiss: onPaymentComplete,
       secretKey: SECRET_KEY,
       enablePayWithoutSession: true,
     });
@@ -48,7 +50,7 @@ const PaymentScreen = () => {
 
   // when the payment is complete pass a callback to get the final results of response
   const onPaymentComplete = (response: any) => {
-    console.log(response);
+    console.log(`Transaction Status: ${response?.status}`);
     setAmount('');
   };
 
