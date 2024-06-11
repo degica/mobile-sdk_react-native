@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { memo, useContext, useEffect, useRef } from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
+import React, { memo, useContext, useEffect, useRef, useState } from "react";
 
 import Input from "./Input";
 import ScanCardButton from "./ScanCardButton";
 import { Actions, DispatchContext, StateContext } from "../state";
 import { isCardNumberValid, validateCardExpiry } from "../util/validator";
-import { formatCreditCardNumber, formatExpiry } from "../util/helpers";
+import { determineCardType, formatCreditCardNumber, formatExpiry } from "../util/helpers";
 
 type Props = {
   inputErrors: {
@@ -18,6 +18,7 @@ type Props = {
 
 const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
   const dispatch = useContext(DispatchContext);
+  const [cardType, setCardType] = useState<string | null>(null);
   const { cardCVV, cardNumber, cardExpiredDate } = useContext(StateContext);
 
   return (
@@ -40,11 +41,28 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
                   type: Actions.SET_CARD_NUMBER,
                   payload: derivedText,
                 });
+                // Determine card type and set it
+                const type = determineCardType(text);
+                setCardType(type);
               }
             }}
             inputStyle={styles.numberInputStyle}
             error={inputErrors.number}
           />
+          <View style={styles.cardContainer}>
+            <Image
+              source={require('../assets/images/visa.png')}
+              style={{
+                ...styles.cardImage,
+                opacity: cardType === 'visa' ? 1 : 0.4
+              }} />
+            <Image
+              source={require('../assets/images/master.png')}
+              style={{
+                ...styles.cardImage,
+                opacity: cardType === 'master' ? 1 : 0.4
+              }} />
+          </View>
         </View>
         <View style={styles.splitRow}>
           <View style={styles.itemRow}>
@@ -135,5 +153,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 8,
-  }
+  },
+  cardContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    position: 'absolute',
+    top: 15,
+    right: 0,
+    marginRight: 8,
+  },
+  cardImage: {
+    width: 26,
+    marginRight: 8,
+  },
 });
