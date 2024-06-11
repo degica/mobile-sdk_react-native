@@ -121,6 +121,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     minHeight: 100,
+    zIndex: -100,
   },
   currencyRow: {
     flexDirection: 'row',

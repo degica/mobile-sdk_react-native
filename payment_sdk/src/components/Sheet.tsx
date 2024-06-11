@@ -1,8 +1,10 @@
 import React, {
   useCallback,
   useImperativeHandle,
-  ForwardRefRenderFunction,
   useContext,
+  useRef,
+  useEffect,
+  ForwardRefRenderFunction,
 } from "react";
 import {
   Alert,
@@ -12,16 +14,9 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Animated as RNAnimated,
+  PanResponder,
 } from "react-native";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import Animated, {
-  runOnJS,
-  useAnimatedProps,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  withTiming,
-} from "react-native-reanimated";
 import ResponseScreen from "./ResponseScreen";
 import { Actions, DispatchContext, StateContext } from "../state";
 import SheetContent from "./SheetContent";
@@ -50,21 +45,46 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
   { swipeClose, onDismiss },
   ref
 ) => {
+  const translateY = useRef(new RNAnimated.Value(0)).current;
+  const active = useRef(new RNAnimated.Value(0)).current;
+  const context = useRef(new RNAnimated.Value(0)).current;
+
+  const activeState = useRef(false);
+  const translateYState = useRef(0);
+  const contextState = useRef(0);
+
   const { paymentState } = useContext(StateContext);
   const dispatch = useContext(DispatchContext);
 
-  const translateY = useSharedValue(0);
-  const active = useSharedValue(false);
+  useEffect(() => {
+    const yListener = translateY.addListener(({ value }) => {
+      translateYState.current = value;
+    });
+    const activeListener = active.addListener(({ value }) => {
+      activeState.current = value === 1;
+    });
+    const contextID = context.addListener(({ value }) => {
+      contextState.current = value;
+    });
+    return () => {
+      translateY.removeListener(yListener);
+      active.removeListener(activeListener);
+      context.removeListener(contextID);
+    };
+  }, []);
 
   const scrollTo = useCallback((destination: number) => {
-    "worklet";
-    active.value = destination !== 0;
-
-    translateY.value = withSpring(destination, { damping: 50 });
+    active.setValue(destination !== 0 ? 1 : 0);
+    RNAnimated.spring(translateY, {
+      toValue: destination,
+      friction: 10,
+      tension: 10,
+      useNativeDriver: true,
+    }).start();
   }, []);
 
   const isActive = useCallback(() => {
-    return active.value;
+    return activeState.current;
   }, []);
 
   const closeSheet = (showAlert = true) => {
@@ -105,40 +125,25 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
     [scrollTo, isActive]
   );
 
-  const context = useSharedValue({ y: 0 });
-  const gesture = Gesture.Pan()
-    .onStart(() => {
-      context.value = { y: translateY.value };
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {
+        context.setValue(translateYState.current);
+      },
+      onPanResponderMove: (event, gestureState) => {
+        const totalYMovement = gestureState.dy + contextState.current;
+        translateY.setValue(Math.max(totalYMovement, MAX_TRANSLATE_Y + 50));
+      },
+      onPanResponderRelease: () => {
+        if (translateYState.current > -SCREEN_HEIGHT / 1.5) {
+          closeSheet(false);
+        } else if (translateYState.current < -SCREEN_HEIGHT / 1.5) {
+          scrollTo(MAX_TRANSLATE_Y + 50);
+        }
+      },
     })
-    .onUpdate((event) => {
-      translateY.value = event.translationY + context.value.y;
-      translateY.value = Math.max(translateY.value, MAX_TRANSLATE_Y + 50);
-    })
-    .onEnd(() => {
-      if (translateY.value > -SCREEN_HEIGHT / 1) {
-        runOnJS(closeSheet)(paymentState !== ResponseScreenStatuses.SUCCESS);
-      } else if (translateY.value < -SCREEN_HEIGHT / 1.5) {
-        scrollTo(MAX_TRANSLATE_Y);
-      }
-    });
-
-  const rSheetStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateY: translateY.value }],
-    };
-  });
-
-  const rBackdropStyle = useAnimatedStyle(() => {
-    return {
-      opacity: withTiming(active.value ? 1 : 0),
-    };
-  }, []);
-
-  const rBackdropProps = useAnimatedProps(() => {
-    return {
-      pointerEvents: active.value ? "auto" : "none",
-    } as any;
-  }, []);
+  ).current;
 
   const getCtaText = () => {
     switch (paymentState) {
@@ -167,31 +172,33 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
 
   return (
     <>
-      <Animated.View
+      <RNAnimated.View
         onTouchStart={() => {
-          swipeClose ? closeSheet(false) : null;
+          if (swipeClose) closeSheet(false);
         }}
-        animatedProps={rBackdropProps}
-        style={[styles.backDrop, rBackdropStyle]}
+        pointerEvents="none"
+        style={[styles.backDrop, { opacity: active }]}
       />
-      <Animated.View style={[styles.bottomSheetContainer, rSheetStyle]}>
-        <GestureDetector gesture={gesture}>
-          <Animated.View>
-            <View style={styles.line}>
-              {!paymentState ? (
-                <Text style={styles.headerLabel}>Payment Options</Text>
-              ) : null}
-              <TouchableOpacity
-                style={styles.crossBtn}
-                onPress={() =>
-                  closeSheet(paymentState !== ResponseScreenStatuses.SUCCESS)
-                }
-              >
-                <Image source={closeIcon} />
-              </TouchableOpacity>
-            </View>
-          </Animated.View>
-        </GestureDetector>
+      <RNAnimated.View
+        style={[
+          styles.bottomSheetContainer,
+          { transform: [{ translateY: translateY }] },
+        ]}
+        {...panResponder.panHandlers}
+      >
+        <View>
+          <View style={styles.line}>
+            <Text style={styles.headerLabel}>Payment Options</Text>
+            <TouchableOpacity
+              style={styles.crossBtn}
+              onPress={() =>
+                closeSheet(paymentState !== ResponseScreenStatuses.SUCCESS)
+              }
+            >
+              <Image source={closeIcon} />
+            </TouchableOpacity>
+          </View>
+        </View>
         {paymentState ? (
           <ResponseScreen
             status={paymentState}
@@ -201,7 +208,7 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
         ) : (
           <SheetContent />
         )}
-      </Animated.View>
+      </RNAnimated.View>
     </>
   );
 };
