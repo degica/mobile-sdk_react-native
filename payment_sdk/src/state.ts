@@ -22,10 +22,14 @@ export const Actions = {
   SET_PAYMENT_OPTION: "SET_PAYMENT_OPTION",
   SET_CARD_EXPIRED_DATE: "SET_CARD_EXPIRED_DATE",
   SET_CARD_CVV: "SET_CARD_CVV",
+  SET_NAME: "SET_NAME",
+  SET_EMAIL: "SET_EMAIL",
   SET_WEBVIEW_LINK: "SET_WEBVIEW_LINK",
   SET_LOADING: "SET_LOADING",
   SET_CURRENCY: "SET_CURRENCY",
   SET_AMOUNT: "SET_AMOUNT",
+  SET_KONBINI_BRANDS: "SET_KONBINI_BRANDS",
+  SET_SELECTED_STORE: "SET_SELECTED_STORE",
   SET_PAYMENT_STATE: "SET_PAYMENT_STATE",
   SESSION_PAY: "SESSION_PAY",
 };
@@ -74,6 +78,16 @@ export function reducer(state: State, action: ActionType) {
         ...state,
         cardCVV: action.payload,
       };
+    case Actions.SET_NAME:
+      return {
+        ...state,
+        name: action.payload,
+      };
+    case Actions.SET_EMAIL:
+      return {
+        ...state,
+        email: action.payload,
+      };
     case Actions.SET_WEBVIEW_LINK:
       return {
         ...state,
@@ -93,6 +107,16 @@ export function reducer(state: State, action: ActionType) {
       return {
         ...state,
         currency: action.payload,
+      };
+    case Actions.SET_KONBINI_BRANDS:
+      return {
+        ...state,
+        konbiniBrands: action.payload,
+      };
+    case Actions.SET_SELECTED_STORE:
+      return {
+        ...state,
+        selectedStore: action.payload,
       };
     case Actions.SET_PAYMENT_STATE:
       return {

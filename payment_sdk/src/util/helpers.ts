@@ -1,4 +1,4 @@
-import { CurrencySign, CurrencyTypes } from "./types";
+import { brandsType, CurrencySign, CurrencyTypes } from "./types";
 
 export const isDevApp = __DEV__;
 
@@ -90,4 +90,20 @@ export const formatCurrency = ({
     amount = (Number(amount) * 0.01).toFixed(2);
 
   return `${sign}${amount}`;
+};
+
+// method to convert konbini payment list brands object to a array of brand type and icon
+export const parseBrands = (obj: { [key: string]: brandsType }) => {
+  // Initialize an empty array to store the converted objects
+  let result = [];
+
+  // Iterate over the keys of the input object
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      // Create a new object with 'type' as the key and 'icon' as the value
+      result.push({ type: key, icon: obj[key].icon });
+    }
+  }
+
+  return result;
 };

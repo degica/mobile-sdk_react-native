@@ -8,3 +8,5 @@ export const sessionParameterName = "sessions";
 
 export const paymentSuccessCtaText = "Back to store";
 export const paymentFailedCtaText = "Update payment method";
+
+export const emailRegex = /^[a-zA-Z0–9._-]+@[a-zA-Z0–9.-]+\.[a-zA-Z]{2,4}$/;

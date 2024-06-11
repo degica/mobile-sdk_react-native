@@ -12,6 +12,7 @@ import {
   initialState,
   InitPrams,
   newNavStateProps,
+  paymentMethodsType,
   PaymentStatuses,
   PaymentType,
   ResponseScreenStatuses,
@@ -31,6 +32,7 @@ import secureTokenService, {
 import { sessionParameterName, tokenParameterName } from "./util/constants";
 import paymentService from "./services/paymentService";
 import Sheet, { SheetRefProps } from "./components/Sheet";
+import { parseBrands } from "./util/helpers";
 
 type KomojuProviderIprops = {
   children?: ReactNode | ReactNode[];
@@ -120,9 +122,19 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
       sheetRef?.current?.close(false);
       Alert.alert("Error", "Session expired");
     } else {
+      // select konbini payment method from all payment methods
+      const konbiniPaymentMethodData = sessionData?.payment_methods?.find(
+        (method: paymentMethodsType) => method?.type === PaymentType.KONBINI
+      );
+
       // if session is valid setting amount, currency type at global store for future use
       dispatch({ type: Actions.SET_AMOUNT, payload: sessionData?.amount });
       dispatch({ type: Actions.SET_CURRENCY, payload: sessionData?.currency });
+      // set available konbini stores in konbini brands state
+      dispatch({
+        type: Actions.SET_KONBINI_BRANDS,
+        payload: parseBrands(konbiniPaymentMethodData?.brands),
+      });
     }
     stopLoading();
   };
@@ -134,7 +146,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
     enablePayWithoutSession = false,
     secretKey,
   }: CreatePaymentFuncType) => {
-    return async ({ paymentType, cardDetails }: sessionPayProps) => {
+    return async ({ paymentType, paymentDetails }: sessionPayProps) => {
       // This callback method is used to intercept Web View urls
       const handleWebViewNavigationStateChange = async (
         newNavState: newNavStateProps
@@ -264,7 +276,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
       // Check if user wants manual 3D secure and is credit card payment method selected
       if (paymentType === PaymentType.CREDIT && enablePayWithoutSession) {
         const response = await secureTokenService({
-          cardDetails,
+          paymentDetails,
           secretKey,
         });
 
@@ -293,7 +305,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
         paymentType,
         sessionId,
         publicKey: props.publicKey,
-        cardDetails,
+        paymentDetails,
       });
 
       stopLoading();

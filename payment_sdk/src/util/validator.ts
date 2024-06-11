@@ -1,4 +1,10 @@
-import { cardValidationFuncProps, PaymentStatuses } from "./types";
+import { emailRegex } from "./constants";
+import {
+  cardValidationFuncProps,
+  konbiniValidationFuncProps,
+  PaymentStatuses,
+  SessionShowResponseType,
+} from "./types";
 
 const MAX_CARD_LENGTH = 16;
 
@@ -62,7 +68,9 @@ export const validateCardExpiry = (expiry: string) => {
   }
 };
 
-export const validateSessionResponse = (sessionData: any) => {
+export const validateSessionResponse = (
+  sessionData: SessionShowResponseType | null
+) => {
   return (
     !sessionData ||
     sessionData?.error ||
@@ -99,4 +107,27 @@ export const validateCardFormFields = ({
   }
 
   return valid;
+};
+
+export const validateKonbiniFormFields = ({
+  name,
+  email,
+  setInputErrors,
+}: konbiniValidationFuncProps): boolean => {
+  let valid = true;
+
+  if (!name) {
+    setInputErrors((pre: object) => ({ ...pre, name: true }));
+    valid = false;
+  }
+  if (!email || !validateEmail(email)) {
+    setInputErrors((pre: object) => ({ ...pre, email: true }));
+    valid = false;
+  }
+
+  return valid;
+};
+
+export const validateEmail = (email: string) => {
+  return emailRegex.test(email);
 };

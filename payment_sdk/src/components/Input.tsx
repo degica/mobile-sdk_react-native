@@ -19,6 +19,7 @@ const Input: React.FC<InputProps> = ({
   placeholder,
   testID,
   error = false,
+  ...rest
 }: InputProps) => {
   return (
     <View>
@@ -34,6 +35,7 @@ const Input: React.FC<InputProps> = ({
           inputStyle,
         ]}
         testID={testID}
+        {...rest}
       />
     </View>
   );

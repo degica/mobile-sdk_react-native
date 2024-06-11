@@ -52,7 +52,12 @@ const CardSection = (): JSX.Element => {
     if (isValid) {
       sessionPay({
         paymentType: PaymentType.CREDIT,
-        cardDetails: { cardholderName, cardCVV, cardNumber, cardExpiredDate },
+        paymentDetails: {
+          cardholderName,
+          cardCVV,
+          cardNumber,
+          cardExpiredDate,
+        },
       });
     }
   };

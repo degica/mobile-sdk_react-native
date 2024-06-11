@@ -1,26 +1,35 @@
-import React from 'react';
+import React, { ReactNode } from "react";
 import {
-  View,
   Text,
   StyleSheet,
   Dimensions,
   TouchableOpacity,
   Image,
-} from 'react-native';
+  ImageSourcePropType,
+} from "react-native";
 
 interface PillProps {
   label: string;
-  icon: any;
+  icon?: ImageSourcePropType;
+  image?: ReactNode;
   onPress: () => void;
   isSelected?: boolean;
 }
 
-const Pill: React.FC<PillProps> = ({label, icon, onPress, isSelected}) => {
+const Pill: React.FC<PillProps> = ({
+  label,
+  icon,
+  image,
+  onPress,
+  isSelected,
+}) => {
   return (
     <TouchableOpacity
       style={[styles.pill, isSelected && styles.activeDeco]}
-      onPress={onPress}>
-      <Image style={styles.icon} source={icon} />
+      onPress={onPress}
+    >
+      {image ? image : <Image style={styles.icon} source={icon} />}
+
       <Text style={styles.label}>{label}</Text>
     </TouchableOpacity>
   );
@@ -28,9 +37,9 @@ const Pill: React.FC<PillProps> = ({label, icon, onPress, isSelected}) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     padding: 16,
   },
   pill: {
@@ -38,25 +47,25 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 8,
     height: 82,
-    backgroundColor: 'white',
-    borderColor: '#CAD6E1',
+    backgroundColor: "white",
+    borderColor: "#CAD6E1",
     borderWidth: 1,
-    width: (Dimensions.get('window').width - 32) / 3,
+    width: (Dimensions.get("window").width - 32) / 3,
     marginRight: 8,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-evenly",
   },
   icon: {
     marginRight: 8,
   },
   label: {
     fontSize: 16,
-    color: '#172E44',
-    fontWeight: '500',
+    color: "#172E44",
+    fontWeight: "500",
   },
   activeDeco: {
-    borderColor: '#172E44',
+    borderColor: "#172E44",
   },
 });
 

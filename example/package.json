@@ -15,6 +15,7 @@
     "react-native-gesture-handler": "^2.16.2",
     "react-native-komoju": "../payment_sdk",
     "react-native-reanimated": "^3.11.0",
+    "react-native-svg": "^15.3.0",
     "react-native-webview": "^13.10.2"
   },
   "devDependencies": {

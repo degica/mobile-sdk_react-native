@@ -9,6 +9,7 @@ import { Actions, DispatchContext, StateContext } from "../state";
 import Loader from "./Loader";
 import SheetFooter from "./sections/SheetFooter";
 import { PaymentType } from "../util/types";
+import KonbiniSection from "./sections/KonbiniSection";
 
 const SheetContent = () => {
   const { paymentType, webViewData, loading } = useContext(StateContext);
@@ -52,6 +53,7 @@ const SheetContent = () => {
         <PillContainer onSelect={handlePillSelect} selectedItem={paymentType} />
         {paymentType === PaymentType.CREDIT && <CardSection />}
         {paymentType === PaymentType.PAY_PAY && <PayPaySection />}
+        {paymentType === PaymentType.KONBINI && <KonbiniSection />}
         {renderLoading}
       </ScrollView>
       <SheetFooter />
