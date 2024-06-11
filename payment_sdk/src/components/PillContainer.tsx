@@ -1,7 +1,6 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, FlatList } from "react-native";
 import Pill from "./Pill";
-import { FlatList } from "react-native-gesture-handler";
 import { PaymentType } from "../util/types";
 
 type Props = {
