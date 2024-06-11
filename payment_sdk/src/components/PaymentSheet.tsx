@@ -1,5 +1,4 @@
 import React, { useRef, forwardRef, useImperativeHandle } from "react";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StyleSheet } from "react-native";
 
 import Sheet, { SheetRefProps } from "./Sheet";
