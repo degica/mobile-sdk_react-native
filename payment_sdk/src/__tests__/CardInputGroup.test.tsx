@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 
-import { formatCreditCardNumber, formatExpiry } from "../util/helpers";
+import { determineCardType, formatCreditCardNumber, formatExpiry } from "../util/helpers";
 import { Actions, DispatchContext, StateContext } from "../state";
 import CardInputGroup from "../components/CardInputGroup";
 import { isCardNumberValid, validateCardExpiry } from "../util/validator";
@@ -9,6 +9,7 @@ import { isCardNumberValid, validateCardExpiry } from "../util/validator";
 // Mock helper functions
 jest.mock("../util/helpers", () => ({
   formatCreditCardNumber: jest.fn(),
+  determineCardType: jest.fn(),
   formatExpiry: jest.fn(),
 }));
 
@@ -71,6 +72,7 @@ describe("CardInputGroup Component", () => {
   it("updates card number when valid and dispatches action", () => {
     isCardNumberValid.mockReturnValue(true);
     formatCreditCardNumber.mockReturnValue("1234 1234 1234 1234");
+    determineCardType.mockReturnValue("visa");
 
     const { getByTestId } = renderWithContext(
       <CardInputGroup
