@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   contentContainer: {
-    paddingLeft: 8,
+    paddingLeft: 16,
   },
 });
 

@@ -135,10 +135,11 @@ const styles = StyleSheet.create({
     height: 50,
   },
   shopListContainer: {
-    marginBottom: 16,
+    marginBottom: 26,
+    marginTop: 16,
   },
   contentContainer: {
-    paddingLeft: 8,
+    paddingLeft: 16,
   },
   iconStyle: {
     width: 32,
