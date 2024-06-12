@@ -107,3 +107,24 @@ export const parseBrands = (obj: { [key: string]: brandsType }) => {
 
   return result;
 };
+
+// Determine the card type based on the card number
+export const determineCardType = (cardNumber: string): string | null => {
+  const firstDigit = cardNumber[0];
+  const firstTwoDigits = parseInt(cardNumber.substring(0, 2));
+  const firstFourDigits = parseInt(cardNumber.substring(0, 4));
+
+  // Check if the card number is a visa card
+  if (firstDigit === "4") {
+    return "visa";
+    // Check if the card number is a master card
+  } else if (
+    (firstTwoDigits >= 51 && firstTwoDigits <= 55) ||
+    (firstFourDigits >= 2221 && firstFourDigits <= 2720)
+  ) {
+    return "master";
+  }
+
+  // Return null if the card type is not on both visa and master
+  return null;
+};

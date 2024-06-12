@@ -1,4 +1,4 @@
-import { formatCreditCardNumber, formatExpiry } from "../util/helpers";
+import { determineCardType, formatCreditCardNumber, formatExpiry } from "../util/helpers";
 import { isCardNumberValid, validateCardExpiry } from "../util/validator";
 
 describe("Credit Card number validation", () => {
@@ -27,5 +27,17 @@ describe("Expiry validation", () => {
 
   it("Given a  expiry date before current year should return false", () => {
     expect(isCardNumberValid("0204")).toBeFalsy();
+  });
+});
+
+describe("determineCardType", () => {
+  it("returns 'visa' for a visa card number", () => {
+    expect(determineCardType("4111111111111111")).toBe("visa");
+  });
+  it("returns 'master' for a master card number", () => {
+    expect(determineCardType("5555555555554444")).toBe("master");
+  });
+  it("returns null for an unknown card number", () => {
+    expect(determineCardType("1234567890123456")).toBeNull();
   });
 });
