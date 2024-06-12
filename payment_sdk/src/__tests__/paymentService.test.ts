@@ -8,7 +8,7 @@ const paymentDetails = {
   publicKey: "samplepublickKey",
   sessionId: "sessionID123",
   paymentType: PaymentType.CREDIT,
-  cardDetails: {
+  paymentDetails: {
     cardholderName: "John Doe",
     cardNumber: "1234 5678 9012 3456",
     cardExpiredDate: "12/25",

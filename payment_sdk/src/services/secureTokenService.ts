@@ -1,13 +1,13 @@
-import { BASE_URL } from "../util/constants";
+import { BASE_URL_API } from "../util/constants";
 import { getMonthYearFromExpiry, printLog } from "../util/helpers";
 
-const secureTokenService = async ({ cardDetails, secretKey }: any) => {
+const secureTokenService = async ({ paymentDetails, secretKey }: any) => {
   try {
-    const url = `${BASE_URL}/secure_tokens`;
+    const url = `${BASE_URL_API}/secure_tokens`;
 
-    const number = cardDetails?.cardNumber.replaceAll(" ", "");
+    const number = paymentDetails?.cardNumber.replaceAll(" ", "");
     const { month, year } = getMonthYearFromExpiry(
-      cardDetails?.cardExpiredDate || ""
+      paymentDetails?.cardExpiredDate || ""
     );
     const options = {
       method: "POST",
@@ -25,8 +25,8 @@ const secureTokenService = async ({ cardDetails, secretKey }: any) => {
           number,
           month,
           year,
-          verification_value: cardDetails?.cardCVV,
-          name: cardDetails?.cardholderName,
+          verification_value: paymentDetails?.cardCVV,
+          name: paymentDetails?.cardholderName,
         },
       }),
     };
@@ -52,7 +52,7 @@ export const checkSecureTokenStatus = async ({
   secretKey: string;
 }) => {
   try {
-    const url = `${BASE_URL}/secure_tokens/${token}`;
+    const url = `${BASE_URL_API}/secure_tokens/${token}`;
 
     const options = {
       method: "GET",

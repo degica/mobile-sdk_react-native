@@ -1,6 +1,10 @@
-import { BASE_URL } from "../util/constants";
+import { BASE_URL_API } from "../util/constants";
 import { getMonthYearFromExpiry, printLog } from "../util/helpers";
-import { payForSessionProps, PaymentType } from "../util/types";
+import {
+  payForSessionProps,
+  PaymentType,
+  SessionPayResponseType,
+} from "../util/types";
 
 /**
  * Processes a payment for a given session.
@@ -8,11 +12,13 @@ import { payForSessionProps, PaymentType } from "../util/types";
  * @param {string} params.publicKey - The public key for authorization.
  * @param {string} params.sessionId - The session ID for the payment.
  * @param {PaymentType} params.paymentType - The type of payment to process.
- * @param {object} params.cardDetails - The details of the card for credit card payments.
- * @param {string} params.cardDetails.cardholderName - The name of the cardholder.
- * @param {string} params.cardDetails.cardNumber - The card number.
- * @param {string} params.cardDetails.cardExpiredDate - The expiration date of the card.
- * @param {string} params.cardDetails.cardCVV - The CVV of the card.
+ * @param {object} params.paymentDetails - The details of the relevant payment type.
+ * @param {string} params.paymentDetails.cardholderName - The name of the cardholder.
+ * @param {string} params.paymentDetails.cardNumber - The card number.
+ * @param {string} params.paymentDetails.cardExpiredDate - The expiration date of the card.
+ * @param {string} params.paymentDetails.cardCVV - The CVV of the card.
+ * @param {string} params.paymentDetails.name - The Name on the receipt in Konbini payment.
+ * @param {string} params.paymentDetails.email - Email for the Konbini payment
  * @returns {Promise<object|null>} The response data from the payment API or null if an error occurs.
  */
 
@@ -20,38 +26,57 @@ const payForSession = async ({
   publicKey,
   sessionId,
   paymentType,
-  cardDetails,
-}: payForSessionProps) => {
+  paymentDetails,
+}: payForSessionProps): Promise<SessionPayResponseType | null> => {
   try {
-    const url = `${BASE_URL}/sessions/${sessionId}/pay`;
+    // pay for a session using /pay API documentation https://doc.komoju.com/reference/post_sessions-id-pay
+    const url = `${BASE_URL_API}/sessions/${sessionId}/pay`;
 
-    let paymentDetails = {};
+    let payment_details = {};
 
+    // creating payment_details payload according to different payment types
     switch (paymentType) {
+      // credit card payment type payment type
       case PaymentType.CREDIT:
+        // refactoring input data from user to separate month and year
         const { month, year } = getMonthYearFromExpiry(
-          cardDetails?.cardExpiredDate || ""
+          paymentDetails?.cardExpiredDate || ""
         );
-        const number = cardDetails?.cardNumber.replaceAll(" ", "");
+        // refactoring number to remove all unsavory empty spaces from credit card number
+        const number = paymentDetails?.cardNumber?.replaceAll(" ", "");
 
-        paymentDetails = {
-          type: "credit_card",
-          name: cardDetails?.cardholderName,
+        // credit card payment_details mandatory parameters type, number, month, year
+        payment_details = {
+          type: PaymentType.CREDIT,
+          name: paymentDetails?.cardholderName,
           number,
           month,
           year,
-          verification_value: cardDetails?.cardCVV,
+          verification_value: paymentDetails?.cardCVV,
         };
         break;
+      // paypay payment type payment type
       case PaymentType.PAY_PAY:
-        paymentDetails = {
-          type: "paypay",
+        // paypay payment_details mandatory parameters type only
+        payment_details = {
+          type: PaymentType.PAY_PAY,
+        };
+        break;
+      // konbini payment type payment type
+      case PaymentType.KONBINI:
+        // konbini payment_details mandatory parameters type and email
+        payment_details = {
+          type: PaymentType.KONBINI,
+          store: paymentDetails?.selectedStore,
+          name: paymentDetails?.name,
+          email: paymentDetails?.email,
         };
         break;
       default:
         break;
     }
 
+    // payment POST request options of headers and body should be as bellow
     const options = {
       method: "POST",
       headers: {
@@ -61,15 +86,17 @@ const payForSession = async ({
       },
       body: JSON.stringify({
         capture: "auto",
-        payment_details: paymentDetails,
+        payment_details,
       }),
     };
 
     const response = await fetch(url, options);
+    // converting the above response to jason format
     const data = await response.json();
 
     return data;
   } catch (e) {
+    // logging out any exceptions for debugging
     printLog({
       logName: "Error:",
       message: "Unable to Process Payment",

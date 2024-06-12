@@ -1,4 +1,4 @@
-import { CurrencySign, CurrencyTypes } from "./types";
+import { brandsType, CurrencySign, CurrencyTypes } from "./types";
 
 export const isDevApp = __DEV__;
 
@@ -86,10 +86,30 @@ export const formatCurrency = ({
     return `${sign}0.00`;
   }
 
-  if (currency !== CurrencyTypes.JPY)
+  // converting the amount to 100 cents except for JPY
+  if (currency === CurrencyTypes.JPY) {
+    amount = Number(amount).toFixed(2);
+  } else {
     amount = (Number(amount) * 0.01).toFixed(2);
+  }
 
   return `${sign}${amount}`;
+};
+
+// method to convert konbini payment list brands object to a array of brand type and icon
+export const parseBrands = (obj: { [key: string]: brandsType }) => {
+  // Initialize an empty array to store the converted objects
+  let result = [];
+
+  // Iterate over the keys of the input object
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      // Create a new object with 'type' as the key and 'icon' as the value
+      result.push({ type: key, icon: obj[key].icon });
+    }
+  }
+
+  return result;
 };
 
 // Determine the card type based on the card number
@@ -99,15 +119,16 @@ export const determineCardType = (cardNumber: string): string | null => {
   const firstFourDigits = parseInt(cardNumber.substring(0, 4));
 
   // Check if the card number is a visa card
-  if (firstDigit === '4') {
-    return 'visa';
+  if (firstDigit === "4") {
+    return "visa";
     // Check if the card number is a master card
-  } else if ((firstTwoDigits >= 51 && firstTwoDigits <= 55) || 
-             (firstFourDigits >= 2221 && firstFourDigits <= 2720)) {
-    return 'master';
+  } else if (
+    (firstTwoDigits >= 51 && firstTwoDigits <= 55) ||
+    (firstFourDigits >= 2221 && firstFourDigits <= 2720)
+  ) {
+    return "master";
   }
 
   // Return null if the card type is not on both visa and master
   return null;
-}
-
+};
