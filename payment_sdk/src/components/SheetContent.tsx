@@ -10,8 +10,7 @@ import Loader from "./Loader";
 import SheetFooter from "./sections/SheetFooter";
 import { PaymentType } from "../util/types";
 import KonbiniSection from "./sections/KonbiniSection";
-import { isAndroid } from "../util/helpers";
-import { SCREEN_HEIGHT } from "./Sheet";
+import { SCREEN_HEIGHT, isAndroid } from "../util/helpers";
 
 const KEYBOARD_OFFSET = isAndroid() ? 100 : 80;
 
