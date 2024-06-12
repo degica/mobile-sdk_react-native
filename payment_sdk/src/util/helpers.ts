@@ -1,3 +1,4 @@
+import { Dimensions, Platform } from "react-native";
 import { brandsType, CurrencySign, CurrencyTypes } from "./types";
 
 export const isDevApp = __DEV__;
@@ -132,3 +133,7 @@ export const determineCardType = (cardNumber: string): string | null => {
   // Return null if the card type is not on both visa and master
   return null;
 };
+
+export const isAndroid = () => Platform.OS === "android";
+export const isIOS = () => Platform.OS === "ios";
+export const { height: SCREEN_HEIGHT } = Dimensions.get("window");

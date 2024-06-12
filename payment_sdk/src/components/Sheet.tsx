@@ -8,7 +8,6 @@ import React, {
 } from "react";
 import {
   Alert,
-  Dimensions,
   Image,
   StyleSheet,
   Text,
@@ -16,16 +15,17 @@ import {
   View,
   Animated as RNAnimated,
   PanResponder,
+  Keyboard,
 } from "react-native";
+
 import ResponseScreen from "./ResponseScreen";
 import { Actions, DispatchContext, StateContext } from "../state";
 import SheetContent from "./SheetContent";
 import { paymentFailedCtaText, paymentSuccessCtaText } from "../util/constants";
 import { ResponseScreenStatuses } from "../util/types";
+import { SCREEN_HEIGHT } from "../util/helpers";
 
 const closeIcon = require("../assets/images/close.png");
-
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 50;
 
@@ -88,6 +88,8 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
   }, []);
 
   const closeSheet = (showAlert = true) => {
+    Keyboard.dismiss();
+
     if (showAlert) {
       // showing an alert when user try to close the SDK modal
       Alert.alert("Cancel Payment?", "", [
