@@ -1,4 +1,4 @@
-import { BASE_URL } from "../util/constants";
+import { BASE_URL_API } from "../util/constants";
 import { getMonthYearFromExpiry, printLog } from "../util/helpers";
 import {
   payForSessionProps,
@@ -30,7 +30,7 @@ const payForSession = async ({
 }: payForSessionProps): Promise<SessionPayResponseType | null> => {
   try {
     // pay for a session using /pay API documentation https://doc.komoju.com/reference/post_sessions-id-pay
-    const url = `${BASE_URL}/sessions/${sessionId}/pay`;
+    const url = `${BASE_URL_API}/sessions/${sessionId}/pay`;
 
     let payment_details = {};
 

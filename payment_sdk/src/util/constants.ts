@@ -1,5 +1,6 @@
 export const noop = () => {};
-export const BASE_URL = "https://komoju.com/api/v1";
+export const BASE_URL = "https://komoju.com";
+export const BASE_URL_API = `${BASE_URL}/api/v1`;
 
 // redirect url parameter to identify if token validation is completed
 export const tokenParameterName = "secure_token_id=";

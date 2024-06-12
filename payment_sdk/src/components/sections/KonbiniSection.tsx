@@ -9,6 +9,7 @@ import { Actions, DispatchContext, StateContext } from "../../state";
 import { brandType, KonbiniStoreNames, PaymentType } from "../../util/types";
 import { validateKonbiniFormFields } from "../../util/validator";
 import Pill from "../Pill";
+import { BASE_URL } from "../../util/constants";
 
 const initialErrors = {
   name: false,
@@ -54,11 +55,7 @@ const KonbiniSection = (): JSX.Element => {
 
   const renderItem = ({ item }: { item: brandType }) => {
     const shopImage = (
-      <SvgCssUri
-        width={38}
-        height={24}
-        uri={`https://komoju.com${item.icon}`}
-      />
+      <SvgCssUri width={38} height={24} uri={`${BASE_URL}${item.icon}`} />
     );
 
     return (

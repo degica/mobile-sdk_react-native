@@ -1,4 +1,4 @@
-import { BASE_URL } from "../util/constants";
+import { BASE_URL_API } from "../util/constants";
 import { printLog } from "../util/helpers";
 import { SessionShowResponseType } from "../util/types";
 
@@ -12,7 +12,7 @@ const sessionShow = async ({
   publicKey,
 }: SessionShowProps): Promise<SessionShowResponseType | null> => {
   try {
-    const url = `${BASE_URL}/sessions/${sessionId}`;
+    const url = `${BASE_URL_API}/sessions/${sessionId}`;
     const options = {
       method: "GET",
       headers: {

@@ -1,4 +1,4 @@
-import { BASE_URL } from "../util/constants";
+import { BASE_URL_API } from "../util/constants";
 import { printLog } from "../util/helpers";
 
 type paymentServiceProps = {
@@ -17,7 +17,7 @@ const paymentService = async ({
   secretKey,
 }: paymentServiceProps) => {
   try {
-    const url = `${BASE_URL}/payments`;
+    const url = `${BASE_URL_API}/payments`;
 
     const options = {
       method: "POST",

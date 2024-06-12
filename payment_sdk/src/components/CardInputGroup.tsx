@@ -5,7 +5,11 @@ import Input from "./Input";
 import ScanCardButton from "./ScanCardButton";
 import { Actions, DispatchContext, StateContext } from "../state";
 import { isCardNumberValid, validateCardExpiry } from "../util/validator";
-import { determineCardType, formatCreditCardNumber, formatExpiry } from "../util/helpers";
+import {
+  determineCardType,
+  formatCreditCardNumber,
+  formatExpiry,
+} from "../util/helpers";
 
 type Props = {
   inputErrors: {
@@ -20,6 +24,14 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
   const dispatch = useContext(DispatchContext);
   const [cardType, setCardType] = useState<string | null>(null);
   const { cardCVV, cardNumber, cardExpiredDate } = useContext(StateContext);
+
+  useEffect(() => {
+    // Determine card type and set it on first render if cardNumber is not empty
+    if (cardNumber) {
+      const type = determineCardType(cardNumber);
+      setCardType(type);
+    }
+  }, []);
 
   return (
     <View style={styles.parentContainer}>
@@ -50,18 +62,22 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
             error={inputErrors.number}
           />
           <View style={styles.cardContainer}>
-            <Image
-              source={require('../assets/images/visa.png')}
-              style={{
-                ...styles.cardImage,
-                opacity: cardType === 'visa' ? 1 : 0.4
-              }} />
-            <Image
-              source={require('../assets/images/master.png')}
-              style={{
-                ...styles.cardImage,
-                opacity: cardType === 'master' ? 1 : 0.4
-              }} />
+            {cardType === "visa" || !cardType ? (
+              <Image
+                source={require("../assets/images/visa.png")}
+                style={{
+                  ...styles.cardImage,
+                }}
+              />
+            ) : null}
+            {cardType === "master" || !cardType ? (
+              <Image
+                source={require("../assets/images/master.png")}
+                style={{
+                  ...styles.cardImage,
+                }}
+              />
+            ) : null}
           </View>
         </View>
         <View style={styles.splitRow}>
@@ -149,16 +165,16 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 0,
   },
   titleScanRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 8,
   },
   cardContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    position: 'absolute',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    position: "absolute",
     top: 15,
     right: 0,
     marginRight: 8,

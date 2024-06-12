@@ -86,8 +86,12 @@ export const formatCurrency = ({
     return `${sign}0.00`;
   }
 
-  if (currency !== CurrencyTypes.JPY)
+  // converting the amount to 100 cents except for JPY
+  if (currency === CurrencyTypes.JPY) {
+    amount = Number(amount).toFixed(2);
+  } else {
     amount = (Number(amount) * 0.01).toFixed(2);
+  }
 
   return `${sign}${amount}`;
 };
