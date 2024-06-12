@@ -52,7 +52,10 @@ const SheetContent = () => {
 
   return (
     <View style={styles.mainContent}>
-      <ScrollView contentContainerStyle={{ paddingBottom: keyboardHeight }}>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingBottom: keyboardHeight }}
+      >
         <PillContainer onSelect={handlePillSelect} selectedItem={paymentType} />
         {paymentType === PaymentType.CREDIT && <CardSection />}
         {paymentType === PaymentType.PAY_PAY && <PayPaySection />}

@@ -44,6 +44,7 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
           <Input
             value={cardNumber}
             testID="cardNumberInput"
+            keyboardType="number-pad"
             placeholder="1234 1234 1234 1234"
             onChangeText={(text: string) => {
               resetError("number");
@@ -84,6 +85,7 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
           <View style={styles.itemRow}>
             <Input
               value={cardExpiredDate}
+              keyboardType="number-pad"
               testID="cardExpiryInput"
               placeholder="MM / YY"
               onChangeText={(text: string) => {
@@ -103,6 +105,7 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
             <Input
               value={cardCVV}
               testID="cardCVVInput"
+              keyboardType="number-pad"
               placeholder="CVV"
               onChangeText={(text: string) => {
                 resetError("cvv");

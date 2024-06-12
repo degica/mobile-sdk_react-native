@@ -1,5 +1,12 @@
 import React from "react";
-import { View, TextInput, Text, StyleSheet, ViewStyle } from "react-native";
+import {
+  View,
+  TextInput,
+  Text,
+  StyleSheet,
+  ViewStyle,
+  KeyboardTypeOptions,
+} from "react-native";
 
 interface InputProps {
   value: string;
@@ -9,6 +16,7 @@ interface InputProps {
   inputStyle?: ViewStyle;
   testID?: string;
   error?: boolean;
+  keyboardType?: KeyboardTypeOptions;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -19,6 +27,7 @@ const Input: React.FC<InputProps> = ({
   placeholder,
   testID,
   error = false,
+  keyboardType,
   ...rest
 }: InputProps) => {
   return (
@@ -26,6 +35,7 @@ const Input: React.FC<InputProps> = ({
       {label && <Text style={styles.label}>{label}</Text>}
       <TextInput
         value={value}
+        keyboardType={keyboardType}
         onChangeText={onChangeText}
         placeholder={placeholder}
         style={[
@@ -58,6 +68,7 @@ const styles = StyleSheet.create({
   withErrorBorder: {
     borderColor: "#F24D49",
   },
+  withBorder: {},
 });
 
 export default Input;
