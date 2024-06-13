@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Keyboard, ScrollView } from "react-native";
+import { Keyboard, ScrollView, StyleSheet, View } from "react-native";
 
 import PillContainer from "./PillContainer";
 import WebView from "./WebView";
@@ -10,6 +10,9 @@ import Loader from "./Loader";
 import SheetFooter from "./sections/SheetFooter";
 import { PaymentType } from "../util/types";
 import KonbiniSection from "./sections/KonbiniSection";
+import { SCREEN_HEIGHT, isAndroid } from "../util/helpers";
+
+const KEYBOARD_OFFSET = isAndroid() ? 100 : 80;
 
 const SheetContent = () => {
   const { paymentType, webViewData, loading } = useContext(StateContext);
@@ -18,12 +21,12 @@ const SheetContent = () => {
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      (e) => setKeyboardHeight(e.endCoordinates.height)
+      "keyboardDidShow",
+      (e) => setKeyboardHeight(e.endCoordinates.height + KEYBOARD_OFFSET)
     );
 
     const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
+      "keyboardDidHide",
       () => setKeyboardHeight(0)
     );
 
@@ -48,17 +51,34 @@ const SheetContent = () => {
     );
 
   return (
-    <>
-      <ScrollView contentContainerStyle={{paddingBottom: keyboardHeight}}>
+    <View style={styles.mainContent}>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingBottom: keyboardHeight }}
+      >
         <PillContainer onSelect={handlePillSelect} selectedItem={paymentType} />
         {paymentType === PaymentType.CREDIT && <CardSection />}
         {paymentType === PaymentType.PAY_PAY && <PayPaySection />}
         {paymentType === PaymentType.KONBINI && <KonbiniSection />}
         {renderLoading}
       </ScrollView>
-      <SheetFooter />
-    </>
+      <View style={styles.bottomContent}>
+        <SheetFooter />
+      </View>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  mainContent: {
+    height: "100%",
+  },
+  bottomContent: {
+    position: "absolute",
+    right: 0,
+    left: 0,
+    bottom: SCREEN_HEIGHT - (SCREEN_HEIGHT - 85 - 40),
+  },
+});
 
 export default SheetContent;

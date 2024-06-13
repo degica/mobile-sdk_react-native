@@ -84,15 +84,19 @@ const PaymentScreen = () => {
         onChangeText={setAmount}
       />
       <View style={styles.buttonContainer}>
-        <Button
-          title="Secure Token Payment"
-          onPress={handleSecureTokenPayment}
-        />
-        <Button
-          title="Session Pay"
-          onPress={handleSessionPay}
-          disabled={!amount}
-        />
+        <View style={{height: 40}}>
+          <Button
+            title="Secure Token Payment"
+            onPress={handleSecureTokenPayment}
+          />
+        </View>
+        <View style={{height: 40}}>
+          <Button
+            title="Session Pay"
+            onPress={handleSessionPay}
+            disabled={!amount}
+          />
+        </View>
       </View>
     </View>
   );
