@@ -70,6 +70,10 @@ export const formatCreditCardNumber = (cardNumber: string) => {
   return formatCardNumberArray.map((el) => el.join("")).join(" ");
 };
 
+function thousandSeparator(number: string) {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 export const formatCurrency = ({
   amount,
   currency,
@@ -88,13 +92,10 @@ export const formatCurrency = ({
   }
 
   // converting the amount to 100 cents except for JPY
-  if (currency === CurrencyTypes.JPY) {
-    amount = Number(amount).toFixed(2);
-  } else {
+  if (currency !== CurrencyTypes.JPY)
     amount = (Number(amount) * 0.01).toFixed(2);
-  }
 
-  return `${sign}${amount}`;
+  return `${sign}${thousandSeparator(amount)}`;
 };
 
 // method to convert konbini payment list brands object to a array of brand type and icon

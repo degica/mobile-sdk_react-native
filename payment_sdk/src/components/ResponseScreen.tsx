@@ -13,7 +13,10 @@ type Props = {
 
 const ResponseScreen = ({ status, message, onPress, onPressLabel }: Props) => {
   const renderMessageContent = useMemo(() => {
-    const title = status === ResponseScreenStatuses.SUCCESS ? "Payment Success" : "Payment Failed";
+    const title =
+      status === ResponseScreenStatuses.SUCCESS
+        ? "Payment Success"
+        : "Payment Failed";
     const defaultMessage =
       status === ResponseScreenStatuses.SUCCESS
         ? "Thank you for your order"
@@ -81,7 +84,7 @@ const styles = StyleSheet.create({
   },
   bottomButton: {
     position: "absolute",
-    bottom: 32,
+    bottom: 42,
     left: 0,
     right: 0,
   },

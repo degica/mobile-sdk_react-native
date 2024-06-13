@@ -156,7 +156,8 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
 
         // Check if its credit card method URL includes secure_token_id=
         if (
-          url.includes(tokenParameterName) &&
+          (url.includes(tokenParameterName) ||
+            url.includes(sessionParameterName)) &&
           paymentType === PaymentType.CREDIT
         ) {
           // CLose web view and start loading
