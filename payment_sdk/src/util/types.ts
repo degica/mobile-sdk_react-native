@@ -9,10 +9,6 @@ export type CreatePaymentFuncType = {
    */
   sessionId: string;
   /**
-   * This will be dedicated on production.
-   */
-  secretKey?: string;
-  /**
    * Callback when transaction is complete.
    * @param {CreatePaymentFuncType} response - Status is passed as a prop.
    */
@@ -22,11 +18,6 @@ export type CreatePaymentFuncType = {
    * @param {CreatePaymentFuncType} response - Status is passed as a prop.
    */
   onDismiss?: (response: SessionShowResponseType) => void;
-  /**
-   * This is to complete the credit card transaction 3D Secure Without a Session https://doc.komoju.com/docs/3d-secure.
-   * This will be dedicated on production.
-   */
-  enablePayWithoutSession?: boolean;
 };
 
 export type KomojuContext = {
