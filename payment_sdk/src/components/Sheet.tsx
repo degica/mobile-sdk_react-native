@@ -118,6 +118,7 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
     ref,
     () => ({
       open: () => {
+        Keyboard.dismiss();
         scrollTo(MAX_TRANSLATE_Y + 50);
       },
       close: closeSheet,
@@ -186,21 +187,18 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
           styles.bottomSheetContainer,
           { transform: [{ translateY: translateY }] },
         ]}
-        {...panResponder.panHandlers}
       >
-        <View>
-          <View style={styles.line}>
-            <Text style={styles.headerLabel}>Payment Options</Text>
-            <TouchableOpacity
-              style={styles.crossBtn}
-              onPress={() =>
-                closeSheet(paymentState !== ResponseScreenStatuses.SUCCESS)
-              }
-            >
-              <Image source={closeIcon} />
-            </TouchableOpacity>
-          </View>
-        </View>
+        <RNAnimated.View style={styles.line} {...panResponder.panHandlers}>
+          <Text style={styles.headerLabel}>Payment Options</Text>
+          <TouchableOpacity
+            style={styles.crossBtn}
+            onPress={() =>
+              closeSheet(paymentState !== ResponseScreenStatuses.SUCCESS)
+            }
+          >
+            <Image source={closeIcon} />
+          </TouchableOpacity>
+        </RNAnimated.View>
         {paymentState ? (
           <ResponseScreen
             status={paymentState}

@@ -10,9 +10,6 @@ import {
 import {KomojuSDK} from 'react-native-komoju';
 import createSession from './services/sessionService';
 
-// Bellow id for testing purposes only remove at production
-import {SECRET_KEY} from '@env';
-
 export enum CurrencyTypes {
   JPY = 'JPY',
   USD = 'USD',
@@ -36,16 +33,6 @@ const PaymentScreen = () => {
         onComplete: onPaymentComplete,
         onDismiss: onPaymentComplete,
       });
-  };
-
-  const handleSecureTokenPayment = async () => {
-    createPayment({
-      sessionId: '',
-      onComplete: onPaymentComplete,
-      onDismiss: onPaymentComplete,
-      secretKey: SECRET_KEY,
-      enablePayWithoutSession: true,
-    });
   };
 
   // when the payment is complete pass a callback to get the final results of response
@@ -84,19 +71,11 @@ const PaymentScreen = () => {
         onChangeText={setAmount}
       />
       <View style={styles.buttonContainer}>
-        <View style={{height: 40}}>
-          <Button
-            title="Secure Token Payment"
-            onPress={handleSecureTokenPayment}
-          />
-        </View>
-        <View style={{height: 40}}>
-          <Button
-            title="Session Pay"
-            onPress={handleSessionPay}
-            disabled={!amount}
-          />
-        </View>
+        <Button
+          title="Checkout"
+          onPress={handleSessionPay}
+          disabled={!amount}
+        />
       </View>
     </View>
   );
@@ -123,9 +102,9 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    minHeight: 100,
+    justifyContent: 'center',
     zIndex: -100,
+    height: 40,
   },
   currencyRow: {
     flexDirection: 'row',
