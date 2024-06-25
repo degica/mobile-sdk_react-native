@@ -1,6 +1,7 @@
 import React from 'react';
-import {KomojuSDK} from 'react-native-komoju';
+import {KomojuSDK} from '../payment_sdk/src';
 import {PUBLIC_KEY} from '@env';
+import 'react-native-svg';
 
 import PaymentScreen from './PaymentScreen';
 

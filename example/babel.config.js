@@ -6,5 +6,14 @@ module.exports = {
       moduleName: '@env',
       path: '.env',
     }],
+    [
+      'module-resolver',
+      {
+        alias: {
+          'react-native': './node_modules/react-native',
+          react: './node_modules/react',
+        },
+      },
+    ],
   ],
 };
