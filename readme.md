@@ -48,8 +48,8 @@ Adding the evironmental variables on the example app
 ```
 
 There are two environment variables need to add to the .env
-- *SECRET_KEY=<key should get from the komoju dashboard>*
-- *PUBLIC_KEY=<key should get from the komoju dashboard>*
+- *SECRET_KEY={key should get from the komoju dashboard}*
+- *PUBLIC_KEY={key should get from the komoju dashboard}*
 
 Start the Example App
 
