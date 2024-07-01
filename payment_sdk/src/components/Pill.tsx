@@ -7,6 +7,7 @@ import {
   Image,
   ImageSourcePropType,
 } from "react-native";
+import { useTranslation } from "react-i18next";
 
 interface PillProps {
   label: string;
@@ -23,6 +24,8 @@ const Pill: React.FC<PillProps> = ({
   onPress,
   isSelected,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <TouchableOpacity
       style={[styles.pill, isSelected && styles.activeDeco]}
@@ -30,7 +33,7 @@ const Pill: React.FC<PillProps> = ({
     >
       {image ? image : <Image style={styles.icon} source={icon} />}
 
-      <Text style={styles.label}>{label}</Text>
+      <Text style={styles.label}>{t(label)}</Text>
     </TouchableOpacity>
   );
 };

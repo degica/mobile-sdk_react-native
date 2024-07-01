@@ -17,7 +17,7 @@ export enum CurrencyTypes {
 
 const PaymentScreen = () => {
   const [amount, setAmount] = useState('');
-  const [currency, setCurrency] = useState(CurrencyTypes.USD);
+  const [currency, setCurrency] = useState(CurrencyTypes.JPY);
 
   // use createPayment method to invoke the payment screen
   const {createPayment} = KomojuSDK.useKomoju();

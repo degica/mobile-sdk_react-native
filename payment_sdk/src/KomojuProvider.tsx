@@ -6,13 +6,13 @@ import React, {
   useRef,
 } from "react";
 import { Alert } from "react-native";
+import i18next from "i18next";
 
 import {
   CreatePaymentFuncType,
   initialState,
   InitPrams,
   newNavStateProps,
-  paymentMethodsType,
   PaymentStatuses,
   PaymentType,
   ResponseScreenStatuses,
@@ -28,18 +28,22 @@ import sessionShow from "./services/sessionShow";
 import { validateSessionResponse } from "./util/validator";
 import { sessionParameterName, tokenParameterName } from "./util/constants";
 import Sheet, { SheetRefProps } from "./components/Sheet";
-import { parseBrands } from "./util/helpers";
+
+import "./assets/languages/i18n";
+import { parsePaymentMethods } from "./util/helpers";
 
 type KomojuProviderIprops = {
   children?: ReactNode | ReactNode[];
 } & InitPrams;
 
 export const KomojuProvider = (props: KomojuProviderIprops) => {
+  if (props?.language) i18next.changeLanguage(props?.language);
   return (
     <StateProvider>
       <MainStateProvider
-        urlScheme={props.urlScheme}
         publicKey={props.publicKey}
+        payment_methods={props?.payment_methods}
+        language={props?.language}
       >
         {props.children}
       </MainStateProvider>
@@ -120,18 +124,28 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
       sheetRef?.current?.close(false);
       Alert.alert("Error", "Session expired");
     } else {
-      // select konbini payment method from all payment methods
-      const konbiniPaymentMethodData = sessionData?.payment_methods?.find(
-        (method: paymentMethodsType) => method?.type === PaymentType.KONBINI
-      );
+      // if explicitly language is not set. set to the localization from session
+      if (!props?.language) i18next.changeLanguage(sessionData?.default_locale);
 
       // if session is valid setting amount, currency type at global store for future use
       dispatch({ type: Actions.SET_AMOUNT, payload: sessionData?.amount });
       dispatch({ type: Actions.SET_CURRENCY, payload: sessionData?.currency });
-      // set available konbini stores in konbini brands state
+
+      // if user provided explicitly payments methods via props, will give priority to that over session payment methods
+      const paymentMethods = parsePaymentMethods(
+        props?.payment_methods,
+        sessionData?.payment_methods
+      );
+
+      // setting the payment methods in global state
       dispatch({
-        type: Actions.SET_KONBINI_BRANDS,
-        payload: parseBrands(konbiniPaymentMethodData?.brands),
+        type: Actions.SET_PAYMENT_METHODS,
+        payload: paymentMethods,
+      });
+      // setting the current selected payment method as the first payment method on the list
+      dispatch({
+        type: Actions.SET_PAYMENT_OPTION,
+        payload: paymentMethods ? paymentMethods[0]?.type : "",
       });
     }
     stopLoading();

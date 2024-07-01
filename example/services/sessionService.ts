@@ -14,6 +14,11 @@ const createSession = async ({
   currency,
 }: createSessionProps): Promise<string | null> => {
   try {
+    if (!SECRET_KEY) {
+      console.log('Secret Key Not Found');
+      throw new Error('Secret Key Required');
+    }
+
     const url = 'https://komoju.com/api/v1/sessions';
     const options = {
       method: 'POST',

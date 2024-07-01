@@ -1,6 +1,7 @@
 export type InitPrams = {
-  urlScheme: string;
   publicKey: string;
+  payment_methods?: Array<PaymentType>;
+  language?: LanguageTypes;
 };
 
 export type CreatePaymentFuncType = {
@@ -26,10 +27,24 @@ export type KomojuContext = {
   initializeKomoju: (args: InitPrams) => void;
 };
 
+export enum LanguageTypes {
+  ENGLISH = "en",
+  JAPANESE = "ja",
+}
+
 export enum PaymentType {
   KONBINI = "konbini",
   CREDIT = "credit_card",
   PAY_PAY = "paypay",
+}
+
+export enum CardTypes {
+  VISA = "visa",
+  AMEX = "american_express",
+  MASTER = "master",
+  JCB = "jcb",
+  DINERS_CLUB = "diners_club",
+  DISCOVER = "discover",
 }
 
 export enum PaymentStatuses {
@@ -58,15 +73,6 @@ export enum CurrencySign {
 export enum CurrencyTypes {
   JPY = "JPY",
   USD = "USD",
-}
-
-export enum KonbiniStoreNames {
-  "seven-eleven" = "7-Eleven",
-  "lawson" = "Lawson",
-  "family-mart" = "Family Mart",
-  "ministop" = "Ministop",
-  "daily-yamazaki" = "Daily Yamazaki",
-  "seicomart" = "Seicomart",
 }
 
 export type payForSessionProps = {
@@ -102,10 +108,10 @@ export type SessionPayResponseType = {
   status: string;
 };
 
-type sessionShowPaymentMethodType = {
-  type: string;
-  brands: Array<string> | { [key: string]: brandsType };
-  exchange_rate: number;
+export type sessionShowPaymentMethodType = {
+  type: PaymentType;
+  brands?: Array<string> | { [key: string]: brandsType };
+  exchange_rate?: number;
 };
 
 export type SessionShowResponseType = {
@@ -119,6 +125,7 @@ export type SessionShowResponseType = {
   session_url?: string;
   return_url?: string;
   payment_methods: Array<sessionShowPaymentMethodType>;
+  default_locale: string;
   created_at: string;
   cancelled_at: string;
   completed_at: string;
@@ -134,10 +141,6 @@ export type cardValidationFuncProps = CardDetailsType & setInputErrorType;
 export type konbiniValidationFuncProps = KonbiniDetailsType & setInputErrorType;
 
 export type Nullable<T> = T | null;
-
-export type paymentMethodsType = {
-  type: string;
-};
 
 type webViewDataProps = {
   link: string;
@@ -183,9 +186,9 @@ export type State = CardDetailsType &
      */
     currency: CurrencyTypes;
     /**
-     * All brand IDs and icons which are accepting konbini payment
+     * All payment methods which are accepting
      */
-    konbiniBrands: Array<brandType>;
+    paymentMethods: Array<sessionShowPaymentMethodType>;
     /**
      * State of the current payment.
      * this state is used to toggle(show hide) the success and failed screens.
@@ -227,6 +230,6 @@ export const initialState: State = {
   amount: "",
   currency: CurrencyTypes.JPY,
   paymentState: "",
-  konbiniBrands: [],
+  paymentMethods: [],
 };
 export type ActionType = { type: string; payload: any };

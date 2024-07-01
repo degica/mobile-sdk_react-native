@@ -6,7 +6,7 @@ import PaymentScreen from './PaymentScreen';
 
 function App(): React.JSX.Element {
   return (
-    <KomojuSDK.KomojuProvider urlScheme="" publicKey={PUBLIC_KEY}>
+    <KomojuSDK.KomojuProvider publicKey={PUBLIC_KEY}>
       <PaymentScreen />
     </KomojuSDK.KomojuProvider>
   );

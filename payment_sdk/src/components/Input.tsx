@@ -6,9 +6,11 @@ import {
   StyleSheet,
   ViewStyle,
   KeyboardTypeOptions,
+  TextInputProps,
 } from "react-native";
+import { useTranslation } from "react-i18next";
 
-interface InputProps {
+interface InputProps extends TextInputProps {
   value: string;
   onChangeText: (text: string) => void;
   label?: string;
@@ -30,14 +32,16 @@ const Input: React.FC<InputProps> = ({
   keyboardType,
   ...rest
 }: InputProps) => {
+  const { t } = useTranslation();
+
   return (
     <View>
-      {label && <Text style={styles.label}>{label}</Text>}
+      {label && <Text style={styles.label}>{t(label)}</Text>}
       <TextInput
         value={value}
         keyboardType={keyboardType}
         onChangeText={onChangeText}
-        placeholder={placeholder}
+        placeholder={t(placeholder || "")}
         style={[
           styles.input,
           styles.withBorder,

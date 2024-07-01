@@ -1,10 +1,11 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React, { useContext } from "react";
 
 import SubmitButton from "../SubmitButton";
 import LightBox from "../LightBox";
 import { StateContext } from "../../state";
 import { PaymentType } from "../../util/types";
+import KomojuText from "../KomojuText";
 
 const PayPaySection = () => {
   const { sessionPay } = useContext(StateContext);
@@ -16,10 +17,10 @@ const PayPaySection = () => {
   return (
     <View style={styles.container}>
       <View style={styles.textContent}>
-        <Text style={styles.title}>Payment via Paypay</Text>
-        <Text style={styles.description}>
-          You will be redirected to Paypay to complete the payment
-        </Text>
+        <KomojuText style={styles.title}>PAYMENT_VIA_PAY_PAY</KomojuText>
+        <KomojuText style={styles.description}>
+          PAY_PAY_REDIRECT_MESSAGE
+        </KomojuText>
       </View>
       <View style={styles.lbWrapper}>
         <LightBox
@@ -27,7 +28,7 @@ const PayPaySection = () => {
           icon="📱"
         />
       </View>
-      <SubmitButton onPress={onPay} label="Continue to Paypay" />
+      <SubmitButton onPress={onPay} label="CONTINUE_TO_PAY_PAY" />
     </View>
   );
 };

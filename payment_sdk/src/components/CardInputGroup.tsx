@@ -1,5 +1,12 @@
-import { Image, StyleSheet, Text, View } from "react-native";
-import React, { memo, useContext, useEffect, useRef, useState } from "react";
+import { StyleSheet, View } from "react-native";
+import React, {
+  memo,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from "react";
+import { SvgCssUri } from "react-native-svg/css";
 
 import Input from "./Input";
 import ScanCardButton from "./ScanCardButton";
@@ -10,6 +17,9 @@ import {
   formatCreditCardNumber,
   formatExpiry,
 } from "../util/helpers";
+import KomojuText from "./KomojuText";
+import { BASE_URL } from "../util/constants";
+import { PaymentType, sessionShowPaymentMethodType } from "../util/types";
 
 type Props = {
   inputErrors: {
@@ -23,7 +33,8 @@ type Props = {
 const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
   const dispatch = useContext(DispatchContext);
   const [cardType, setCardType] = useState<string | null>(null);
-  const { cardCVV, cardNumber, cardExpiredDate } = useContext(StateContext);
+  const { cardCVV, cardNumber, cardExpiredDate, paymentMethods } =
+    useContext(StateContext);
 
   useEffect(() => {
     // Determine card type and set it on first render if cardNumber is not empty
@@ -33,16 +44,38 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
     }
   }, []);
 
+  // Create card image list
+  const cardImage = useCallback(() => {
+    const cardUri = `${BASE_URL}/payment_methods/${PaymentType.CREDIT}.svg?brands=`;
+    // Select credit card payment method data from session response payment methods
+    const cardPaymentMethodData = paymentMethods?.find(
+      (method: sessionShowPaymentMethodType) =>
+        method?.type === PaymentType.CREDIT
+    );
+    // If card number input is empty or user input does not match any card type showing all available card payment methods
+    const allCardTypes = cardType ?? cardPaymentMethodData?.brands?.toString();
+    const cardTypesCount = allCardTypes?.split(",")?.length;
+
+    if (!allCardTypes) return null;
+    return (
+      <SvgCssUri
+        width={26 * cardTypesCount ?? 1}
+        height={30}
+        uri={`${cardUri}${allCardTypes}`}
+      />
+    );
+  }, [cardType, paymentMethods]);
+
   return (
     <View style={styles.parentContainer}>
       <View style={styles.titleScanRow}>
-        <Text style={styles.label}>Card Number</Text>
+        <KomojuText style={styles.label}>CARD_NUMBER</KomojuText>
         <ScanCardButton />
       </View>
       <View style={styles.container}>
         <View style={styles.cardNumberRow}>
           <Input
-            value={cardNumber}
+            value={cardNumber ?? ""}
             testID="cardNumberInput"
             keyboardType="number-pad"
             placeholder="1234 1234 1234 1234"
@@ -62,24 +95,7 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
             inputStyle={styles.numberInputStyle}
             error={inputErrors.number}
           />
-          <View style={styles.cardContainer}>
-            {cardType === "visa" || !cardType ? (
-              <Image
-                source={require("../assets/images/visa.png")}
-                style={{
-                  ...styles.cardImage,
-                }}
-              />
-            ) : null}
-            {cardType === "master" || !cardType ? (
-              <Image
-                source={require("../assets/images/master.png")}
-                style={{
-                  ...styles.cardImage,
-                }}
-              />
-            ) : null}
-          </View>
+          <View style={styles.cardContainer}>{cardImage()}</View>
         </View>
         <View style={styles.splitRow}>
           <View style={styles.itemRow}>

@@ -1,12 +1,16 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useCallback } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { SvgCssUri } from "react-native-svg/css";
 
 import Input from "../Input";
 import SubmitButton from "../SubmitButton";
-import { formatCurrency } from "../../util/helpers";
+import { formatCurrency, parseBrands } from "../../util/helpers";
 import { Actions, DispatchContext, StateContext } from "../../state";
-import { brandType, KonbiniStoreNames, PaymentType } from "../../util/types";
+import {
+  brandType,
+  PaymentType,
+  sessionShowPaymentMethodType,
+} from "../../util/types";
 import { validateKonbiniFormFields } from "../../util/validator";
 import Pill from "../Pill";
 import { BASE_URL } from "../../util/constants";
@@ -25,10 +29,16 @@ const KonbiniSection = (): JSX.Element => {
     email,
     amount,
     currency,
-    konbiniBrands,
+    paymentMethods,
     selectedStore,
   } = useContext(StateContext);
   const dispatch = useContext(DispatchContext);
+
+  const konbiniPaymentMethodData = paymentMethods?.find(
+    (method: sessionShowPaymentMethodType) =>
+      method?.type === PaymentType.KONBINI
+  );
+  const konbiniBrands = parseBrands(konbiniPaymentMethodData?.brands || {});
 
   const onPay = () => {
     const isValid = validateKonbiniFormFields({ name, email, setInputErrors });
@@ -53,16 +63,21 @@ const KonbiniSection = (): JSX.Element => {
     dispatch({ type: Actions.SET_SELECTED_STORE, payload: type });
   };
 
+  const shopImage = useCallback(
+    (iconUrl: string) => {
+      return <SvgCssUri width={38} height={24} uri={`${iconUrl}`} />;
+    },
+    [konbiniBrands]
+  );
+
   const renderItem = ({ item }: { item: brandType }) => {
-    const shopImage = (
-      <SvgCssUri width={38} height={24} uri={`${BASE_URL}${item.icon}`} />
-    );
+    const image = shopImage(item?.icon);
 
     return (
       <Pill
         isSelected={item.type === selectedStore}
-        label={KonbiniStoreNames[item.type]}
-        image={shopImage}
+        label={item.type}
+        image={image}
         onPress={() => {
           handlePillSelect(item.type);
         }}
@@ -74,9 +89,9 @@ const KonbiniSection = (): JSX.Element => {
     <View style={styles.mainContainer}>
       <View style={styles.inputContainer}>
         <Input
-          value={name}
-          label="Name (shown on receipt)"
-          placeholder="Full name on receipt"
+          value={name ?? ""}
+          label="NAME_SHOWN_ON_RECEIPT"
+          placeholder="FULL_NAME_ON_RECEIPT"
           onChangeText={(text: string) => {
             resetError("name");
             dispatch({ type: Actions.SET_NAME, payload: text });
@@ -87,9 +102,9 @@ const KonbiniSection = (): JSX.Element => {
       </View>
       <View style={styles.inputContainer}>
         <Input
-          value={email}
-          label="Email"
-          placeholder="example@email.com"
+          value={email ?? ""}
+          label="EMAIL"
+          placeholder="EXAMPLE_EMAIL"
           onChangeText={(text: string) => {
             resetError("email");
             dispatch({ type: Actions.SET_EMAIL, payload: text });
@@ -109,7 +124,8 @@ const KonbiniSection = (): JSX.Element => {
         />
       </View>
       <SubmitButton
-        label={`Pay ${formatCurrency({ amount, currency })}`}
+        label="PAY"
+        labelSuffix={formatCurrency({ amount, currency })}
         onPress={onPay}
       />
     </View>

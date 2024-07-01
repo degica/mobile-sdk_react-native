@@ -66,9 +66,9 @@ const CardSection = (): JSX.Element => {
     <View style={styles.cardContainer}>
       <View style={styles.cardNameContainer}>
         <Input
-          value={cardholderName}
-          label="Cardholder name"
-          placeholder="Full name on card"
+          value={cardholderName ?? ""}
+          label="CARD_HOLDER_NAME"
+          placeholder="FULL_NAME_ON_CARD"
           onChangeText={(text: string) => {
             resetError("name");
             dispatch({ type: Actions.SET_CARDHOLDER_NAME, payload: text });
@@ -80,7 +80,8 @@ const CardSection = (): JSX.Element => {
       </View>
       <CardInputGroup inputErrors={inputErrors} resetError={resetError} />
       <SubmitButton
-        label={`Pay ${formatCurrency({ amount, currency })}`}
+        label="PAY"
+        labelSuffix={formatCurrency({ amount, currency })}
         onPress={onPay}
         testID="PayCTA"
       />
