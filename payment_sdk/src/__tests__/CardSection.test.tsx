@@ -36,7 +36,7 @@ describe("Card Section Test cases", () => {
         <CardSection />
       </StateProvider>
     );
-    const cardHolderText = getByText("Cardholder name");
+    const cardHolderText = getByText("CARD_HOLDER_NAME");
     expect(cardHolderText).toBeTruthy();
   });
 
@@ -46,7 +46,7 @@ describe("Card Section Test cases", () => {
         <CardSection />
       </StateProvider>
     );
-    fireEvent.changeText(getByText("Cardholder name"), "Kasun Prabath");
+    fireEvent.changeText(getByText("CARD_HOLDER_NAME"), "Kasun Prabath");
     await waitFor(() =>
       expect(getByTestId("cardHolderName").props.value).toBe("Kasun Prabath")
     );
