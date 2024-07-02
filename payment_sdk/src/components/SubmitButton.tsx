@@ -1,20 +1,25 @@
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   onPress: () => void;
   label: string;
+  labelSuffix?: string;
   testID?: string;
 };
 
-const SubmitButton = ({ label, onPress, testID }: Props) => {
+const SubmitButton = ({ label, labelSuffix, onPress, testID }: Props) => {
+  const { t } = useTranslation();
   return (
     <TouchableOpacity
       testID={testID}
       style={styles.buttonWrapper}
       onPress={onPress}
     >
-      <Text style={styles.label}>{label}</Text>
+      <Text style={styles.label}>
+        {labelSuffix ? `${t(label)} ${labelSuffix}` : t(label)}
+      </Text>
     </TouchableOpacity>
   );
 };

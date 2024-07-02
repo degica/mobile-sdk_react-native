@@ -10,9 +10,7 @@ import {
   Alert,
   Image,
   StyleSheet,
-  Text,
   TouchableOpacity,
-  View,
   Animated as RNAnimated,
   PanResponder,
   Keyboard,
@@ -24,6 +22,7 @@ import SheetContent from "./SheetContent";
 import { paymentFailedCtaText, paymentSuccessCtaText } from "../util/constants";
 import { ResponseScreenStatuses } from "../util/types";
 import { SCREEN_HEIGHT } from "../util/helpers";
+import KomojuText from "./KomojuText";
 
 const closeIcon = require("../assets/images/close.png");
 
@@ -189,7 +188,7 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
         ]}
       >
         <RNAnimated.View style={styles.line} {...panResponder.panHandlers}>
-          <Text style={styles.headerLabel}>Payment Options</Text>
+          <KomojuText style={styles.headerLabel}>PAYMENT_OPTIONS</KomojuText>
           <TouchableOpacity
             style={styles.crossBtn}
             onPress={() =>

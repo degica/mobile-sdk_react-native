@@ -28,9 +28,9 @@ export const Actions = {
   SET_LOADING: "SET_LOADING",
   SET_CURRENCY: "SET_CURRENCY",
   SET_AMOUNT: "SET_AMOUNT",
-  SET_KONBINI_BRANDS: "SET_KONBINI_BRANDS",
   SET_SELECTED_STORE: "SET_SELECTED_STORE",
   SET_PAYMENT_STATE: "SET_PAYMENT_STATE",
+  SET_PAYMENT_METHODS: "SET_PAYMENT_METHODS",
   SESSION_PAY: "SESSION_PAY",
 };
 
@@ -108,11 +108,6 @@ export function reducer(state: State, action: ActionType) {
         ...state,
         currency: action.payload,
       };
-    case Actions.SET_KONBINI_BRANDS:
-      return {
-        ...state,
-        konbiniBrands: action.payload,
-      };
     case Actions.SET_SELECTED_STORE:
       return {
         ...state,
@@ -122,6 +117,11 @@ export function reducer(state: State, action: ActionType) {
       return {
         ...state,
         paymentState: action.payload,
+      };
+    case Actions.SET_PAYMENT_METHODS:
+      return {
+        ...state,
+        paymentMethods: action.payload,
       };
     default:
       throw new Error();

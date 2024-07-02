@@ -1,5 +1,12 @@
 import { Dimensions, Platform } from "react-native";
-import { brandsType, CurrencySign, CurrencyTypes } from "./types";
+import {
+  brandsType,
+  CardTypes,
+  CurrencySign,
+  CurrencyTypes,
+  PaymentType,
+  sessionShowPaymentMethodType,
+} from "./types";
 
 export const isDevApp = __DEV__;
 
@@ -99,7 +106,9 @@ export const formatCurrency = ({
 };
 
 // method to convert konbini payment list brands object to a array of brand type and icon
-export const parseBrands = (obj: { [key: string]: brandsType }) => {
+export const parseBrands = (
+  obj: string[] | { [key: string]: brandsType } | undefined
+) => {
   // Initialize an empty array to store the converted objects
   let result = [];
 
@@ -114,21 +123,71 @@ export const parseBrands = (obj: { [key: string]: brandsType }) => {
   return result;
 };
 
+// Method to filter out payment methods
+export const parsePaymentMethods = (
+  userPaymentMethods: PaymentType[] | undefined,
+  sessionPaymentMethods: sessionShowPaymentMethodType[] | undefined
+) => {
+  // check if user has provided explicit payment methods
+  if (userPaymentMethods && userPaymentMethods?.length > 0) {
+    const parsedPayment: sessionShowPaymentMethodType[] = [];
+
+    // map the payment methods from session for each payment method user provided
+    userPaymentMethods.forEach((item: PaymentType) => {
+      const paymentMethod = sessionPaymentMethods?.find(
+        (method) => method.type === item
+      );
+
+      // if the payment method match form session add it to the list
+      if (paymentMethod) parsedPayment.push(paymentMethod);
+    });
+
+    return parsedPayment;
+  } else {
+    // if user does not provide any payment methods use the payment methods from session
+    return sessionPaymentMethods;
+  }
+};
+
 // Determine the card type based on the card number
 export const determineCardType = (cardNumber: string): string | null => {
   const firstDigit = cardNumber[0];
   const firstTwoDigits = parseInt(cardNumber.substring(0, 2));
+  const firstThreeDigits = parseInt(cardNumber.substring(0, 3));
   const firstFourDigits = parseInt(cardNumber.substring(0, 4));
+  const firstSixDigits = parseInt(cardNumber.substring(0, 6));
 
-  // Check if the card number is a visa card
+  /** Check if the card number is a visa card */
   if (firstDigit === "4") {
-    return "visa";
-    // Check if the card number is a master card
-  } else if (
+    return CardTypes.VISA;
+  }
+  /** Check if the card number is a master card */
+  if (
     (firstTwoDigits >= 51 && firstTwoDigits <= 55) ||
     (firstFourDigits >= 2221 && firstFourDigits <= 2720)
   ) {
-    return "master";
+    return CardTypes.MASTER;
+  }
+  /** Check if the card number is a American express card */
+  if (firstTwoDigits === 34 || firstTwoDigits === 37) {
+    return CardTypes.AMEX;
+  }
+  /** Check if the card number is a JCB card */
+  if (firstFourDigits >= 3528 && firstFourDigits <= 3589) {
+    return CardTypes.JCB;
+  }
+  /** Check if the card number is a Dinners Club card */
+  if (firstTwoDigits === 36) {
+    return CardTypes.DINERS_CLUB;
+  }
+  /** Check if the card number is a Discover card */
+  if (
+    firstTwoDigits === 65 ||
+    firstFourDigits === 6011 ||
+    (firstThreeDigits >= 644 && firstThreeDigits <= 649) ||
+    (firstSixDigits >= 622126 && firstSixDigits <= 622925)
+  ) {
+    return CardTypes.DISCOVER;
   }
 
   // Return null if the card type is not on both visa and master

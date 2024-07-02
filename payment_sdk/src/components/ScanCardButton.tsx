@@ -1,16 +1,21 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import { Image, StyleSheet, TouchableOpacity } from "react-native";
+import React from "react";
+import KomojuText from "./KomojuText";
 
 // When press the scan card button it will open the camera and scan the card,
-// without manually typing the card number, this will automaticaly fill in the 
+// without manually typing the card number, this will automaticaly fill in the
 // card field
 const ScanCardButton = () => {
   return (
     <TouchableOpacity
       style={styles.scanIconRow}
-      onPress={() => console.log('save card number in context')}>
-      <Image style={styles.cardScan} source={require('../assets/images/scan.png')} />
-      <Text style={styles.label}>Scan Card</Text>
+      onPress={() => console.log("save card number in context")}
+    >
+      <Image
+        style={styles.cardScan}
+        source={require("../assets/images/scan.png")}
+      />
+      <KomojuText style={styles.label}>SCAN_CARD</KomojuText>
     </TouchableOpacity>
   );
 };
@@ -24,11 +29,11 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   scanIconRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   label: {
     fontSize: 16,
-    color: '#172E44',
+    color: "#172E44",
   },
 });
