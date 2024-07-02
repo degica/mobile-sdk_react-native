@@ -15,7 +15,7 @@ const createSession = async ({
 }: createSessionProps): Promise<string | null> => {
   try {
     if (!SECRET_KEY) {
-      console.log('Secret Key Not Found');
+      console.error('Secret Key Not Found');
       throw new Error('Secret Key Required');
     }
 
