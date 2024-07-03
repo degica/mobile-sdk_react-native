@@ -7,6 +7,7 @@ import {
   PaymentType,
   sessionShowPaymentMethodType,
 } from "./types";
+import { cardTypeRegex } from "./constants";
 
 export const isDevApp = __DEV__;
 
@@ -151,47 +152,21 @@ export const parsePaymentMethods = (
 
 // Determine the card type based on the card number
 export const determineCardType = (cardNumber: string): string | null => {
-  const firstDigit = cardNumber[0];
-  const firstTwoDigits = parseInt(cardNumber.substring(0, 2));
-  const firstThreeDigits = parseInt(cardNumber.substring(0, 3));
-  const firstFourDigits = parseInt(cardNumber.substring(0, 4));
-  const firstSixDigits = parseInt(cardNumber.substring(0, 6));
-
-  /** Check if the card number is a visa card */
-  if (firstDigit === "4") {
-    return CardTypes.VISA;
-  }
-  /** Check if the card number is a master card */
-  if (
-    (firstTwoDigits >= 51 && firstTwoDigits <= 55) ||
-    (firstFourDigits >= 2221 && firstFourDigits <= 2720)
-  ) {
-    return CardTypes.MASTER;
-  }
-  /** Check if the card number is a American express card */
-  if (firstTwoDigits === 34 || firstTwoDigits === 37) {
+  if (cardTypeRegex.amex.exec(cardNumber)) {
     return CardTypes.AMEX;
-  }
-  /** Check if the card number is a JCB card */
-  if (firstFourDigits >= 3528 && firstFourDigits <= 3589) {
-    return CardTypes.JCB;
-  }
-  /** Check if the card number is a Dinners Club card */
-  if (firstTwoDigits === 36) {
+  } else if (cardTypeRegex.diner.exec(cardNumber)) {
     return CardTypes.DINERS_CLUB;
-  }
-  /** Check if the card number is a Discover card */
-  if (
-    firstTwoDigits === 65 ||
-    firstFourDigits === 6011 ||
-    (firstThreeDigits >= 644 && firstThreeDigits <= 649) ||
-    (firstSixDigits >= 622126 && firstSixDigits <= 622925)
-  ) {
-    return CardTypes.DISCOVER;
-  }
-
-  // Return null if the card type is not on both visa and master
-  return null;
+  } else if (cardTypeRegex.mastercard.exec(cardNumber)) {
+    return CardTypes.MASTER;
+  } else if (cardTypeRegex.jcb15.exec(cardNumber)) {
+    return CardTypes.JCB;
+  } else if (cardTypeRegex.jcb.exec(cardNumber)) {
+    return CardTypes.JCB;
+  } else if (cardTypeRegex.visa.exec(cardNumber)) {
+    return CardTypes.VISA;
+  } else if (cardNumber.length > 2) {
+    return "unknown";
+  } else return null;
 };
 
 export const isAndroid = () => Platform.OS === "android";

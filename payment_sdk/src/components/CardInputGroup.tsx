@@ -18,7 +18,11 @@ import {
   formatExpiry,
 } from "../util/helpers";
 import KomojuText from "./KomojuText";
-import { BASE_URL } from "../util/constants";
+import {
+  BASE_URL,
+  STATIC_CREDIT_CARD_CVC_SVG,
+  STATIC_CREDIT_CARD_SVG,
+} from "../util/constants";
 import { PaymentType, sessionShowPaymentMethodType } from "../util/types";
 
 type Props = {
@@ -29,6 +33,9 @@ type Props = {
   };
   resetError: (type: string) => void;
 };
+
+const CARD_WIDTH = 26;
+const CARD_HEIGHT = 30;
 
 const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
   const dispatch = useContext(DispatchContext);
@@ -44,6 +51,14 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
     }
   }, []);
 
+  const renderSvg = (uri: string, widthMultiplier = 1) => (
+    <SvgCssUri
+      width={CARD_WIDTH * widthMultiplier}
+      height={CARD_HEIGHT}
+      uri={uri}
+    />
+  );
+
   // Create card image list
   const cardImage = useCallback(() => {
     const cardUri = `${BASE_URL}/payment_methods/${PaymentType.CREDIT}.svg?brands=`;
@@ -53,17 +68,21 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
         method?.type === PaymentType.CREDIT
     );
     // If card number input is empty or user input does not match any card type showing all available card payment methods
-    const allCardTypes = cardType ?? cardPaymentMethodData?.brands?.toString();
-    const cardTypesCount = allCardTypes?.split(",")?.length;
+    const allCardTypes = cardPaymentMethodData?.brands?.toString();
+    const cardTypesCount = allCardTypes?.split(",")?.length ?? 1;
 
-    if (!allCardTypes) return null;
-    return (
-      <SvgCssUri
-        width={26 * cardTypesCount ?? 1}
-        height={30}
-        uri={`${cardUri}${allCardTypes}`}
-      />
-    );
+    /**
+     * if card number field is empty or less than 2 digits showing all available card brands
+     * if user typed card number matched showing relevant card type
+     * if card number is more than 2 digits and not matching for any brand showing static credit card svg
+     */
+    if (cardType === "unknown") {
+      return renderSvg(STATIC_CREDIT_CARD_SVG);
+    } else if (cardType) {
+      return renderSvg(`${cardUri}${cardType}`);
+    } else if (allCardTypes) {
+      return renderSvg(`${cardUri}${allCardTypes}`, cardTypesCount);
+    }
   }, [cardType, paymentMethods]);
 
   return (
@@ -100,7 +119,7 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
         <View style={styles.splitRow}>
           <View style={styles.itemRow}>
             <Input
-              value={cardExpiredDate}
+              value={cardExpiredDate ?? ""}
               keyboardType="number-pad"
               testID="cardExpiryInput"
               placeholder="MM / YY"
@@ -119,18 +138,22 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
           </View>
           <View style={styles.itemRow}>
             <Input
-              value={cardCVV}
+              value={cardCVV ?? ""}
               testID="cardCVVInput"
               keyboardType="number-pad"
               placeholder="CVV"
               onChangeText={(text: string) => {
                 resetError("cvv");
 
-                dispatch({ type: Actions.SET_CARD_CVV, payload: text });
+                if (text?.length < 11)
+                  dispatch({ type: Actions.SET_CARD_CVV, payload: text });
               }}
               inputStyle={styles.cvvInputStyle}
               error={inputErrors.cvv}
             />
+            <View style={styles.cardContainer}>
+              {renderSvg(STATIC_CREDIT_CARD_CVC_SVG)}
+            </View>
           </View>
         </View>
       </View>
@@ -194,7 +217,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     position: "absolute",
-    top: 15,
+    top: 9,
     right: 0,
     marginRight: 8,
   },
