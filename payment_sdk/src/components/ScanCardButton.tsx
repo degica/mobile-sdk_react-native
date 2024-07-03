@@ -5,11 +5,16 @@ import KomojuText from "./KomojuText";
 // When press the scan card button it will open the camera and scan the card,
 // without manually typing the card number, this will automaticaly fill in the
 // card field
-const ScanCardButton = () => {
+
+type ScanCardButtonProps = {
+  onPress: () => void;
+};
+
+const ScanCardButton = ({onPress}: ScanCardButtonProps) => {
   return (
     <TouchableOpacity
       style={styles.scanIconRow}
-      onPress={() => console.log("save card number in context")}
+      onPress={onPress}
     >
       <Image
         style={styles.cardScan}
