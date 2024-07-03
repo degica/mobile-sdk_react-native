@@ -42,6 +42,6 @@ describe("determineCardType", () => {
     expect(determineCardType("5555555555554444")).toBe("master");
   });
   it("returns unknown for an unknown card number", () => {
-    expect(determineCardType("1234567890123456")).toBeNull("unknown");
+    expect(determineCardType("1234567890123456")).toBe("unknown");
   });
 });
