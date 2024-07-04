@@ -261,6 +261,22 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
               handleWebViewNavigationStateChange(newNavState, paymentType),
           },
         });
+      } else if (
+        paymentType === PaymentType.KONBINI &&
+        response?.payment?.payment_details?.instructions_url
+      ) {
+        dispatch({
+          type: Actions.SET_WEBVIEW_LINK,
+          payload: {
+            link: response?.payment?.payment_details?.instructions_url,
+            onNavChange: (newNavState: newNavStateProps) =>
+              handleWebViewNavigationStateChange(newNavState, paymentType),
+          },
+        });
+        dispatch({
+          type: Actions.SET_PAYMENT_STATE,
+          payload: ResponseScreenStatuses.COMPLETE,
+        });
       } else if (response?.status === PaymentStatuses.SUCCESS) {
         onPaymentSuccess();
       } else {

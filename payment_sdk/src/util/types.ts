@@ -61,8 +61,12 @@ export enum TokenResponseStatuses {
 }
 
 export enum ResponseScreenStatuses {
+  /** When a payment is fully complete Displaying success screen immediately and disabling the cancel payment popup */
   SUCCESS = "success",
+  /** Displaying failed screen immediately */
   FAILED = "failed",
+  /** For displaying payment instruction screens and disabling the cancel payment popup */
+  COMPLETE = "complete",
 }
 
 export enum CurrencySign {
@@ -106,6 +110,9 @@ export type newNavStateProps = {
 export type SessionPayResponseType = {
   redirect_url: string;
   status: string;
+  payment: {
+    payment_details: { instructions_url: string };
+  };
 };
 
 export type sessionShowPaymentMethodType = {

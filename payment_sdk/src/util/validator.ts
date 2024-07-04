@@ -6,7 +6,7 @@ import {
   SessionShowResponseType,
 } from "./types";
 
-const MAX_CARD_LENGTH = 16;
+const MAX_CARD_LENGTH = 19;
 
 export const isCardNumberValid = (cardString: string) => {
   const text = cardString.replaceAll(" ", "");

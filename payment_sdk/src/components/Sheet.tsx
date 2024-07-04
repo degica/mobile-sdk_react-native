@@ -192,13 +192,18 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
           <TouchableOpacity
             style={styles.crossBtn}
             onPress={() =>
-              closeSheet(paymentState !== ResponseScreenStatuses.SUCCESS)
+              closeSheet(
+                !(
+                  paymentState === ResponseScreenStatuses.SUCCESS ||
+                  paymentState === ResponseScreenStatuses.COMPLETE
+                )
+              )
             }
           >
             <Image source={closeIcon} />
           </TouchableOpacity>
         </RNAnimated.View>
-        {paymentState ? (
+        {paymentState && paymentState !== ResponseScreenStatuses.COMPLETE ? (
           <ResponseScreen
             status={paymentState}
             onPress={ctaOnPress}
