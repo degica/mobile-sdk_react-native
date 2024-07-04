@@ -6,5 +6,6 @@ module.exports = {
       moduleName: '@env',
       path: '.env',
     }],
+    ['react-native-worklets-core/plugin']
   ],
 };

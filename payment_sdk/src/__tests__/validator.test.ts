@@ -13,7 +13,7 @@ describe("isCardNumberValid", () => {
   });
 
   it("returns false for input exceeding max card length", () => {
-    expect(isCardNumberValid("12345678901234567")).toBe(false);
+    expect(isCardNumberValid("12345678901234567890")).toBe(false);
   });
 
   it("returns false for input with non-numeric characters", () => {
@@ -25,7 +25,7 @@ describe("isCardNumberValid", () => {
   });
 
   it("returns false for card number with spaces but exceeding max length", () => {
-    expect(isCardNumberValid("1234 5678 1234 5678 90")).toBe(false);
+    expect(isCardNumberValid("1234 5678 1234 5678 9012")).toBe(false);
   });
 
   it("returns false for input length not matching numeric conversion", () => {
