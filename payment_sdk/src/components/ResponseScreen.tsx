@@ -1,8 +1,10 @@
-import { Image, StyleSheet, Text, View } from "react-native";
 import React, { useCallback, useMemo } from "react";
 
+import { Image, StyleSheet, Text, View } from "react-native";
+
+import { ResponseScreenStatuses } from "@util/types";
+
 import SubmitButton from "./SubmitButton";
-import { ResponseScreenStatuses } from "../util/types";
 
 type Props = {
   status: ResponseScreenStatuses.SUCCESS | ResponseScreenStatuses.FAILED;

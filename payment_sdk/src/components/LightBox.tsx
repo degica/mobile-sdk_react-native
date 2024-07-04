@@ -1,5 +1,7 @@
-import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+
+import { StyleSheet, Text, View } from "react-native";
+
 import { useTranslation } from "react-i18next";
 
 type Props = {

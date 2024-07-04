@@ -1,13 +1,16 @@
 import React, { useState, useContext } from "react";
+
 import { StyleSheet, View } from "react-native";
 
-import Input from "../Input";
+import { Actions, DispatchContext, StateContext } from "@context/state";
+
+import { formatCurrency } from "@util/helpers";
+import { PaymentType } from "@util/types";
+import { validateCardFormFields } from "@util/validator";
+
 import CardInputGroup from "../CardInputGroup";
+import Input from "../Input";
 import SubmitButton from "../SubmitButton";
-import { Actions, DispatchContext, StateContext } from "../../state";
-import { PaymentType } from "../../util/types";
-import { formatCurrency } from "../../util/helpers";
-import { validateCardFormFields } from "../../util/validator";
 
 const initialErrors = {
   name: false,

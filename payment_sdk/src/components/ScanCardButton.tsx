@@ -1,5 +1,7 @@
-import { Image, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
+
+import { Image, StyleSheet, TouchableOpacity } from "react-native";
+
 import KomojuText from "./KomojuText";
 
 // When press the scan card button it will open the camera and scan the card,

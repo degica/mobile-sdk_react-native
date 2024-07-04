@@ -1,4 +1,6 @@
 import { Dimensions, Platform } from "react-native";
+
+import { cardTypeRegex } from "./constants";
 import {
   brandsType,
   CardTypes,
@@ -7,7 +9,6 @@ import {
   PaymentType,
   sessionShowPaymentMethodType,
 } from "./types";
-import { cardTypeRegex } from "./constants";
 
 export const isDevApp = __DEV__;
 
@@ -111,10 +112,10 @@ export const parseBrands = (
   obj: string[] | { [key: string]: brandsType } | undefined
 ) => {
   // Initialize an empty array to store the converted objects
-  let result = [];
+  const result = [];
 
   // Iterate over the keys of the input object
-  for (let key in obj) {
+  for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
       // Create a new object with 'type' as the key and 'icon' as the value
       result.push({ type: key, icon: obj[key].icon });

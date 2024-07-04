@@ -1,4 +1,3 @@
-import { StyleSheet, View } from "react-native";
 import React, {
   memo,
   useContext,
@@ -6,25 +5,30 @@ import React, {
   useState,
   useCallback,
 } from "react";
+
+import { StyleSheet, View } from "react-native";
+
 import { SvgCssUri } from "react-native-svg/css";
 
-import Input from "./Input";
-import ScanCardButton from "./ScanCardButton";
-import { Actions, DispatchContext, StateContext } from "../state";
-import { isCardNumberValid, validateCardExpiry } from "../util/validator";
-import {
-  determineCardType,
-  formatCreditCardNumber,
-  formatExpiry,
-} from "../util/helpers";
-import KomojuText from "./KomojuText";
+import { Actions, DispatchContext, StateContext } from "@context/state";
+
 import {
   BASE_URL,
   STATIC_CREDIT_CARD_CVC_SVG,
   STATIC_CREDIT_CARD_SVG,
-} from "../util/constants";
-import { PaymentType, sessionShowPaymentMethodType } from "../util/types";
+} from "@util/constants";
+import {
+  determineCardType,
+  formatCreditCardNumber,
+  formatExpiry,
+} from "@util/helpers";
+import { PaymentType, sessionShowPaymentMethodType } from "@util/types";
+import { isCardNumberValid, validateCardExpiry } from "@util/validator";
+
 import CardScanner from "./CardScanner";
+import Input from "./Input";
+import KomojuText from "./KomojuText";
+import ScanCardButton from "./ScanCardButton";
 
 type Props = {
   inputErrors: {

@@ -1,5 +1,7 @@
 import React from "react";
+
 import { Text, StyleProp, TextStyle } from "react-native";
+
 import { useTranslation } from "react-i18next";
 
 interface KomojuTextProps {

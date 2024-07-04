@@ -1,11 +1,15 @@
 import React, { useContext } from "react";
+
 import { StyleSheet, View, FlatList } from "react-native";
+
 import { SvgCssUri } from "react-native-svg/css";
 
+import { StateContext } from "@context/state";
+
+import { BASE_URL } from "@util/constants";
+import { PaymentType, sessionShowPaymentMethodType } from "@util/types";
+
 import Pill from "./Pill";
-import { PaymentType, sessionShowPaymentMethodType } from "../util/types";
-import { StateContext } from "../state";
-import { BASE_URL } from "../util/constants";
 
 type Props = {
   onSelect: (type: PaymentType) => void;

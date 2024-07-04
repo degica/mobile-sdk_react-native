@@ -5,9 +5,19 @@ import React, {
   useMemo,
   useRef,
 } from "react";
+
 import { Alert } from "react-native";
+
 import i18next from "i18next";
 
+import StateProvider from "@components/paymentState/stateProvider";
+import Sheet, { SheetRefProps } from "@components/Sheet";
+
+import payForSession from "@services/payForSessionService";
+import sessionShow from "@services/sessionShow";
+
+import { sessionParameterName, tokenParameterName } from "@util/constants";
+import { parsePaymentMethods } from "@util/helpers";
 import {
   CreatePaymentFuncType,
   initialState,
@@ -19,18 +29,11 @@ import {
   sessionPayProps,
   TokenResponseStatuses,
   webViewDataInitialState,
-} from "./util/types";
+} from "@util/types";
+import { validateSessionResponse } from "@util/validator";
 
+import "@assets/languages/i18n";
 import { Actions, DispatchContext, KomojuContext } from "./state";
-import StateProvider from "./components/paymentState/stateProvider";
-import payForSession from "./services/payForSessionService";
-import sessionShow from "./services/sessionShow";
-import { validateSessionResponse } from "./util/validator";
-import { sessionParameterName, tokenParameterName } from "./util/constants";
-import Sheet, { SheetRefProps } from "./components/Sheet";
-
-import "./assets/languages/i18n";
-import { parsePaymentMethods } from "./util/helpers";
 
 type KomojuProviderIprops = {
   children?: ReactNode | ReactNode[];
@@ -89,7 +92,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
       };
 
       // fetch session status to check if the payment is completed
-      let sessionResponse = await sessionShow(sessionShowPayload);
+      const sessionResponse = await sessionShow(sessionShowPayload);
       // invoking client provided onDismiss callback
       onDismissCallback.current(sessionResponse);
     }

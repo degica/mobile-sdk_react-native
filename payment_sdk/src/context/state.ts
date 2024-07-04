@@ -1,7 +1,6 @@
 import { createContext } from "react";
 
-import { noop } from "./util/constants";
-
+import { noop } from "@util/constants";
 import {
   ActionType,
   CreatePaymentFuncType,
@@ -9,7 +8,7 @@ import {
   PaymentType,
   State,
   initialState,
-} from "./util/types";
+} from "@util/types";
 
 /**
  * Action types for the reducer

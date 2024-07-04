@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 
 import { determineCardType, formatCreditCardNumber, formatExpiry } from "../util/helpers";
-import { Actions, DispatchContext, StateContext } from "../state";
+import { Actions, DispatchContext, StateContext } from "../context/state";
 import CardInputGroup from "../components/CardInputGroup";
 import { isCardNumberValid, validateCardExpiry } from "../util/validator";
 

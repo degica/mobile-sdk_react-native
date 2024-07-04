@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
   View,
   TextInput,
@@ -8,6 +9,7 @@ import {
   KeyboardTypeOptions,
   TextInputProps,
 } from "react-native";
+
 import { useTranslation } from "react-i18next";
 
 interface InputProps extends TextInputProps {

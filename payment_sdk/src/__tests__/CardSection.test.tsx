@@ -4,7 +4,7 @@ import { fireEvent, render, waitFor } from "@testing-library/react-native";
 import CardSection from "../components/sections/CardSection";
 
 import StateProvider from "../components/paymentState/stateProvider";
-import { DispatchContext, StateContext } from "../state";
+import { DispatchContext, StateContext } from "../context/state";
 import { PaymentType } from "../util/types";
 
 export const mockState = {

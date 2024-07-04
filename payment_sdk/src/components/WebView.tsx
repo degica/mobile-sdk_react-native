@@ -1,8 +1,10 @@
 import React from "react";
-import { WebView } from "react-native-webview";
+
 import { StyleSheet } from "react-native";
 
-import { newNavStateProps } from "../util/types";
+import { WebView } from "react-native-webview";
+
+import { newNavStateProps } from "@util/types";
 
 type webViewProps = {
   link: string;

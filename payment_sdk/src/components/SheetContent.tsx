@@ -1,16 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
+
 import { Keyboard, ScrollView, StyleSheet, View } from "react-native";
 
-import PillContainer from "./PillContainer";
-import WebView from "./WebView";
-import CardSection from "./sections/CardSection";
-import PayPaySection from "./sections/PayPaySection";
-import { Actions, DispatchContext, StateContext } from "../state";
+import { Actions, DispatchContext, StateContext } from "@context/state";
+
+import { SCREEN_HEIGHT, isAndroid } from "@util/helpers";
+import { PaymentType } from "@util/types";
+
 import Loader from "./Loader";
-import SheetFooter from "./sections/SheetFooter";
-import { PaymentType } from "../util/types";
+import PillContainer from "./PillContainer";
+import CardSection from "./sections/CardSection";
 import KonbiniSection from "./sections/KonbiniSection";
-import { SCREEN_HEIGHT, isAndroid } from "../util/helpers";
+import PayPaySection from "./sections/PayPaySection";
+import SheetFooter from "./sections/SheetFooter";
+import WebView from "./WebView";
 
 const KEYBOARD_OFFSET = isAndroid() ? 120 : 80;
 

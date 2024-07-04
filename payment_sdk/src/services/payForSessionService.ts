@@ -1,10 +1,10 @@
-import { BASE_URL_API } from "../util/constants";
-import { getMonthYearFromExpiry, printLog } from "../util/helpers";
+import { BASE_URL_API } from "@util/constants";
+import { getMonthYearFromExpiry, printLog } from "@util/helpers";
 import {
   payForSessionProps,
   PaymentType,
   SessionPayResponseType,
-} from "../util/types";
+} from "@util/types";
 
 /**
  * Processes a payment for a given session.

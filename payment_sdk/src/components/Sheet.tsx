@@ -6,6 +6,7 @@ import React, {
   useEffect,
   ForwardRefRenderFunction,
 } from "react";
+
 import {
   Alert,
   Image,
@@ -16,15 +17,17 @@ import {
   Keyboard,
 } from "react-native";
 
-import ResponseScreen from "./ResponseScreen";
-import { Actions, DispatchContext, StateContext } from "../state";
-import SheetContent from "./SheetContent";
-import { paymentFailedCtaText, paymentSuccessCtaText } from "../util/constants";
-import { ResponseScreenStatuses } from "../util/types";
-import { SCREEN_HEIGHT } from "../util/helpers";
-import KomojuText from "./KomojuText";
+import { Actions, DispatchContext, StateContext } from "@context/state";
 
-const closeIcon = require("../assets/images/close.png");
+import { paymentFailedCtaText, paymentSuccessCtaText } from "@util/constants";
+import { SCREEN_HEIGHT } from "@util/helpers";
+import { ResponseScreenStatuses } from "@util/types";
+
+import closeIcon from "@assets/images/close.png";
+
+import KomojuText from "./KomojuText";
+import ResponseScreen from "./ResponseScreen";
+import SheetContent from "./SheetContent";
 
 const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 50;
 
