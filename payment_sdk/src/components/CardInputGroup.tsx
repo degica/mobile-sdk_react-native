@@ -18,7 +18,11 @@ import {
   formatExpiry,
 } from "../util/helpers";
 import KomojuText from "./KomojuText";
-import { BASE_URL } from "../util/constants";
+import {
+  BASE_URL,
+  STATIC_CREDIT_CARD_CVC_SVG,
+  STATIC_CREDIT_CARD_SVG,
+} from "../util/constants";
 import { PaymentType, sessionShowPaymentMethodType } from "../util/types";
 import CardScanner from "./CardScanner";
 
@@ -30,6 +34,9 @@ type Props = {
   };
   resetError: (type: string) => void;
 };
+
+const CARD_WIDTH = 26;
+const CARD_HEIGHT = 30;
 
 const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
   const dispatch = useContext(DispatchContext);
@@ -46,9 +53,17 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
     }
   }, []);
 
+  const renderSvg = (uri: string, widthMultiplier = 1) => (
+    <SvgCssUri
+      width={CARD_WIDTH * widthMultiplier}
+      height={CARD_HEIGHT}
+      uri={uri}
+    />
+  );
+
   //Toggle card scanner
   const toggleCardScanner = () => {
-    setToggleScanCard(prevState => !prevState);
+    setToggleScanCard((prevState: boolean) => !prevState);
   };
 
   // Create card image list
@@ -60,17 +75,21 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
         method?.type === PaymentType.CREDIT
     );
     // If card number input is empty or user input does not match any card type showing all available card payment methods
-    const allCardTypes = cardType ?? cardPaymentMethodData?.brands?.toString();
-    const cardTypesCount = allCardTypes?.split(",")?.length;
+    const allCardTypes = cardPaymentMethodData?.brands?.toString();
+    const cardTypesCount = allCardTypes?.split(",")?.length ?? 1;
 
-    if (!allCardTypes) return null;
-    return (
-      <SvgCssUri
-        width={26 * cardTypesCount ?? 1}
-        height={30}
-        uri={`${cardUri}${allCardTypes}`}
-      />
-    );
+    /**
+     * if card number field is empty or less than 2 digits showing all available card brands
+     * if user typed card number matched showing relevant card type
+     * if card number is more than 2 digits and not matching for any brand showing static credit card svg
+     */
+    if (cardType === "unknown") {
+      return renderSvg(STATIC_CREDIT_CARD_SVG);
+    } else if (cardType) {
+      return renderSvg(`${cardUri}${cardType}`);
+    } else if (allCardTypes) {
+      return renderSvg(`${cardUri}${allCardTypes}`, cardTypesCount);
+    }
   }, [cardType, paymentMethods]);
 
   const onCardScanned = useCallback(
@@ -94,73 +113,81 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
         <KomojuText style={styles.label}>CARD_NUMBER</KomojuText>
         <ScanCardButton onPress={toggleCardScanner} />
       </View>
-      {
-        toggleScanCard ? <View style={styles.scanContainer}>
-          <CardScanner isVisible={toggleScanCard} onCardScanned={onCardScanned}/>
-        </View> :
-          <View style={styles.container}>
-            <View style={styles.cardNumberRow}>
+      {toggleScanCard ? (
+        <View style={styles.scanContainer}>
+          <CardScanner
+            isVisible={toggleScanCard}
+            onCardScanned={onCardScanned}
+          />
+        </View>
+      ) : (
+        <View style={styles.container}>
+          <View style={styles.cardNumberRow}>
+            <Input
+              value={cardNumber ?? ""}
+              testID="cardNumberInput"
+              keyboardType="number-pad"
+              placeholder="1234 1234 1234 1234"
+              onChangeText={(text: string) => {
+                resetError("number");
+                if (isCardNumberValid(text)) {
+                  const derivedText = formatCreditCardNumber(text);
+                  dispatch({
+                    type: Actions.SET_CARD_NUMBER,
+                    payload: derivedText,
+                  });
+                  // Determine card type and set it
+                  const type = determineCardType(text);
+                  setCardType(type);
+                }
+              }}
+              inputStyle={styles.numberInputStyle}
+              error={inputErrors.number}
+            />
+            <View style={styles.cardContainer}>{cardImage()}</View>
+          </View>
+          <View style={styles.splitRow}>
+            <View style={styles.itemRow}>
               <Input
-                value={cardNumber ?? ""}
-                testID="cardNumberInput"
+                value={cardExpiredDate}
                 keyboardType="number-pad"
-                placeholder="1234 1234 1234 1234"
+                testID="cardExpiryInput"
+                placeholder="MM / YY"
                 onChangeText={(text: string) => {
-                  resetError("number");
-                  if (isCardNumberValid(text)) {
-                    const derivedText = formatCreditCardNumber(text);
+                  resetError("expiry");
+                  if (validateCardExpiry(text)) {
                     dispatch({
-                      type: Actions.SET_CARD_NUMBER,
-                      payload: derivedText,
+                      type: Actions.SET_CARD_EXPIRED_DATE,
+                      payload: formatExpiry(text),
                     });
-                    // Determine card type and set it
-                    const type = determineCardType(text);
-                    setCardType(type);
                   }
                 }}
-                inputStyle={styles.numberInputStyle}
-                error={inputErrors.number}
+                inputStyle={styles.expiryInputStyle}
+                error={inputErrors.expiry}
               />
-              <View style={styles.cardContainer}>{cardImage()}</View>
             </View>
-            <View style={styles.splitRow}>
-              <View style={styles.itemRow}>
-                <Input
-                  value={cardExpiredDate}
-                  keyboardType="number-pad"
-                  testID="cardExpiryInput"
-                  placeholder="MM / YY"
-                  onChangeText={(text: string) => {
-                    resetError("expiry");
-                    if (validateCardExpiry(text)) {
-                      dispatch({
-                        type: Actions.SET_CARD_EXPIRED_DATE,
-                        payload: formatExpiry(text),
-                      });
-                    }
-                  }}
-                  inputStyle={styles.expiryInputStyle}
-                  error={inputErrors.expiry}
-                />
-              </View>
-              <View style={styles.itemRow}>
-                <Input
-                  value={cardCVV}
-                  testID="cardCVVInput"
-                  keyboardType="number-pad"
-                  placeholder="CVV"
-                  onChangeText={(text: string) => {
-                    resetError("cvv");
+            <View style={styles.itemRow}>
+              <Input
+                value={cardCVV}
+                testID="cardCVVInput"
+                keyboardType="number-pad"
+                placeholder="CVV"
+                onChangeText={(text: string) => {
+                  resetError("cvv");
 
+                  if (text?.length < 11)
                     dispatch({ type: Actions.SET_CARD_CVV, payload: text });
-                  }}
-                  inputStyle={styles.cvvInputStyle}
-                  error={inputErrors.cvv}
-                />
+                }}
+                inputStyle={styles.cvvInputStyle}
+                error={inputErrors.cvv}
+              />
+              <View style={styles.cardContainer}>
+                {renderSvg(STATIC_CREDIT_CARD_CVC_SVG)}
               </View>
             </View>
           </View>
-      }
+        </View>
+      )}
     </View>
   );
 });
@@ -221,7 +248,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     position: "absolute",
-    top: 15,
+    top: 9,
     right: 0,
     marginRight: 8,
   },
@@ -233,5 +260,5 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
-  }
+  },
 });

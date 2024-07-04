@@ -1,4 +1,8 @@
-import { determineCardType, formatCreditCardNumber, formatExpiry } from "../util/helpers";
+import {
+  determineCardType,
+  formatCreditCardNumber,
+  formatExpiry,
+} from "../util/helpers";
 import { isCardNumberValid, validateCardExpiry } from "../util/validator";
 
 describe("Credit Card number validation", () => {
@@ -37,7 +41,7 @@ describe("determineCardType", () => {
   it("returns 'master' for a master card number", () => {
     expect(determineCardType("5555555555554444")).toBe("master");
   });
-  it("returns null for an unknown card number", () => {
-    expect(determineCardType("1234567890123456")).toBeNull();
+  it("returns unknown for an unknown card number", () => {
+    expect(determineCardType("1234567890123456")).toBe("unknown");
   });
 });
