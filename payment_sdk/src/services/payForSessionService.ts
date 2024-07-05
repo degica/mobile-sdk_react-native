@@ -1,4 +1,4 @@
-import { BASE_URL_API } from "@util/constants";
+import { BASE_URL_API, API_HEADER } from "@util/constants";
 import { getMonthYearFromExpiry, printLog } from "@util/helpers";
 import {
   payForSessionProps,
@@ -79,11 +79,7 @@ const payForSession = async ({
     // payment POST request options of headers and body should be as bellow
     const options = {
       method: "POST",
-      headers: {
-        accept: "application/json",
-        "content-type": "application/json",
-        Authorization: `Basic ${btoa(publicKey + ":")}`,
-      },
+      headers: API_HEADER(publicKey),
       body: JSON.stringify({
         capture: "auto",
         payment_details,

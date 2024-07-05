@@ -1,6 +1,12 @@
 export const noop = () => {};
 export const BASE_URL = "https://komoju.com";
 export const BASE_URL_API = `${BASE_URL}/api/v1`;
+export const API_HEADER = (publicKey: string) => ({
+  accept: "application/json",
+  "content-type": "application/json",
+  "KOMOJU-VIA": "mobile_react",
+  Authorization: `Basic ${btoa(publicKey + ":")}`,
+});
 
 export const STATIC_CREDIT_CARD_SVG =
   "https://komoju-fields-demo.herokuapp.com/static/credit_card_number.svg";
