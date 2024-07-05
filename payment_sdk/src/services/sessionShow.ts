@@ -1,4 +1,4 @@
-import { BASE_URL_API } from "../util/constants";
+import { API_HEADER, BASE_URL_API } from "../util/constants";
 import { printLog } from "../util/helpers";
 import { SessionShowResponseType } from "../util/types";
 
@@ -15,10 +15,7 @@ const sessionShow = async ({
     const url = `${BASE_URL_API}/sessions/${sessionId}`;
     const options = {
       method: "GET",
-      headers: {
-        accept: "application/json",
-        Authorization: `Basic ${btoa(publicKey + ":")}`,
-      },
+      headers: API_HEADER(publicKey),
     };
 
     const response = await fetch(url, options);
