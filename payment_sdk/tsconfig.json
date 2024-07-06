@@ -8,7 +8,8 @@
     ],
     "jsx": "react",
     "declaration": true,
-    "outDir": "lib",
+    "emitDeclarationOnly": true,
+    "outDir": "./dist",
     "rootDir": "src",
     "strict": true,
     "moduleResolution": "node",
@@ -41,10 +42,10 @@
   ],
   "exclude": [
     "node_modules",
-    "lib",
-    "__tests__",
+    "src/__tests__",
     "babel.config.js",
     "metro.config.js",
-    "jest.config.js"
+    "jest.config.js",
+    "dist"
   ]
 }

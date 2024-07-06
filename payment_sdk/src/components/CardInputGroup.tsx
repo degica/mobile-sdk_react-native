@@ -42,7 +42,7 @@ type Props = {
 const CARD_WIDTH = 26;
 const CARD_HEIGHT = 30;
 
-const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
+const CardInputGroup = ({ inputErrors, resetError }: Props) => {
   const dispatch = useContext(DispatchContext);
   const [cardType, setCardType] = useState<string | null>(null);
   const [toggleScanCard, setToggleScanCard] = useState<boolean>(false);
@@ -153,7 +153,7 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
           <View style={styles.splitRow}>
             <View style={styles.itemRow}>
               <Input
-                value={cardExpiredDate}
+                value={cardExpiredDate as string}
                 keyboardType="number-pad"
                 testID="cardExpiryInput"
                 placeholder="MM / YY"
@@ -172,7 +172,7 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
             </View>
             <View style={styles.itemRow}>
               <Input
-                value={cardCVV}
+                value={cardCVV as string}
                 testID="cardCVVInput"
                 keyboardType="number-pad"
                 placeholder="CVV"
@@ -194,9 +194,9 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
       )}
     </View>
   );
-});
+};
 
-export default CardInputGroup;
+export default memo(CardInputGroup);
 
 const styles = StyleSheet.create({
   parentContainer: {

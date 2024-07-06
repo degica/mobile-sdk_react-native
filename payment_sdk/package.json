@@ -2,8 +2,13 @@
   "name": "react-native-komoju",
   "version": "1.0.0",
   "description": "degica payment SDK",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
   "scripts": {
+    "build": "npm run build:js && npm run build:types",
+    "build:js": "babel src --out-dir dist --extensions \".ts,.tsx\" --copy-files",
+    "build:types": "tsc --emitDeclarationOnly --outDir dist",
     "test": "jest",
     "lint": "eslint . --ignore-pattern babel.config.js --ignore-pattern jest.config.js --ignore-pattern setupTests.js"
   },

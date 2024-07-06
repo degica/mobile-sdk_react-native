@@ -44,6 +44,8 @@ const KonbiniSection = (): JSX.Element => {
   const konbiniBrands = parseBrands(konbiniPaymentMethodData?.brands || {});
 
   const onPay = () => {
+    // TODO: Fix this type error
+    // @ts-expect-error - Type 'string' is not assignable to type 'object'.
     const isValid = validateKonbiniFormFields({ name, email, setInputErrors });
 
     if (isValid) {
@@ -59,6 +61,8 @@ const KonbiniSection = (): JSX.Element => {
   };
 
   const resetError = (type: string) => {
+    // TODO: Fix this type error
+    // @ts-expect-error - Type 'string' cannot be used to index type 'object'.
     setInputErrors((pre: object) => ({ ...pre, [type]: false }));
   };
 

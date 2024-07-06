@@ -40,6 +40,8 @@ const CardSection = (): JSX.Element => {
   const dispatch = useContext(DispatchContext);
 
   const resetError = (type: string) => {
+    // TODO: Fix this type error
+    // @ts-expect-error - Type 'string' cannot be used to index type 'object'.
     setInputErrors((pre: object) => ({ ...pre, [type]: false }));
   };
 
@@ -49,6 +51,8 @@ const CardSection = (): JSX.Element => {
       cardCVV,
       cardNumber,
       cardExpiredDate,
+      // TODO: Fix this type error
+      // @ts-expect-error - Type 'object' is not assignable to type 'SetStateAction<object>'.
       setInputErrors,
     });
 
