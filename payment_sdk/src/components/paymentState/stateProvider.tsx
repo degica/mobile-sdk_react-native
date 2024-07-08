@@ -1,3 +1,5 @@
+// TODO: Fix this type error
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode, useReducer } from "react";
 
 import { DispatchContext, StateContext, reducer } from "@context/state";

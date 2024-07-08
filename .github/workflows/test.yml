@@ -27,5 +27,8 @@ jobs:
       - name: Install dependencies
         run: cd payment_sdk && yarn install
 
+      - name: Run Lint Check
+        run: cd payment_sdk && yarn lint
+
       - name: Run Jest tests
         run: cd payment_sdk && yarn test

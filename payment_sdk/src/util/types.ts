@@ -140,6 +140,8 @@ export type SessionShowResponseType = {
 };
 
 type setInputErrorType = {
+  // TODO: Fix this type error
+  // eslint-disable-next-line @typescript-eslint/ban-types
   setInputErrors: (data: object) => {};
 };
 
@@ -178,6 +180,8 @@ export type State = CardDetailsType &
     /**
      * Callback function to call relevant api for each payment type.
      */
+    // TODO: Fix this type error
+  // eslint-disable-next-line @typescript-eslint/ban-types
     sessionPay: Function;
     /**
      * Web view url and callback when url change at web view.
@@ -201,9 +205,9 @@ export type State = CardDetailsType &
      * this state is used to toggle(show hide) the success and failed screens.
      */
     paymentState:
-      | ResponseScreenStatuses.SUCCESS
-      | ResponseScreenStatuses.FAILED
-      | "";
+    | ResponseScreenStatuses.SUCCESS
+    | ResponseScreenStatuses.FAILED
+    | "";
   };
 
 export type sessionPayProps = {
@@ -211,7 +215,9 @@ export type sessionPayProps = {
   paymentDetails?: CardDetailsType;
 };
 
-export const webViewDataInitialState = { link: "", onNavChange: ({}) => {} };
+// TODO: Fix this type error
+// eslint-disable-next-line no-empty-pattern
+export const webViewDataInitialState = { link: "", onNavChange: ({ }) => { } };
 
 // Define the initial state
 export const initialState: State = {
@@ -232,11 +238,13 @@ export const initialState: State = {
   email: "",
   /** konbini pay related states start */
 
-  sessionPay: () => {},
+  sessionPay: () => { },
   webViewData: webViewDataInitialState,
   amount: "",
   currency: CurrencyTypes.JPY,
   paymentState: "",
   paymentMethods: [],
 };
+// TODO: Fix this type error
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ActionType = { type: string; payload: any };

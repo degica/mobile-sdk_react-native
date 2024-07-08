@@ -7,6 +7,17 @@ import tseslint from "typescript-eslint";
 
 export default [
   {
+    ignores: [
+      "node_modules/",
+      "dist/*",
+      "*.config.js",
+      "*.config.mjs",
+      "babel.config.js",
+      "setupTests.js",
+      "src/__tests__/*",
+    ]
+  },
+  {
     files: ["**/*.ts", "**/*.tsx"],
     languageOptions:
       { globals: globals.browser }

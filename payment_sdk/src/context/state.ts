@@ -131,6 +131,8 @@ const defaultValue = {
    * Function to create a payment session.
    * @param {CreatePaymentFuncType} data - The data for creating a payment session.
    */
+  // TODO: Fix this type error
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   createPayment: (data: CreatePaymentFuncType) => {},
   /**
    * Function to display the payment sheet UI.
@@ -140,6 +142,8 @@ const defaultValue = {
    * Function to initialize Komoju without relying on props.
    * @param {InitPrams} data - The initialization parameters.
    */
+  // TODO: Fix this type error
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   initializeKomoju: (data: InitPrams) => {},
 };
 /**

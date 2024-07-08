@@ -10,7 +10,7 @@
     "build:js": "babel src --out-dir dist --extensions \".ts,.tsx\" --copy-files",
     "build:types": "tsc --emitDeclarationOnly --outDir dist",
     "test": "jest",
-    "lint": "eslint . --ignore-pattern babel.config.js --ignore-pattern jest.config.js --ignore-pattern setupTests.js"
+    "lint": "eslint ."
   },
   "author": "",
   "license": "MIT",
