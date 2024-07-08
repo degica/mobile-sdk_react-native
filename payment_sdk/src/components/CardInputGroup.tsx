@@ -55,7 +55,7 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
       const type = determineCardType(cardNumber);
       setCardType(type);
     }
-  }, []);
+  }, [cardNumber]);
 
   const renderSvg = (uri: string, widthMultiplier = 1) => (
     <SvgCssUri
