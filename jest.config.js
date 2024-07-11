@@ -8,6 +8,8 @@ module.exports = {
   preset: "react-native",
   testEnvironment: "node",
   modulePathIgnorePatterns: ["<rootDir>/node_modules"],
+  // added dist file to ignore
+  testPathIgnorePatterns: ["<rootDir>/dist"],
   setupFiles: ["<rootDir>/setupTests.js"],
   setupFilesAfterEnv: ["@testing-library/jest-native/extend-expect"],
   transformIgnorePatterns: [],

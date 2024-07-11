@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+
 import {
   useColorScheme,
   View,
@@ -8,7 +9,9 @@ import {
   StyleSheet,
   Pressable,
 } from 'react-native';
+
 import {KomojuSDK} from 'react-native-komoju';
+
 import createSession from './services/sessionService';
 
 export enum CurrencyTypes {

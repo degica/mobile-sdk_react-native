@@ -10,29 +10,29 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "outDir": "./dist",
-    "rootDir": "src",
+    "rootDir": ".",
+    "baseUrl": ".",
     "strict": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "./src",
     "paths": {
       "@services/*": [
-        "services/*"
+        "./src/services/*"
       ],
       "@assets/*": [
-        "assets/*"
+        "./src/assets/*"
       ],
       "@components/*": [
-        "components/*"
+        "./src/components/*"
       ],
       "@util/*": [
-        "util/*"
+        "./src/util/*"
       ],
       "@context/*": [
-        "context/*"
+        "./src/context/*"
       ]
     }
   },
