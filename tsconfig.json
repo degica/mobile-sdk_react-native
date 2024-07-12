@@ -10,8 +10,8 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "outDir": "./dist",
-    "rootDir": ".",
-    "baseUrl": ".",
+    "rootDir": "./src",
+    "baseUrl": "./src",
     "strict": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
@@ -20,19 +20,19 @@
     "allowSyntheticDefaultImports": true,
     "paths": {
       "@services/*": [
-        "./src/services/*"
+        "services/*"
       ],
       "@assets/*": [
-        "./src/assets/*"
+        "assets/*"
       ],
       "@components/*": [
-        "./src/components/*"
+        "components/*"
       ],
       "@util/*": [
-        "./src/util/*"
+        "util/*"
       ],
       "@context/*": [
-        "./src/context/*"
+        "context/*"
       ]
     }
   },
