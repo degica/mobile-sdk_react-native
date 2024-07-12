@@ -24,10 +24,10 @@ npm install @komoju/komoju-react-native
 i18next
 react-i18next
 react-native-svg
-react-native-vision-camera
-react-native-vision-camera-text-recognition
 react-native-webview
 react-native-worklets-core
+react-native-vision-camera
+react-native-vision-camera-text-recognition
 ```
 
 ## Usage example
@@ -38,7 +38,7 @@ import { KomojuSDK } from '@komoju/komoju-react-native';
 function App() {
   return (
     <KomojuSDK.KomojuProvider
-      publicKey={PUBLISHABLE_KEY}
+      publicKey={PUBLIC_KEY}
     >
       <PaymentScreen />
     </KomojuSDK.KomojuProvider>
@@ -101,3 +101,10 @@ function App() {
 }
 ```
 
+### Properties
+
+| property           | type                                         | description                                                                                                   |
+| ------------------ | -------------------------------------------- | -------------------------------------------------------------                                                 |
+| **publicKey**      | `string`                                     | Your publishable key from the KOMOJU [merchant settings page](https://komoju.com/sign_in/) (this is mandtory) |
+| **payment_methods**| `Array <PaymentTypes>`                       | explicitly set the payment method(s) for purchase. (optional)                                                 |
+| **language**       | `string (LanguageTypes)`                     | explicitly set the language, if not set language will be picked from your session Id (optional)               |
