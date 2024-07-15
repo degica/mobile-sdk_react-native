@@ -1,7 +1,10 @@
-import { Image, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
-import KomojuText from "./KomojuText";
 
+import { Image, StyleSheet, TouchableOpacity } from "react-native";
+
+import ScannerImage from "@assets/images/scan.png";
+
+import KomojuText from "./KomojuText";
 // When press the scan card button it will open the camera and scan the card,
 // without manually typing the card number, this will automaticaly fill in the
 // card field
@@ -18,7 +21,7 @@ const ScanCardButton = ({onPress}: ScanCardButtonProps) => {
     >
       <Image
         style={styles.cardScan}
-        source={require("../assets/images/scan.png")}
+        source={ScannerImage}
       />
       <KomojuText style={styles.label}>SCAN_CARD</KomojuText>
     </TouchableOpacity>

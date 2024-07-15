@@ -1,11 +1,14 @@
-import { StyleSheet, View } from "react-native";
 import React, { useContext } from "react";
 
-import SubmitButton from "../SubmitButton";
-import LightBox from "../LightBox";
-import { StateContext } from "../../state";
-import { PaymentType } from "../../util/types";
+import { StyleSheet, View } from "react-native";
+
+import { StateContext } from "@context/state";
+
+import { PaymentType } from "@util/types";
+
 import KomojuText from "../KomojuText";
+import LightBox from "../LightBox";
+import SubmitButton from "../SubmitButton";
 
 const PayPaySection = () => {
   const { sessionPay } = useContext(StateContext);

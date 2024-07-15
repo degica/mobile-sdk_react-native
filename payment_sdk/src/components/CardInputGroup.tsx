@@ -1,4 +1,3 @@
-import { StyleSheet, View } from "react-native";
 import React, {
   memo,
   useContext,
@@ -6,25 +5,30 @@ import React, {
   useState,
   useCallback,
 } from "react";
+
+import { StyleSheet, View } from "react-native";
+
 import { SvgCssUri } from "react-native-svg/css";
 
-import Input from "./Input";
-import ScanCardButton from "./ScanCardButton";
-import { Actions, DispatchContext, StateContext } from "../state";
-import { isCardNumberValid, validateCardExpiry } from "../util/validator";
-import {
-  determineCardType,
-  formatCreditCardNumber,
-  formatExpiry,
-} from "../util/helpers";
-import KomojuText from "./KomojuText";
+import { Actions, DispatchContext, StateContext } from "@context/state";
+
 import {
   BASE_URL,
   STATIC_CREDIT_CARD_CVC_SVG,
   STATIC_CREDIT_CARD_SVG,
-} from "../util/constants";
-import { PaymentType, sessionShowPaymentMethodType } from "../util/types";
+} from "@util/constants";
+import {
+  determineCardType,
+  formatCreditCardNumber,
+  formatExpiry,
+} from "@util/helpers";
+import { PaymentType, sessionShowPaymentMethodType } from "@util/types";
+import { isCardNumberValid, validateCardExpiry } from "@util/validator";
+
 import CardScanner from "./CardScanner";
+import Input from "./Input";
+import KomojuText from "./KomojuText";
+// import ScanCardButton from "./ScanCardButton";
 
 type Props = {
   inputErrors: {
@@ -38,7 +42,7 @@ type Props = {
 const CARD_WIDTH = 26;
 const CARD_HEIGHT = 30;
 
-const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
+const CardInputGroup = ({ inputErrors, resetError }: Props) => {
   const dispatch = useContext(DispatchContext);
   const [cardType, setCardType] = useState<string | null>(null);
   const [toggleScanCard, setToggleScanCard] = useState<boolean>(false);
@@ -51,7 +55,7 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
       const type = determineCardType(cardNumber);
       setCardType(type);
     }
-  }, []);
+  }, [cardNumber]);
 
   const renderSvg = (uri: string, widthMultiplier = 1) => (
     <SvgCssUri
@@ -62,9 +66,9 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
   );
 
   //Toggle card scanner
-  const toggleCardScanner = () => {
-    setToggleScanCard((prevState: boolean) => !prevState);
-  };
+  // const toggleCardScanner = () => {
+  //   setToggleScanCard((prevState: boolean) => !prevState);
+  // };
 
   // Create card image list
   const cardImage = useCallback(() => {
@@ -111,7 +115,7 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
     <View style={styles.parentContainer}>
       <View style={styles.titleScanRow}>
         <KomojuText style={styles.label}>CARD_NUMBER</KomojuText>
-        <ScanCardButton onPress={toggleCardScanner} />
+        {/* <ScanCardButton onPress={toggleCardScanner} /> */}
       </View>
       {toggleScanCard ? (
         <View style={styles.scanContainer}>
@@ -149,7 +153,7 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
           <View style={styles.splitRow}>
             <View style={styles.itemRow}>
               <Input
-                value={cardExpiredDate}
+                value={cardExpiredDate as string}
                 keyboardType="number-pad"
                 testID="cardExpiryInput"
                 placeholder="MM / YY"
@@ -168,7 +172,7 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
             </View>
             <View style={styles.itemRow}>
               <Input
-                value={cardCVV}
+                value={cardCVV as string}
                 testID="cardCVVInput"
                 keyboardType="number-pad"
                 placeholder="CVV"
@@ -190,9 +194,9 @@ const CardInputGroup = memo(({ inputErrors, resetError }: Props) => {
       )}
     </View>
   );
-});
+};
 
-export default CardInputGroup;
+export default memo(CardInputGroup);
 
 const styles = StyleSheet.create({
   parentContainer: {

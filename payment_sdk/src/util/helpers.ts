@@ -1,4 +1,6 @@
 import { Dimensions, Platform } from "react-native";
+
+import { cardTypeRegex } from "./constants";
 import {
   brandsType,
   CardTypes,
@@ -7,7 +9,6 @@ import {
   PaymentType,
   sessionShowPaymentMethodType,
 } from "./types";
-import { cardTypeRegex } from "./constants";
 
 export const isDevApp = __DEV__;
 
@@ -25,12 +26,16 @@ export const formatExpiry = (expiry: string) => {
   const prevExpiry = expiry.split(" / ").join("/");
 
   if (!prevExpiry) return null;
+  // TODO: Fix this type error
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let expiryDate: any = prevExpiry;
   if (/^[2-9]$/.test(expiryDate)) {
     expiryDate = `0${expiryDate}`;
   }
 
   if (prevExpiry.length === 2 && +prevExpiry > 12) {
+    // TODO: Fix this type error
+    // @ts-expect-error - Type 'string' is not assignable to
     const [head, ...tail] = prevExpiry;
     expiryDate = `0${head}/${tail.join("")}`;
   }
@@ -111,11 +116,15 @@ export const parseBrands = (
   obj: string[] | { [key: string]: brandsType } | undefined
 ) => {
   // Initialize an empty array to store the converted objects
-  let result = [];
+  const result = [];
 
   // Iterate over the keys of the input object
-  for (let key in obj) {
+  for (const key in obj) {
+    // TODO: Fix this type error
+    // eslint-disable-next-line no-prototype-builtins
     if (obj.hasOwnProperty(key)) {
+      // TODO: Fix this type error
+      // @ts-expect-error - Type 'string' cannot be used to index type 'brandsType'.
       // Create a new object with 'type' as the key and 'icon' as the value
       result.push({ type: key, icon: obj[key].icon });
     }

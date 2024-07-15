@@ -1,5 +1,5 @@
 import React from 'react';
-import {KomojuSDK} from 'react-native-komoju';
+import {KomojuSDK} from '@komoju/komoju-react-native';
 import {PUBLIC_KEY} from '@env';
 
 import PaymentScreen from './PaymentScreen';

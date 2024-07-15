@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+
 import {
   Text,
   StyleSheet,
@@ -7,6 +8,7 @@ import {
   Image,
   ImageSourcePropType,
 } from "react-native";
+
 import { useTranslation } from "react-i18next";
 
 interface PillProps {

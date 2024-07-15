@@ -1,8 +1,9 @@
 import { useContext } from "react";
 
-import { KomojuProvider } from "./KomojuProvider";
-import { KomojuContext } from "./state";
-import { LanguageTypes, PaymentType } from "./util/types";
+import { KomojuProvider } from "@context/KomojuProvider";
+import { KomojuContext } from "@context/state";
+
+import { LanguageTypes, PaymentType } from "@util/types";
 
 /**
  * KomojuSDK provides context utilities for the Komoju payment system.

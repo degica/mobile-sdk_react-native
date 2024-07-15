@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {
+  useColorScheme,
   View,
   Text,
   TextInput,
@@ -7,7 +8,7 @@ import {
   StyleSheet,
   Pressable,
 } from 'react-native';
-import {KomojuSDK} from 'react-native-komoju';
+import {KomojuSDK} from '@komoju/komoju-react-native';
 import createSession from './services/sessionService';
 
 export enum CurrencyTypes {
@@ -18,6 +19,7 @@ export enum CurrencyTypes {
 const PaymentScreen = () => {
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState(CurrencyTypes.JPY);
+  const colorScheme = useColorScheme(); // Detects the color scheme of the device
 
   // use createPayment method to invoke the payment screen
   const {createPayment} = KomojuSDK.useKomoju();
@@ -45,8 +47,21 @@ const PaymentScreen = () => {
     setCurrency(key);
   };
 
+  const dynamicStyles = StyleSheet.create({
+    container: {
+      backgroundColor: colorScheme === 'dark' ? '#333' : '#FFF',
+    },
+    text: {
+      color: colorScheme === 'dark' ? '#FFF' : '#000',
+    },
+    input: {
+      backgroundColor: colorScheme === 'dark' ? '#555' : '#FFF',
+      color: colorScheme === 'dark' ? '#FFF' : '#000',
+    },
+  });
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, dynamicStyles.container]}>
       <View style={styles.currencyRow}>
         {(Object.keys(CurrencyTypes) as Array<keyof typeof CurrencyTypes>).map(
           key => (
@@ -55,6 +70,7 @@ const PaymentScreen = () => {
                 style={[
                   styles.currencyText,
                   key === currency && styles.currencySelectedText,
+                  dynamicStyles.text,
                 ]}>
                 {key}
               </Text>
@@ -62,10 +78,13 @@ const PaymentScreen = () => {
           ),
         )}
       </View>
-      <Text style={styles.title}>Enter Amount to Pay with Komoju</Text>
+      <Text style={[styles.title, dynamicStyles.text]}>
+        Enter Amount to Pay with Komoju
+      </Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, dynamicStyles.input]}
         placeholder="Enter amount"
+        placeholderTextColor={colorScheme === 'dark' ? '#CCC' : '#333'}
         keyboardType="numeric"
         value={amount}
         onChangeText={setAmount}
@@ -75,6 +94,7 @@ const PaymentScreen = () => {
           title="Checkout"
           onPress={handleSessionPay}
           disabled={!amount}
+          color={colorScheme === 'dark' ? '#888' : '#007AFF'}
         />
       </View>
     </View>

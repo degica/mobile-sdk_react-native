@@ -1,6 +1,6 @@
-import { API_HEADER, BASE_URL_API } from "../util/constants";
-import { printLog } from "../util/helpers";
-import { SessionShowResponseType } from "../util/types";
+import { BASE_URL_API, API_HEADER } from "@util/constants";
+import { printLog } from "@util/helpers";
+import { SessionShowResponseType } from "@util/types";
 
 type SessionShowProps = {
   sessionId: string;

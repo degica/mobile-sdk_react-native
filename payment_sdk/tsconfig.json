@@ -2,17 +2,50 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "lib": ["dom", "es2015"],
+    "lib": [
+      "dom",
+      "es2021"
+    ],
     "jsx": "react",
     "declaration": true,
-    "outDir": "lib",
-    "rootDir": "src",
+    "emitDeclarationOnly": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": "./src",
     "strict": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@services/*": [
+        "services/*"
+      ],
+      "@assets/*": [
+        "assets/*"
+      ],
+      "@components/*": [
+        "components/*"
+      ],
+      "@util/*": [
+        "util/*"
+      ],
+      "@context/*": [
+        "context/*"
+      ]
+    }
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "lib", "__tests__"]
+  "include": [
+    "src",
+    "assets.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "src/__tests__",
+    "babel.config.js",
+    "metro.config.js",
+    "jest.config.js",
+    "dist"
+  ]
 }

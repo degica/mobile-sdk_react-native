@@ -1,13 +1,16 @@
 import React, { useState, useContext } from "react";
+
 import { StyleSheet, View } from "react-native";
 
-import Input from "../Input";
+import { Actions, DispatchContext, StateContext } from "@context/state";
+
+import { formatCurrency } from "@util/helpers";
+import { PaymentType } from "@util/types";
+import { validateCardFormFields } from "@util/validator";
+
 import CardInputGroup from "../CardInputGroup";
+import Input from "../Input";
 import SubmitButton from "../SubmitButton";
-import { Actions, DispatchContext, StateContext } from "../../state";
-import { PaymentType } from "../../util/types";
-import { formatCurrency } from "../../util/helpers";
-import { validateCardFormFields } from "../../util/validator";
 
 const initialErrors = {
   name: false,
@@ -37,6 +40,8 @@ const CardSection = (): JSX.Element => {
   const dispatch = useContext(DispatchContext);
 
   const resetError = (type: string) => {
+    // TODO: Fix this type error
+    // @ts-expect-error - Type 'string' cannot be used to index type 'object'.
     setInputErrors((pre: object) => ({ ...pre, [type]: false }));
   };
 
@@ -46,6 +51,8 @@ const CardSection = (): JSX.Element => {
       cardCVV,
       cardNumber,
       cardExpiredDate,
+      // TODO: Fix this type error
+      // @ts-expect-error - Type 'object' is not assignable to type 'SetStateAction<object>'.
       setInputErrors,
     });
 

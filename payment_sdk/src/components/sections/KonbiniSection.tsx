@@ -1,19 +1,22 @@
 import React, { useContext, useState, useCallback } from "react";
+
 import { FlatList, StyleSheet, View } from "react-native";
+
 import { SvgCssUri } from "react-native-svg/css";
 
-import Input from "../Input";
-import SubmitButton from "../SubmitButton";
-import { formatCurrency, parseBrands } from "../../util/helpers";
-import { Actions, DispatchContext, StateContext } from "../../state";
+import { Actions, DispatchContext, StateContext } from "@context/state";
+
+import { formatCurrency, parseBrands } from "@util/helpers";
 import {
   brandType,
   PaymentType,
   sessionShowPaymentMethodType,
-} from "../../util/types";
-import { validateKonbiniFormFields } from "../../util/validator";
+} from "@util/types";
+import { validateKonbiniFormFields } from "@util/validator";
+
+import Input from "../Input";
 import Pill from "../Pill";
-import { BASE_URL } from "../../util/constants";
+import SubmitButton from "../SubmitButton";
 
 const initialErrors = {
   name: false,
@@ -41,6 +44,8 @@ const KonbiniSection = (): JSX.Element => {
   const konbiniBrands = parseBrands(konbiniPaymentMethodData?.brands || {});
 
   const onPay = () => {
+    // TODO: Fix this type error
+    // @ts-expect-error - Type 'string' is not assignable to type 'object'.
     const isValid = validateKonbiniFormFields({ name, email, setInputErrors });
 
     if (isValid) {
@@ -56,6 +61,8 @@ const KonbiniSection = (): JSX.Element => {
   };
 
   const resetError = (type: string) => {
+    // TODO: Fix this type error
+    // @ts-expect-error - Type 'string' cannot be used to index type 'object'.
     setInputErrors((pre: object) => ({ ...pre, [type]: false }));
   };
 

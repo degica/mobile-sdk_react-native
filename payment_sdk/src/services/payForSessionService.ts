@@ -1,10 +1,10 @@
-import { API_HEADER, BASE_URL_API } from "../util/constants";
-import { getMonthYearFromExpiry, printLog } from "../util/helpers";
+import { BASE_URL_API, API_HEADER } from "@util/constants";
+import { getMonthYearFromExpiry, printLog } from "@util/helpers";
 import {
   payForSessionProps,
   PaymentType,
   SessionPayResponseType,
-} from "../util/types";
+} from "@util/types";
 
 /**
  * Processes a payment for a given session.
@@ -39,10 +39,14 @@ const payForSession = async ({
       // credit card payment type payment type
       case PaymentType.CREDIT:
         // refactoring input data from user to separate month and year
+        // TODO: Fix this type error
+        // eslint-disable-next-line no-case-declarations
         const { month, year } = getMonthYearFromExpiry(
           paymentDetails?.cardExpiredDate || ""
         );
         // refactoring number to remove all unsavory empty spaces from credit card number
+        // TODO: Fix this type error
+        // eslint-disable-next-line no-case-declarations
         const number = paymentDetails?.cardNumber?.replaceAll(" ", "");
 
         // credit card payment_details mandatory parameters type, number, month, year

@@ -5,9 +5,19 @@ import React, {
   useMemo,
   useRef,
 } from "react";
+
 import { Alert } from "react-native";
+
 import i18next from "i18next";
 
+import StateProvider from "@components/paymentState/stateProvider";
+import Sheet, { SheetRefProps } from "@components/Sheet";
+
+import payForSession from "@services/payForSessionService";
+import sessionShow from "@services/sessionShow";
+
+import { sessionParameterName, tokenParameterName } from "@util/constants";
+import { parsePaymentMethods } from "@util/helpers";
 import {
   CreatePaymentFuncType,
   initialState,
@@ -19,18 +29,11 @@ import {
   sessionPayProps,
   TokenResponseStatuses,
   webViewDataInitialState,
-} from "./util/types";
+} from "@util/types";
+import { validateSessionResponse } from "@util/validator";
 
+import "@assets/languages/i18n";
 import { Actions, DispatchContext, KomojuContext } from "./state";
-import StateProvider from "./components/paymentState/stateProvider";
-import payForSession from "./services/payForSessionService";
-import sessionShow from "./services/sessionShow";
-import { validateSessionResponse } from "./util/validator";
-import { sessionParameterName, tokenParameterName } from "./util/constants";
-import Sheet, { SheetRefProps } from "./components/Sheet";
-
-import "./assets/languages/i18n";
-import { parsePaymentMethods } from "./util/helpers";
 
 type KomojuProviderIprops = {
   children?: ReactNode | ReactNode[];
@@ -89,8 +92,10 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
       };
 
       // fetch session status to check if the payment is completed
-      let sessionResponse = await sessionShow(sessionShowPayload);
+      const sessionResponse = await sessionShow(sessionShowPayload);
       // invoking client provided onDismiss callback
+      // TODO: Fix this type error
+      // @ts-expect-error - Argument of type 'PaymentSessionResponse' is not assignable to parameter of type 'string'.
       onDismissCallback.current(sessionResponse);
     }
   };
@@ -121,6 +126,8 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
 
     // validating the session data and closing the payment gateway if data is not valid
     if (validateSessionResponse(sessionData)) {
+      // TODO: Fix this type error
+      // @ts-expect-error - Object is possibly 'null'.
       sheetRef?.current?.close(false);
       Alert.alert("Error", "Session expired");
     } else {
@@ -197,6 +204,8 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
         onPaymentSuccess();
         // calling user passed onComplete method with session response data
         onCompleteCallback.current &&
+          // TODO: Fix this type error
+          // @ts-expect-error - Argument of type 'PaymentSessionResponse' is not assignable to parameter of type 'string'.
           onCompleteCallback.current(sessionResponse);
       } else {
         onPaymentFailed();
@@ -229,6 +238,8 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
         onPaymentSuccess();
         // calling user passed onComplete method with session response data
         onCompleteCallback.current &&
+          // TODO: Fix this type error
+          // @ts-expect-error - Argument of type 'PaymentSessionResponse' is not assignable to parameter of type 'string'.
           onCompleteCallback.current(sessionResponse);
       } else {
         onPaymentFailed();
@@ -293,8 +304,12 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
       });
 
       // setting client provided onComplete callback into a ref
+      // TODO: Fix this type error
+      // @ts-expect-error - Argument of type 'PaymentSessionResponse' is not assignable to parameter of type 'string'.
       onCompleteCallback.current = onComplete;
       // setting client provided onDismiss callback into a ref
+      // TODO: Fix this type error
+      // @ts-expect-error - Argument of type 'PaymentSessionResponse' is not assignable to parameter of type 'string'.
       onDismissCallback.current = onDismiss;
       // setting client provided session Id and into a ref
       sessionIdRef.current = sessionId;
@@ -316,7 +331,9 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
     // take params from state or props
   }, []);
 
-  const initializeKomoju = useCallback((params: InitPrams) => {}, []);
+  // TODO: Fix this type error
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const initializeKomoju = useCallback((params: InitPrams) => { }, []);
 
   const renderPaymentUI = useMemo(() => {
     const UI = <Sheet ref={sheetRef} onDismiss={onUserCancel} />;

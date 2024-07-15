@@ -1,13 +1,15 @@
-import { Image, StyleSheet, Platform, View } from "react-native";
 import React from "react";
 
-type Props = {};
+import { Image, StyleSheet, View } from "react-native";
 
-const SheetFooter = (props: Props) => {
+import FirstFooterImage from "@assets/images/footer_image1.png";
+import SecondFooterImage from "@assets/images/footer_image2.png";
+
+const SheetFooter = () => {
   return (
     <View style={styles.container}>
-      <Image source={require("../../assets/images/footer_image1.png")} />
-      <Image source={require("../../assets/images/footer_image2.png")} />
+      <Image source={FirstFooterImage} />
+      <Image source={SecondFooterImage} />
     </View>
   );
 };
