@@ -44,6 +44,7 @@ const Input: React.FC<InputProps> = ({
         keyboardType={keyboardType}
         onChangeText={onChangeText}
         placeholder={t(placeholder || "")}
+        placeholderTextColor="#7D8C9B"
         style={[
           styles.input,
           styles.withBorder,
@@ -70,6 +71,7 @@ const styles = StyleSheet.create({
     borderColor: "#CAD6E1",
     borderWidth: 1,
     borderRadius: 8,
+    color: "#172E44",
   },
   withErrorBorder: {
     borderColor: "#F24D49",

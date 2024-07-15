@@ -8,7 +8,7 @@ import {
   StyleSheet,
   Pressable,
 } from 'react-native';
-import {KomojuSDK} from 'react-native-komoju';
+import {KomojuSDK} from '@komoju/komoju-react-native';
 import createSession from './services/sessionService';
 
 export enum CurrencyTypes {

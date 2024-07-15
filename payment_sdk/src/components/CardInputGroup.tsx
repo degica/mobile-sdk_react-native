@@ -28,7 +28,7 @@ import { isCardNumberValid, validateCardExpiry } from "@util/validator";
 import CardScanner from "./CardScanner";
 import Input from "./Input";
 import KomojuText from "./KomojuText";
-import ScanCardButton from "./ScanCardButton";
+// import ScanCardButton from "./ScanCardButton";
 
 type Props = {
   inputErrors: {
@@ -66,9 +66,9 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
   );
 
   //Toggle card scanner
-  const toggleCardScanner = () => {
-    setToggleScanCard((prevState: boolean) => !prevState);
-  };
+  // const toggleCardScanner = () => {
+  //   setToggleScanCard((prevState: boolean) => !prevState);
+  // };
 
   // Create card image list
   const cardImage = useCallback(() => {
@@ -115,7 +115,7 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
     <View style={styles.parentContainer}>
       <View style={styles.titleScanRow}>
         <KomojuText style={styles.label}>CARD_NUMBER</KomojuText>
-        <ScanCardButton onPress={toggleCardScanner} />
+        {/* <ScanCardButton onPress={toggleCardScanner} /> */}
       </View>
       {toggleScanCard ? (
         <View style={styles.scanContainer}>
