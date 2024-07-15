@@ -19,15 +19,12 @@ npm install @komoju/komoju-react-native
 ```
 
 
-> ### *In order to use the alpha version you will have to install bellow packages as dependancies.*
+> ### *In order to use the SDK you will have to install bellow packages as dependancies.*
 ```sh
 i18next
 react-i18next
 react-native-svg
 react-native-webview
-react-native-worklets-core
-react-native-vision-camera
-react-native-vision-camera-text-recognition
 ```
 
 ## Usage example
