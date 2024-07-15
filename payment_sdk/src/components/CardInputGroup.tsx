@@ -25,7 +25,7 @@ import {
 import { PaymentType, sessionShowPaymentMethodType } from "@util/types";
 import { isCardNumberValid, validateCardExpiry } from "@util/validator";
 
-import CardScanner from "./CardScanner";
+// import CardScanner from "./CardScanner";
 import Input from "./Input";
 import KomojuText from "./KomojuText";
 // import ScanCardButton from "./ScanCardButton";
@@ -45,7 +45,7 @@ const CARD_HEIGHT = 30;
 const CardInputGroup = ({ inputErrors, resetError }: Props) => {
   const dispatch = useContext(DispatchContext);
   const [cardType, setCardType] = useState<string | null>(null);
-  const [toggleScanCard, setToggleScanCard] = useState<boolean>(false);
+  // const [toggleScanCard, setToggleScanCard] = useState<boolean>(false);
   const { cardCVV, cardNumber, cardExpiredDate, paymentMethods } =
     useContext(StateContext);
 
@@ -96,20 +96,20 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
     }
   }, [cardType, paymentMethods]);
 
-  const onCardScanned = useCallback(
-    (cardDetails: { cardNumber?: string; expirationDate?: string }) => {
-      dispatch({
-        type: Actions.SET_CARD_NUMBER,
-        payload: cardDetails.cardNumber,
-      });
-      dispatch({
-        type: Actions.SET_CARD_EXPIRED_DATE,
-        payload: cardDetails.expirationDate,
-      });
-      setToggleScanCard(false);
-    },
-    []
-  );
+  // const onCardScanned = useCallback(
+  //   (cardDetails: { cardNumber?: string; expirationDate?: string }) => {
+  //     dispatch({
+  //       type: Actions.SET_CARD_NUMBER,
+  //       payload: cardDetails.cardNumber,
+  //     });
+  //     dispatch({
+  //       type: Actions.SET_CARD_EXPIRED_DATE,
+  //       payload: cardDetails.expirationDate,
+  //     });
+  //     setToggleScanCard(false);
+  //   },
+  //   []
+  // );
 
   return (
     <View style={styles.parentContainer}>
@@ -117,81 +117,72 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
         <KomojuText style={styles.label}>CARD_NUMBER</KomojuText>
         {/* <ScanCardButton onPress={toggleCardScanner} /> */}
       </View>
-      {toggleScanCard ? (
-        <View style={styles.scanContainer}>
-          <CardScanner
-            isVisible={toggleScanCard}
-            onCardScanned={onCardScanned}
+      <View style={styles.container}>
+        <View style={styles.cardNumberRow}>
+          <Input
+            value={cardNumber ?? ""}
+            testID="cardNumberInput"
+            keyboardType="number-pad"
+            placeholder="1234 1234 1234 1234"
+            onChangeText={(text: string) => {
+              resetError("number");
+              if (isCardNumberValid(text)) {
+                const derivedText = formatCreditCardNumber(text);
+                dispatch({
+                  type: Actions.SET_CARD_NUMBER,
+                  payload: derivedText,
+                });
+                // Determine card type and set it
+                const type = determineCardType(text);
+                setCardType(type);
+              }
+            }}
+            inputStyle={styles.numberInputStyle}
+            error={inputErrors.number}
           />
+          <View style={styles.cardContainer}>{cardImage()}</View>
         </View>
-      ) : (
-        <View style={styles.container}>
-          <View style={styles.cardNumberRow}>
+        <View style={styles.splitRow}>
+          <View style={styles.itemRow}>
             <Input
-              value={cardNumber ?? ""}
-              testID="cardNumberInput"
+              value={cardExpiredDate as string}
               keyboardType="number-pad"
-              placeholder="1234 1234 1234 1234"
+              testID="cardExpiryInput"
+              placeholder="MM / YY"
               onChangeText={(text: string) => {
-                resetError("number");
-                if (isCardNumberValid(text)) {
-                  const derivedText = formatCreditCardNumber(text);
+                resetError("expiry");
+                if (validateCardExpiry(text)) {
                   dispatch({
-                    type: Actions.SET_CARD_NUMBER,
-                    payload: derivedText,
+                    type: Actions.SET_CARD_EXPIRED_DATE,
+                    payload: formatExpiry(text),
                   });
-                  // Determine card type and set it
-                  const type = determineCardType(text);
-                  setCardType(type);
                 }
               }}
-              inputStyle={styles.numberInputStyle}
-              error={inputErrors.number}
+              inputStyle={styles.expiryInputStyle}
+              error={inputErrors.expiry}
             />
-            <View style={styles.cardContainer}>{cardImage()}</View>
           </View>
-          <View style={styles.splitRow}>
-            <View style={styles.itemRow}>
-              <Input
-                value={cardExpiredDate as string}
-                keyboardType="number-pad"
-                testID="cardExpiryInput"
-                placeholder="MM / YY"
-                onChangeText={(text: string) => {
-                  resetError("expiry");
-                  if (validateCardExpiry(text)) {
-                    dispatch({
-                      type: Actions.SET_CARD_EXPIRED_DATE,
-                      payload: formatExpiry(text),
-                    });
-                  }
-                }}
-                inputStyle={styles.expiryInputStyle}
-                error={inputErrors.expiry}
-              />
-            </View>
-            <View style={styles.itemRow}>
-              <Input
-                value={cardCVV as string}
-                testID="cardCVVInput"
-                keyboardType="number-pad"
-                placeholder="CVV"
-                onChangeText={(text: string) => {
-                  resetError("cvv");
+          <View style={styles.itemRow}>
+            <Input
+              value={cardCVV as string}
+              testID="cardCVVInput"
+              keyboardType="number-pad"
+              placeholder="CVV"
+              onChangeText={(text: string) => {
+                resetError("cvv");
 
-                  if (text?.length < 11)
-                    dispatch({ type: Actions.SET_CARD_CVV, payload: text });
-                }}
-                inputStyle={styles.cvvInputStyle}
-                error={inputErrors.cvv}
-              />
-              <View style={styles.cardContainer}>
-                {renderSvg(STATIC_CREDIT_CARD_CVC_SVG)}
-              </View>
+                if (text?.length < 11)
+                  dispatch({ type: Actions.SET_CARD_CVV, payload: text });
+              }}
+              inputStyle={styles.cvvInputStyle}
+              error={inputErrors.cvv}
+            />
+            <View style={styles.cardContainer}>
+              {renderSvg(STATIC_CREDIT_CARD_CVC_SVG)}
             </View>
           </View>
         </View>
-      )}
+      </View>
     </View>
   );
 };
