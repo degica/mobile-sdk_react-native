@@ -1,39 +1,41 @@
-import React from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
-import Pill from './Pill';
-import {FlatList} from 'react-native-gesture-handler';
+import React, { useContext } from "react";
+
+import { StyleSheet, View, FlatList } from "react-native";
+
+import { SvgCssUri } from "react-native-svg/css";
+
+import { StateContext } from "@context/state";
+
+import { BASE_URL } from "@util/constants";
+import { PaymentType, sessionShowPaymentMethodType } from "@util/types";
+
+import Pill from "./Pill";
 
 type Props = {
-  onSelect: (index: number) => void;
-  selectedItem: number;
+  onSelect: (type: PaymentType) => void;
+  selectedItem: PaymentType;
 };
 
-const options = [
-  {
-    label: 'Credit Card',
-    icon: '💳',
-    color: '#e0e0e0',
-  },
-  {
-    label: 'Konbini',
-    icon: '🏪',
-    color: '#a5d6a7',
-  },
-  {
-    label: 'Paypay',
-    icon: '💰',
-    color: '#ef9a9a',
-  },
-];
+const PillContainer = ({ onSelect, selectedItem }: Props) => {
+  const { paymentMethods } = useContext(StateContext);
 
-const PillContainer = ({onSelect, selectedItem}: Props) => {
-  const renderItem = ({item, index}) => {
+  const getIcon = (slug: string) => {
+    return (
+      <SvgCssUri
+        width={38}
+        height={24}
+        uri={`${BASE_URL}/payment_methods/${slug}.svg`}
+      />
+    );
+  };
+
+  const renderItem = ({ item }: { item: sessionShowPaymentMethodType }) => {
     return (
       <Pill
-        isSelected={index === selectedItem}
-        label={item.label}
-        icon={item.icon}
-        onPress={() => onSelect(index)}
+        isSelected={item.type === selectedItem}
+        label={item.type}
+        image={getIcon(item.type)}
+        onPress={() => onSelect(item.type)}
       />
     );
   };
@@ -41,7 +43,7 @@ const PillContainer = ({onSelect, selectedItem}: Props) => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={options}
+        data={paymentMethods}
         renderItem={renderItem}
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -56,7 +58,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   contentContainer: {
-    paddingLeft: 8,
+    paddingLeft: 16,
   },
 });
 

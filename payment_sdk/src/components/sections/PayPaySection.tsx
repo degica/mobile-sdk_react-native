@@ -1,17 +1,29 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, { useContext } from "react";
 
-import SubmitButton from '../SubmitButton';
-import LightBox from '../LightBox';
+import { StyleSheet, View } from "react-native";
+
+import { StateContext } from "@context/state";
+
+import { PaymentType } from "@util/types";
+
+import KomojuText from "../KomojuText";
+import LightBox from "../LightBox";
+import SubmitButton from "../SubmitButton";
 
 const PayPaySection = () => {
+  const { sessionPay } = useContext(StateContext);
+
+  const onPay = () => {
+    sessionPay({ paymentType: PaymentType.PAY_PAY });
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.textContent}>
-        <Text style={styles.title}>Payment via Paypay</Text>
-        <Text style={styles.description}>
-          You will be redirected to Paypay to complete the payment
-        </Text>
+        <KomojuText style={styles.title}>PAYMENT_VIA_PAY_PAY</KomojuText>
+        <KomojuText style={styles.description}>
+          PAY_PAY_REDIRECT_MESSAGE
+        </KomojuText>
       </View>
       <View style={styles.lbWrapper}>
         <LightBox
@@ -19,7 +31,7 @@ const PayPaySection = () => {
           icon="📱"
         />
       </View>
-      <SubmitButton onPress={() => {}} label="Continue to Paypay" />
+      <SubmitButton onPress={onPay} label="CONTINUE_TO_PAY_PAY" />
     </View>
   );
 };
@@ -37,13 +49,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: '#172E44',
+    fontWeight: "bold",
+    color: "#172E44",
     marginBottom: 8,
   },
   description: {
     fontSize: 16,
-    color: '#172E44',
+    color: "#172E44",
   },
   lbWrapper: {
     minHeight: 80,

@@ -1,13 +1,26 @@
-import React from 'react';
-import {View, TextInput, Text, StyleSheet, ViewStyle} from 'react-native';
+import React from "react";
 
-interface InputProps {
+import {
+  View,
+  TextInput,
+  Text,
+  StyleSheet,
+  ViewStyle,
+  KeyboardTypeOptions,
+  TextInputProps,
+} from "react-native";
+
+import { useTranslation } from "react-i18next";
+
+interface InputProps extends TextInputProps {
   value: string;
   onChangeText: (text: string) => void;
   label?: string;
   placeholder?: string;
-  hasBorder?: boolean;
   inputStyle?: ViewStyle;
+  testID?: string;
+  error?: boolean;
+  keyboardType?: KeyboardTypeOptions;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -15,17 +28,31 @@ const Input: React.FC<InputProps> = ({
   onChangeText,
   label,
   inputStyle,
-  hasBorder,
   placeholder,
-}) => {
+  testID,
+  error = false,
+  keyboardType,
+  ...rest
+}: InputProps) => {
+  const { t } = useTranslation();
+
   return (
     <View>
-      {label && <Text style={styles.label}>{label}</Text>}
+      {label && <Text style={styles.label}>{t(label)}</Text>}
       <TextInput
         value={value}
+        keyboardType={keyboardType}
         onChangeText={onChangeText}
-        placeholder={placeholder}
-        style={[styles.input, inputStyle, hasBorder && styles.withBorder]}
+        placeholder={t(placeholder || "")}
+        placeholderTextColor="#7D8C9B"
+        style={[
+          styles.input,
+          styles.withBorder,
+          error && styles.withErrorBorder,
+          inputStyle,
+        ]}
+        testID={testID}
+        {...rest}
       />
     </View>
   );
@@ -33,19 +60,23 @@ const Input: React.FC<InputProps> = ({
 
 const styles = StyleSheet.create({
   label: {
+    fontSize: 16,
     marginBottom: 8,
-    color: '#172E44',
+    color: "#172E44",
   },
   input: {
-    height: '100%',
+    height: "100%",
     paddingLeft: 16,
     fontSize: 16,
-  },
-  withBorder: {
-    borderColor: '#CAD6E1',
+    borderColor: "#CAD6E1",
     borderWidth: 1,
     borderRadius: 8,
+    color: "#172E44",
   },
+  withErrorBorder: {
+    borderColor: "#F24D49",
+  },
+  withBorder: {},
 });
 
 export default Input;

@@ -1,7 +1,15 @@
-const MAX_CARD_LENGTH = 16;
+import { emailRegex } from "./constants";
+import {
+  cardValidationFuncProps,
+  konbiniValidationFuncProps,
+  PaymentStatuses,
+  SessionShowResponseType,
+} from "./types";
+
+const MAX_CARD_LENGTH = 19;
 
 export const isCardNumberValid = (cardString: string) => {
-  const text = cardString.replaceAll("-", "");
+  const text = cardString.replaceAll(" ", "");
   try {
     if (text?.length <= 0) {
       return true;
@@ -27,12 +35,13 @@ export const validateCardExpiry = (expiry: string) => {
     if (expiry?.length <= 0) {
       return true;
     }
-    const derivedExpiry = expiry.replace("/", "");
+    const derivedExpiry = expiry.replace(" / ", "");
+
     if (derivedExpiry.length > 4) {
       return false;
     }
-    const expiryMonthValue = expiry.slice(0, 2);
-    const expiryYearValue = expiry.slice(3, 5);
+    const expiryMonthValue = derivedExpiry.slice(0, 2);
+    const expiryYearValue = derivedExpiry.slice(2, 4);
     const expiryMonth = parseInt(expiryMonthValue, 10);
     const expiryYear = parseInt(expiryYearValue, 10);
     const hasUserEnteredYear = expiryYearValue?.length === 2;
@@ -57,4 +66,68 @@ export const validateCardExpiry = (expiry: string) => {
   } catch {
     return false;
   }
+};
+
+export const validateSessionResponse = (
+  sessionData: SessionShowResponseType | null
+) => {
+  return (
+    !sessionData ||
+    sessionData?.error ||
+    sessionData.expired ||
+    sessionData?.status === PaymentStatuses.SUCCESS ||
+    sessionData?.status === PaymentStatuses.ERROR
+  );
+};
+
+export const validateCardFormFields = ({
+  cardholderName,
+  cardNumber,
+  cardExpiredDate,
+  cardCVV,
+  setInputErrors,
+}: cardValidationFuncProps): boolean => {
+  let valid = true;
+
+  if (!cardholderName) {
+    setInputErrors((pre: object) => ({ ...pre, name: true }));
+    valid = false;
+  }
+  if (!cardNumber) {
+    setInputErrors((pre: object) => ({ ...pre, number: true }));
+    valid = false;
+  }
+  if (!cardExpiredDate) {
+    setInputErrors((pre: object) => ({ ...pre, expiry: true }));
+    valid = false;
+  }
+  if (!cardCVV) {
+    setInputErrors((pre: object) => ({ ...pre, cvv: true }));
+    valid = false;
+  }
+
+  return valid;
+};
+
+export const validateKonbiniFormFields = ({
+  name,
+  email,
+  setInputErrors,
+}: konbiniValidationFuncProps): boolean => {
+  let valid = true;
+
+  if (!name) {
+    setInputErrors((pre: object) => ({ ...pre, name: true }));
+    valid = false;
+  }
+  if (!email || !validateEmail(email)) {
+    setInputErrors((pre: object) => ({ ...pre, email: true }));
+    valid = false;
+  }
+
+  return valid;
+};
+
+export const validateEmail = (email: string) => {
+  return emailRegex.test(email);
 };

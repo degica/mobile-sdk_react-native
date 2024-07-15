@@ -1,13 +1,14 @@
 import React from 'react';
-import {KomojuSDK} from 'react-native-komoju';
+import {KomojuSDK} from '@komoju/komoju-react-native';
+import {PUBLIC_KEY} from '@env';
 
-import Component from './component';
+import PaymentScreen from './PaymentScreen';
 
 function App(): React.JSX.Element {
   return (
-    <KomojuSDK.KomojouProvider urlScheme="" pubickKey="">
-      <Component />
-    </KomojuSDK.KomojouProvider>
+    <KomojuSDK.KomojuProvider publicKey={PUBLIC_KEY}>
+      <PaymentScreen />
+    </KomojuSDK.KomojuProvider>
   );
 }
 

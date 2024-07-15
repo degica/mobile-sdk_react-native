@@ -1,30 +1,40 @@
 import React, {
   useCallback,
   useImperativeHandle,
-  useState,
+  useContext,
+  useRef,
+  useEffect,
   ForwardRefRenderFunction,
 } from "react";
-import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import Animated, {
-  Extrapolation,
-  interpolate,
-  useAnimatedProps,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  withTiming,
-} from "react-native-reanimated";
 
-import StateProvider from "./paymentState/stateProvider";
+import {
+  Alert,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Animated as RNAnimated,
+  PanResponder,
+  Keyboard,
+} from "react-native";
 
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+import { Actions, DispatchContext, StateContext } from "@context/state";
+
+import { paymentFailedCtaText, paymentSuccessCtaText } from "@util/constants";
+import { SCREEN_HEIGHT } from "@util/helpers";
+import { ResponseScreenStatuses } from "@util/types";
+
+import closeIcon from "@assets/images/close.png";
+
+import KomojuText from "./KomojuText";
+import ResponseScreen from "./ResponseScreen";
+import SheetContent from "./SheetContent";
 
 const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 50;
 
 type SheetProps = {
   children?: React.ReactNode;
   swipeClose?: boolean;
+  onDismiss?: () => void;
 };
 
 export type SheetRefProps = {
@@ -34,101 +44,184 @@ export type SheetRefProps = {
 };
 
 const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
-  { children, swipeClose },
+  { swipeClose, onDismiss },
   ref
 ) => {
-  const translateY = useSharedValue(0);
-  const active = useSharedValue(false);
+  const translateY = useRef(new RNAnimated.Value(0)).current;
+  const active = useRef(new RNAnimated.Value(0)).current;
+  const context = useRef(new RNAnimated.Value(0)).current;
+
+  const activeState = useRef(false);
+  const translateYState = useRef(0);
+  const contextState = useRef(0);
+
+  const { paymentState } = useContext(StateContext);
+  const dispatch = useContext(DispatchContext);
+
+  useEffect(() => {
+    const yListener = translateY.addListener(({ value }) => {
+      translateYState.current = value;
+    });
+    const activeListener = active.addListener(({ value }) => {
+      activeState.current = value === 1;
+    });
+    const contextID = context.addListener(({ value }) => {
+      contextState.current = value;
+    });
+    return () => {
+      translateY.removeListener(yListener);
+      active.removeListener(activeListener);
+      context.removeListener(contextID);
+    };
+  }, []);
 
   const scrollTo = useCallback((destination: number) => {
-    "worklet";
-    active.value = destination !== 0;
-
-    translateY.value = withSpring(destination, { damping: 50 });
+    active.setValue(destination !== 0 ? 1 : 0);
+    RNAnimated.spring(translateY, {
+      toValue: destination,
+      friction: 10,
+      tension: 10,
+      useNativeDriver: true,
+    }).start();
   }, []);
 
   const isActive = useCallback(() => {
-    return active.value;
+    return activeState.current;
   }, []);
+
+  const closeSheet = (showAlert = true) => {
+    Keyboard.dismiss();
+
+    if (showAlert) {
+      // showing an alert when user try to close the SDK modal
+      Alert.alert("Cancel Payment?", "", [
+        {
+          text: "No",
+          onPress: () => scrollTo(MAX_TRANSLATE_Y + 50),
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          onPress: () => {
+            // invoking client provided onDismiss() callback when closing the SDK modal
+            onDismiss && onDismiss();
+            scrollTo(0);
+          },
+        },
+      ]);
+    } else {
+      // invoking client provided callback when closing the SDK modal
+      onDismiss && onDismiss();
+      scrollTo(0);
+    }
+  };
 
   useImperativeHandle(
     ref,
     () => ({
       open: () => {
-        scrollTo(MAX_TRANSLATE_Y);
+        Keyboard.dismiss();
+        scrollTo(MAX_TRANSLATE_Y + 50);
       },
+      close: closeSheet,
       scrollTo,
       isActive,
     }),
     [scrollTo, isActive]
   );
 
-  const context = useSharedValue({ y: 0 });
-  const gesture = Gesture.Pan()
-    .onStart(() => {
-      context.value = { y: translateY.value };
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderGrant: () => {
+        context.setValue(translateYState.current);
+      },
+      onPanResponderMove: (event, gestureState) => {
+        const totalYMovement = gestureState.dy + contextState.current;
+        translateY.setValue(Math.max(totalYMovement, MAX_TRANSLATE_Y + 50));
+      },
+      onPanResponderRelease: () => {
+        if (translateYState.current > -SCREEN_HEIGHT / 1.5) {
+          closeSheet(false);
+        } else if (translateYState.current < -SCREEN_HEIGHT / 1.5) {
+          scrollTo(MAX_TRANSLATE_Y + 50);
+        }
+      },
     })
-    .onUpdate((event) => {
-      translateY.value = event.translationY + context.value.y;
-      translateY.value = Math.max(translateY.value, MAX_TRANSLATE_Y);
-    })
-    .onEnd(() => {
-      if (translateY.value > -SCREEN_HEIGHT / 1) {
-        scrollTo(0);
-      } else if (translateY.value < -SCREEN_HEIGHT / 1.5) {
-        scrollTo(MAX_TRANSLATE_Y);
-      }
-    });
+  ).current;
 
-  const rSheetStyle = useAnimatedStyle(() => {
-    const borderRadius = interpolate(
-      translateY.value,
-      [MAX_TRANSLATE_Y + 50, MAX_TRANSLATE_Y],
-      [25, 5],
-      Extrapolation.CLAMP
-    );
+  const getCtaText = () => {
+    switch (paymentState) {
+      case ResponseScreenStatuses.SUCCESS:
+        return paymentSuccessCtaText;
+      case ResponseScreenStatuses.FAILED:
+        return paymentFailedCtaText;
+      default:
+        return "";
+    }
+  };
 
-    return {
-      borderRadius,
-      transform: [{ translateY: translateY.value }],
-    };
-  });
-
-  const rBackdropStyle = useAnimatedStyle(() => {
-    return {
-      opacity: withTiming(active.value ? 1 : 0),
-    };
-  }, []);
-
-  const rBackdropProps = useAnimatedProps(() => {
-    return {
-      pointerEvents: active.value ? "auto" : "none",
-    } as any;
-  }, []);
+  const ctaOnPress = () => {
+    switch (paymentState) {
+      case ResponseScreenStatuses.SUCCESS:
+        return closeSheet(false);
+      case ResponseScreenStatuses.FAILED:
+        return dispatch({
+          type: Actions.SET_PAYMENT_STATE,
+          payload: "",
+        });
+      default:
+        return "";
+    }
+  };
 
   return (
-    <StateProvider>
-      <Animated.View
+    <>
+      <RNAnimated.View
         onTouchStart={() => {
-          swipeClose ? scrollTo(0) : null;
+          if (swipeClose) closeSheet(false);
         }}
-        animatedProps={rBackdropProps}
-        style={[styles.backDrop, rBackdropStyle]}
+        pointerEvents="none"
+        style={[styles.backDrop, { opacity: active }]}
       />
-      <Animated.View style={[styles.bottomSheetContainer, rSheetStyle]}>
-        <GestureDetector gesture={gesture}>
-          <Animated.View>
-            <View style={styles.line}>
-              <Text style={styles.headerLabel}>Payment Options</Text>
-              <Text style={styles.crossBtn} onPress={() => scrollTo(0)}>
-                ✖️
-              </Text>
-            </View>
-          </Animated.View>
-        </GestureDetector>
-        <ScrollView>{children}</ScrollView>
-      </Animated.View>
-    </StateProvider>
+      <RNAnimated.View
+        style={[
+          styles.bottomSheetContainer,
+          { transform: [{ translateY: translateY }] },
+        ]}
+      >
+        <RNAnimated.View style={styles.line} {...panResponder.panHandlers}>
+          <KomojuText style={styles.headerLabel}>PAYMENT_OPTIONS</KomojuText>
+          <TouchableOpacity
+            style={styles.crossBtn}
+            onPress={() =>
+              closeSheet(
+                !(
+                  paymentState === ResponseScreenStatuses.SUCCESS ||
+                  // TODO: Fix this type error
+                  // @ts-expect-error - Property 'COMPLETE' does not exist on type 'ResponseScreenStatuses'.
+                  paymentState === ResponseScreenStatuses.COMPLETE
+                )
+              )
+            }
+          >
+            <Image source={closeIcon} />
+          </TouchableOpacity>
+        </RNAnimated.View>
+        {
+          // TODO: Fix this type error
+          // @ts-expect-error - Property 'COMPLETE' does not exist on type 'ResponseScreenStatuses'.
+          paymentState && paymentState !== ResponseScreenStatuses.COMPLETE ? (
+            <ResponseScreen
+              status={paymentState}
+              onPress={ctaOnPress}
+              onPressLabel={getCtaText()}
+            />
+          ) : (
+            <SheetContent />
+          )}
+      </RNAnimated.View>
+    </>
   );
 };
 
@@ -138,12 +231,12 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.6)",
   },
   bottomSheetContainer: {
-    height: SCREEN_HEIGHT,
+    height: SCREEN_HEIGHT - 85,
     width: "100%",
     backgroundColor: "white",
     position: "absolute",
     top: SCREEN_HEIGHT,
-    borderRadius: 25,
+    borderRadius: 0,
   },
   line: {
     flexDirection: "row",
@@ -164,6 +257,9 @@ const styles = StyleSheet.create({
     right: 0,
     padding: 10,
     fontSize: 16,
+  },
+  contentContainer: {
+    flex: 1,
   },
 });
 
