@@ -1,5 +1,4 @@
 import {Alert} from 'react-native';
-import {SECRET_KEY} from '@env';
 
 // Refer documentation on https://doc.komoju.com/reference/post_sessions
 // for creating a session
@@ -7,14 +6,16 @@ import {SECRET_KEY} from '@env';
 type createSessionProps = {
   amount: string;
   currency: string;
+  secretKey: string;
 };
 
 const createSession = async ({
   amount,
   currency,
+  secretKey,
 }: createSessionProps): Promise<string | null> => {
   try {
-    if (!SECRET_KEY) {
+    if (!secretKey) {
       console.error('Secret Key Not Found');
       throw new Error('Secret Key Required');
     }
@@ -25,7 +26,7 @@ const createSession = async ({
       headers: {
         accept: 'application/json',
         'content-type': 'application/json',
-        Authorization: `Basic ${btoa(SECRET_KEY + ':')}`,
+        Authorization: `Basic ${btoa(secretKey + ':')}`,
       },
       body: JSON.stringify({
         default_locale: 'en',
@@ -38,7 +39,10 @@ const createSession = async ({
 
     return id;
   } catch (e) {
-    Alert.alert('Error', 'Unable to fetch session. Is your server running?');
+    Alert.alert(
+      'Error',
+      'Unable to fetch session. Did you set PUBLIC_KEY and SECRET_KEY at App.tsx?',
+    );
     return null;
   }
 };
