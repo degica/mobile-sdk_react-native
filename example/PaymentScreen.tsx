@@ -7,6 +7,7 @@ import {
   Button,
   StyleSheet,
   Pressable,
+  Alert,
 } from 'react-native';
 import {KomojuSDK} from '@komoju/komoju-react-native';
 import createSession from './services/sessionService';
@@ -16,7 +17,7 @@ export enum CurrencyTypes {
   USD = 'USD',
 }
 
-const PaymentScreen = () => {
+const PaymentScreen = ({secretKey}: {secretKey: string}) => {
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState(CurrencyTypes.JPY);
   const colorScheme = useColorScheme(); // Detects the color scheme of the device
@@ -25,16 +26,20 @@ const PaymentScreen = () => {
   const {createPayment} = KomojuSDK.useKomoju();
 
   const handleSessionPay = async () => {
+    if (!amount) {
+      Alert.alert('Error', 'Please enter an amount to checkout');
+      return;
+    }
+
     // fetch a session Id to initiate payment
-    const sessionId = await createSession({amount, currency});
+    const sessionId = await createSession({amount, currency, secretKey});
 
     // invoke createPayment method with sessionId as parameters to open the payment portal
-    sessionId &&
-      createPayment({
-        sessionId,
-        onComplete: onPaymentComplete,
-        onDismiss: onPaymentComplete,
-      });
+    createPayment({
+      sessionId: sessionId ?? '',
+      onComplete: onPaymentComplete,
+      onDismiss: onPaymentComplete,
+    });
   };
 
   // when the payment is complete pass a callback to get the final results of response
@@ -65,12 +70,17 @@ const PaymentScreen = () => {
       <View style={styles.currencyRow}>
         {(Object.keys(CurrencyTypes) as Array<keyof typeof CurrencyTypes>).map(
           key => (
-            <Pressable key={key} onPress={() => changeCurrencyType(key)}>
+            <Pressable
+              key={key}
+              onPress={() => changeCurrencyType(CurrencyTypes[key])}
+              style={[
+                styles.currencyTextContainer,
+                key === currency && styles.currencySelectedTextContainer,
+              ]}>
               <Text
                 style={[
-                  styles.currencyText,
-                  key === currency && styles.currencySelectedText,
                   dynamicStyles.text,
+                  key === currency && styles.currencySelectedText,
                 ]}>
                 {key}
               </Text>
@@ -93,7 +103,6 @@ const PaymentScreen = () => {
         <Button
           title="Checkout"
           onPress={handleSessionPay}
-          disabled={!amount}
           color={colorScheme === 'dark' ? '#888' : '#007AFF'}
         />
       </View>
@@ -130,8 +139,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 20,
   },
-  currencyText: {
-    paddingRight: 20,
+  currencyTextContainer: {
+    padding: 10,
+  },
+  currencySelectedTextContainer: {
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: 'coral',
   },
   currencySelectedText: {
     color: 'coral',
