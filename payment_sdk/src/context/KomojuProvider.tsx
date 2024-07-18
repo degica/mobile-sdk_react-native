@@ -132,7 +132,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
       // TODO: Fix this type error
       // @ts-expect-error - Object is possibly 'null'.
       sheetRef?.current?.close(false);
-      Alert.alert("Error", "Session expired");
+      Alert.alert("Error", "Invalid Session");
     } else {
       // if explicitly language is not set. set to the localization from session
       if (!props?.language) i18next.changeLanguage(sessionData?.default_locale);
@@ -336,7 +336,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
 
   // TODO: Fix this type error
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const initializeKomoju = useCallback((params: InitPrams) => { }, []);
+  const initializeKomoju = useCallback((params: InitPrams) => {}, []);
 
   const renderPaymentUI = useMemo(() => {
     const UI = <Sheet ref={sheetRef} onDismiss={onUserCancel} />;
