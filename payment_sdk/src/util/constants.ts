@@ -31,3 +31,9 @@ export const cardTypeRegex = {
   jcb: /^(?:35)\d{0,17}/,
   visa: /^4\d{0,18}/,
 };
+
+export enum ThemeModes {
+  light = "light",
+  dark = "dark",
+
+}

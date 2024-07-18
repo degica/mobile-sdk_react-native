@@ -9,6 +9,8 @@ import { StateContext } from "@context/state";
 import { BASE_URL } from "@util/constants";
 import { PaymentType, sessionShowPaymentMethodType } from "@util/types";
 
+import { responsiveScale } from "@theme/scalling";
+
 import Pill from "./Pill";
 
 type Props = {
@@ -55,10 +57,10 @@ const PillContainer = ({ onSelect, selectedItem }: Props) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 16,
+    marginBottom: responsiveScale(16),
   },
   contentContainer: {
-    paddingLeft: 16,
+    paddingLeft: responsiveScale(16),
   },
 });
 

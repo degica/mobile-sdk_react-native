@@ -22,10 +22,13 @@ import {
   formatCreditCardNumber,
   formatExpiry,
 } from "@util/helpers";
-import { PaymentType, sessionShowPaymentMethodType } from "@util/types";
+import { PaymentType, sessionShowPaymentMethodType, ThemeSchemeType } from "@util/types";
 import { isCardNumberValid, validateCardExpiry } from "@util/validator";
 
 // import CardScanner from "./CardScanner";
+import { resizeFonts, responsiveScale } from "@theme/scalling";
+import { useCurrentTheme } from "@theme/useCurrentTheme";
+
 import Input from "./Input";
 import KomojuText from "./KomojuText";
 // import ScanCardButton from "./ScanCardButton";
@@ -39,13 +42,15 @@ type Props = {
   resetError: (type: string) => void;
 };
 
-const CARD_WIDTH = 26;
-const CARD_HEIGHT = 30;
+const CARD_WIDTH = responsiveScale(30);
+const CARD_HEIGHT = responsiveScale(26);
 
 const CardInputGroup = ({ inputErrors, resetError }: Props) => {
   const dispatch = useContext(DispatchContext);
   const [cardType, setCardType] = useState<string | null>(null);
   // const [toggleScanCard, setToggleScanCard] = useState<boolean>(false);
+  const theme = useCurrentTheme();
+  const styles = getStyles(theme);
   const { cardCVV, cardNumber, cardExpiredDate, paymentMethods } =
     useContext(StateContext);
 
@@ -189,71 +194,75 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
 
 export default memo(CardInputGroup);
 
-const styles = StyleSheet.create({
-  parentContainer: {
-    margin: 16,
-    marginBottom: 24,
-    flexGrow: 0,
-    minHeight: 130,
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 8,
-    color: "#172E44",
-  },
-  container: {
-    flex: 1,
-    flexDirection: "column",
-    maxHeight: 120,
-  },
-  cardNumberRow: {
-    flex: 1,
-    height: 60,
-  },
-  splitRow: {
-    flex: 1,
-    flexDirection: "row",
-    height: 60,
-  },
-  itemRow: {
-    flex: 1,
-  },
-  numberInputStyle: {
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-  },
-  expiryInputStyle: {
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
-    borderBottomRightRadius: 0,
-  },
-  cvvInputStyle: {
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
-    borderBottomLeftRadius: 0,
-  },
-  titleScanRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  cardContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    position: "absolute",
-    top: 9,
-    right: 0,
-    marginRight: 8,
-  },
-  cardImage: {
-    width: 26,
-    marginRight: 8,
-  },
-  scanContainer: {
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
+const getStyles = (theme: ThemeSchemeType) => {
+  return StyleSheet.create({
+    parentContainer: {
+      margin: responsiveScale(16),
+      marginBottom: responsiveScale(24),
+      flexGrow: 0,
+      minHeight: responsiveScale(130),
+    },
+    label: {
+      fontSize: resizeFonts(16),
+      marginBottom: responsiveScale(8),
+      color: theme.TEXT_COLOR,
+    },
+    container: {
+      flex: 1,
+      flexDirection: "column",
+      maxHeight: responsiveScale(120),
+    },
+    cardNumberRow: {
+      flex: 1,
+      marginBottom: -responsiveScale(1),
+      height: responsiveScale(60),
+    },
+    splitRow: {
+      flex: 1,
+      flexDirection: "row",
+      height: responsiveScale(60),
+    },
+    itemRow: {
+      flex: 1,
+    },
+    numberInputStyle: {
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+    },
+    expiryInputStyle: {
+      borderTopLeftRadius: 0,
+      borderTopRightRadius: 0,
+      borderBottomRightRadius: 0,
+    },
+    cvvInputStyle: {
+      borderTopLeftRadius: 0,
+      borderTopRightRadius: 0,
+      borderBottomLeftRadius: 0,
+    },
+    titleScanRow: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: responsiveScale(8),
+    },
+    cardContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      position: "absolute",
+      top: responsiveScale(9),
+      right: 0,
+      marginRight: responsiveScale(8),
+    },
+    cardImage: {
+      width: responsiveScale(26),
+      marginRight: responsiveScale(8),
+    },
+    scanContainer: {
+      width: "100%",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+  });
+
+}

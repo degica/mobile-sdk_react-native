@@ -18,18 +18,22 @@ import {
 } from "react-native";
 
 import { Actions, DispatchContext, StateContext } from "@context/state";
+import { useTheme } from "@context/ThemeContext";
 
-import { paymentFailedCtaText, paymentSuccessCtaText } from "@util/constants";
-import { SCREEN_HEIGHT } from "@util/helpers";
-import { ResponseScreenStatuses } from "@util/types";
+import { paymentFailedCtaText, paymentSuccessCtaText, ThemeModes } from "@util/constants";
+import { ResponseScreenStatuses, ThemeSchemeType } from "@util/types";
 
 import closeIcon from "@assets/images/close.png";
+import closeDMIcon from "@assets/images/close_dm.png";
+
+import { resizeFonts, responsiveScale, WINDOW_HEIGHT } from "@theme/scalling";
+import { useCurrentTheme } from "@theme/useCurrentTheme";
 
 import KomojuText from "./KomojuText";
 import ResponseScreen from "./ResponseScreen";
 import SheetContent from "./SheetContent";
 
-const MAX_TRANSLATE_Y = -SCREEN_HEIGHT + 50;
+const MAX_TRANSLATE_Y = - WINDOW_HEIGHT + responsiveScale(50);
 
 type SheetProps = {
   children?: React.ReactNode;
@@ -57,6 +61,9 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
 
   const { paymentState } = useContext(StateContext);
   const dispatch = useContext(DispatchContext);
+  const theme = useCurrentTheme();
+  const styles = getStyles(theme);
+  const {mode} = useTheme();
 
   useEffect(() => {
     const yListener = translateY.addListener(({ value }) => {
@@ -141,9 +148,9 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
         translateY.setValue(Math.max(totalYMovement, MAX_TRANSLATE_Y + 50));
       },
       onPanResponderRelease: () => {
-        if (translateYState.current > -SCREEN_HEIGHT / 1.5) {
+        if (translateYState.current > -WINDOW_HEIGHT / 1.5) {
           closeSheet(false);
-        } else if (translateYState.current < -SCREEN_HEIGHT / 1.5) {
+        } else if (translateYState.current < -WINDOW_HEIGHT / 1.5) {
           scrollTo(MAX_TRANSLATE_Y + 50);
         }
       },
@@ -205,7 +212,7 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
               )
             }
           >
-            <Image source={closeIcon} />
+            <Image source={mode === ThemeModes.light ? closeIcon : closeDMIcon} />
           </TouchableOpacity>
         </RNAnimated.View>
         {
@@ -225,42 +232,44 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
   );
 };
 
-const styles = StyleSheet.create({
-  backDrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0,0,0,0.6)",
-  },
-  bottomSheetContainer: {
-    height: SCREEN_HEIGHT - 85,
-    width: "100%",
-    backgroundColor: "white",
-    position: "absolute",
-    top: SCREEN_HEIGHT,
-    borderRadius: 0,
-  },
-  line: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 20,
-    marginHorizontal: 16,
-  },
-  headerLabel: {
-    fontSize: 18,
-    fontWeight: "bold",
-    flex: 1,
-    alignItems: "center",
-    textAlign: "center",
-    color: "#172E44",
-  },
-  crossBtn: {
-    position: "absolute",
-    right: 0,
-    padding: 10,
-    fontSize: 16,
-  },
-  contentContainer: {
-    flex: 1,
-  },
-});
+const getStyles = (theme: ThemeSchemeType) => {
+  return StyleSheet.create({
+    backDrop: {
+      ...StyleSheet.absoluteFillObject,
+      backgroundColor: theme.WHITE50,
+    },
+    bottomSheetContainer: {
+      height: WINDOW_HEIGHT - 85,
+      width: "100%",
+      backgroundColor: theme.BACKGROUND_COLOR,
+      position: "absolute",
+      top: WINDOW_HEIGHT,
+      borderRadius: 0,
+    },
+    line: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginVertical: responsiveScale(20),
+      marginHorizontal: responsiveScale(16),
+    },
+    headerLabel: {
+      fontSize: resizeFonts(18),
+      fontWeight: "bold",
+      flex: 1,
+      alignItems: "center",
+      textAlign: "center",
+      color: theme.TEXT_COLOR,
+    },
+    crossBtn: {
+      position: "absolute",
+      right: 0,
+      padding: responsiveScale(10),
+      fontSize: resizeFonts(16),
+    },
+    contentContainer: {
+      flex: 1,
+    },
+  });
+}
 
 export default React.forwardRef<SheetRefProps, SheetProps>(Sheet);

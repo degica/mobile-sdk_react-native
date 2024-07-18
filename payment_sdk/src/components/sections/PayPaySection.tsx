@@ -4,7 +4,10 @@ import { StyleSheet, View } from "react-native";
 
 import { StateContext } from "@context/state";
 
-import { PaymentType } from "@util/types";
+import { PaymentType, ThemeSchemeType } from "@util/types";
+
+import { resizeFonts, responsiveScale } from "@theme/scalling";
+import { useCurrentTheme } from "@theme/useCurrentTheme";
 
 import KomojuText from "../KomojuText";
 import LightBox from "../LightBox";
@@ -12,7 +15,8 @@ import SubmitButton from "../SubmitButton";
 
 const PayPaySection = () => {
   const { sessionPay } = useContext(StateContext);
-
+  const theme = useCurrentTheme();
+  const styles = getStyles(theme);
   const onPay = () => {
     sessionPay({ paymentType: PaymentType.PAY_PAY });
   };
@@ -31,35 +35,42 @@ const PayPaySection = () => {
           icon="📱"
         />
       </View>
-      <SubmitButton onPress={onPay} label="CONTINUE_TO_PAY_PAY" />
+      <View style={styles.btn}>
+        <SubmitButton onPress={onPay} label="CONTINUE_TO_PAY_PAY" />
+      </View>
     </View>
   );
 };
 
 export default PayPaySection;
 
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-  },
-  textContent: {
-    marginBottom: 24,
-    marginTop: 16,
-    marginHorizontal: 16,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#172E44",
-    marginBottom: 8,
-  },
-  description: {
-    fontSize: 16,
-    color: "#172E44",
-  },
-  lbWrapper: {
-    minHeight: 80,
-    marginHorizontal: 16,
-    marginBottom: 24,
-  },
-});
+const getStyles = (theme: ThemeSchemeType) => {
+  return StyleSheet.create({
+    container: {
+      flexGrow: 1,
+    },
+    textContent: {
+      marginBottom: responsiveScale(24),
+      marginTop: responsiveScale(16),
+      marginHorizontal: responsiveScale(16),
+    },
+    title: {
+      fontSize: resizeFonts(20),
+      fontWeight: "bold",
+      color: theme.TEXT_COLOR,
+      marginBottom: responsiveScale(8),
+    },
+    description: {
+      fontSize: resizeFonts(16),
+      color: theme.TEXT_COLOR,
+    },
+    lbWrapper: {
+      minHeight: responsiveScale(80),
+      marginHorizontal: responsiveScale(16),
+      marginBottom: responsiveScale(24),
+    },
+    btn: {
+      height: responsiveScale(60),
+    },
+  });
+}

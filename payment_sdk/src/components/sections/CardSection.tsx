@@ -8,6 +8,8 @@ import { formatCurrency } from "@util/helpers";
 import { PaymentType } from "@util/types";
 import { validateCardFormFields } from "@util/validator";
 
+import { responsiveScale } from "@theme/scalling";
+
 import CardInputGroup from "../CardInputGroup";
 import Input from "../Input";
 import SubmitButton from "../SubmitButton";
@@ -86,12 +88,14 @@ const CardSection = (): JSX.Element => {
         />
       </View>
       <CardInputGroup inputErrors={inputErrors} resetError={resetError} />
-      <SubmitButton
-        label="PAY"
-        labelSuffix={formatCurrency({ amount, currency })}
-        onPress={onPay}
-        testID="PayCTA"
-      />
+      <View style={styles.btn}>
+        <SubmitButton
+          label="PAY"
+          labelSuffix={formatCurrency({ amount, currency })}
+          onPress={onPay}
+          testID="PayCTA"
+        />
+      </View>
     </View>
   );
 };
@@ -101,14 +105,17 @@ export default CardSection;
 const styles = StyleSheet.create({
   cardContainer: {
     position: "relative",
-    flex: 1,
+    flexGrow: 1,
   },
   cardNameContainer: {
-    margin: 16,
-    marginBottom: 24,
-    height: 60,
+    margin: responsiveScale(16),
+    marginBottom: responsiveScale(24),
+    height: responsiveScale(60),
+  },
+  btn: {
+    height: responsiveScale(60),
   },
   inputStyle: {
-    height: 50,
+    height: responsiveScale(50),
   },
 });

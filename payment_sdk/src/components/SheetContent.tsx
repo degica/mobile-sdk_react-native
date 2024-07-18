@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 
-import { Keyboard, ScrollView, StyleSheet, View } from "react-native";
+import { FlatList, Keyboard, Platform, StyleSheet, View } from "react-native";
 
 import { Actions, DispatchContext, StateContext } from "@context/state";
 
-import { SCREEN_HEIGHT, isAndroid } from "@util/helpers";
+// import { isAndroid } from "@util/helpers";
 import { PaymentType } from "@util/types";
+
+import { responsiveScale } from "@theme/scalling";
 
 import Loader from "./Loader";
 import PillContainer from "./PillContainer";
@@ -15,7 +17,7 @@ import PayPaySection from "./sections/PayPaySection";
 import SheetFooter from "./sections/SheetFooter";
 import WebView from "./WebView";
 
-const KEYBOARD_OFFSET = isAndroid() ? 120 : 80;
+// const KEYBOARD_OFFSET = isAndroid() ? 120 : 80;
 
 const SheetContent = () => {
   const { paymentType, webViewData, loading } = useContext(StateContext);
@@ -25,7 +27,7 @@ const SheetContent = () => {
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
-      (e) => setKeyboardHeight(e.endCoordinates.height + KEYBOARD_OFFSET)
+      (e) => setKeyboardHeight(e.endCoordinates.height)
     );
 
     const keyboardDidHideListener = Keyboard.addListener(
@@ -53,35 +55,56 @@ const SheetContent = () => {
       />
     );
 
-  return (
-    <View style={styles.mainContent}>
-      <ScrollView
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{ paddingBottom: keyboardHeight }}
-      >
+  const renderItem = () => {
+    return (
+      <View style={styles.item}>
         <PillContainer onSelect={handlePillSelect} selectedItem={paymentType} />
         {paymentType === PaymentType.CREDIT && <CardSection />}
         {paymentType === PaymentType.PAY_PAY && <PayPaySection />}
         {paymentType === PaymentType.KONBINI && <KonbiniSection />}
         {renderLoading}
-      </ScrollView>
-      <View style={styles.bottomContent}>
-        <SheetFooter />
       </View>
+    );
+  };
+
+  return (
+    <View style={styles.mainContent}>
+      <FlatList
+      showsVerticalScrollIndicator={false}
+        data={[{ key: 'content' }]}
+        bounces={false}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.key}
+        contentContainerStyle={[styles.flatListContent, { paddingBottom: keyboardHeight }]}
+        ListFooterComponent={<SheetFooter />}
+        ListFooterComponentStyle={styles.footerContent}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   mainContent: {
-    height: "100%",
+    flex: 1,
   },
-  bottomContent: {
-    position: "absolute",
-    right: 0,
-    left: 0,
-    bottom: SCREEN_HEIGHT - (SCREEN_HEIGHT - 85 - 40),
+  flatListContent: {
+    flexGrow: 1,
   },
+  item: {
+    height: "100%"
+  },
+  footerContent: {
+    ...Platform.select({
+      ios: {
+        marginBottom: responsiveScale(200),
+        marginTop: -responsiveScale(60)
+      },
+      android: {
+        marginBottom: responsiveScale(200),
+        marginTop: -responsiveScale(50)
+      },
+    }),
+  }
 });
 
 export default SheetContent;

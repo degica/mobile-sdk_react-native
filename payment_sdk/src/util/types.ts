@@ -248,3 +248,20 @@ export const initialState: State = {
 // TODO: Fix this type error
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ActionType = { type: string; payload: any };
+
+export interface ThemeSchemeType {
+  PRIMARY_COLOR: string;
+  BACKGROUND_COLOR: string;
+  ERROR: string;
+  TEXT_COLOR: string;
+  INPUT_BACKGROUND: string;
+  INPUT_TEXT: string;
+  INPUT_PLACEHOLDER: string;
+  INVERTED_CONTENT: string;
+  WHITE50: string;
+  CARD_BACKGROUND: string;
+  CARD_BORDER: string;
+  LIGHT_BOX: string;
+  CARD_SHADOW_IOS_COLOR: string;
+  CARD_SHADOW_ANDROID_COLOR: string;
+}

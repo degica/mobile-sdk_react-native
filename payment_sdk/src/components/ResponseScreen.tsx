@@ -2,7 +2,10 @@ import React, { useCallback, useMemo } from "react";
 
 import { Image, StyleSheet, Text, View } from "react-native";
 
-import { ResponseScreenStatuses } from "@util/types";
+import { ResponseScreenStatuses, ThemeSchemeType } from "@util/types";
+
+import { resizeFonts, responsiveScale } from "@theme/scalling";
+import { useCurrentTheme } from "@theme/useCurrentTheme";
 
 import SubmitButton from "./SubmitButton";
 
@@ -14,6 +17,10 @@ type Props = {
 };
 
 const ResponseScreen = ({ status, message, onPress, onPressLabel }: Props) => {
+
+  const theme = useCurrentTheme();
+  const styles = getStyles(theme);
+
   const renderMessageContent = useMemo(() => {
     const title =
       status === ResponseScreenStatuses.SUCCESS
@@ -56,38 +63,41 @@ const ResponseScreen = ({ status, message, onPress, onPressLabel }: Props) => {
 
 export default ResponseScreen;
 
-const styles = StyleSheet.create({
-  parentContainer: {
-    flex: 1,
-  },
-  container: {
-    padding: 16,
-    alignItems: "center",
-  },
-  imageContainer: {
-    alignItems: "center",
-    marginBottom: 18,
-  },
-  icon: {
-    width: 48,
-    height: 48,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 16,
-    color: "#172E44",
-  },
-  message: {
-    fontSize: 16,
-    marginBottom: 16,
-    textAlign: "center",
-    paddingHorizontal: 32,
-  },
-  bottomButton: {
-    position: "absolute",
-    bottom: 42,
-    left: 0,
-    right: 0,
-  },
-});
+const getStyles = (theme: ThemeSchemeType) => {
+  return StyleSheet.create({
+    parentContainer: {
+      flex: 1,
+    },
+    container: {
+      padding: responsiveScale(16),
+      alignItems: "center",
+    },
+    imageContainer: {
+      alignItems: "center",
+      marginBottom: responsiveScale(18),
+    },
+    icon: {
+      width: responsiveScale(48),
+      height: responsiveScale(48),
+    },
+    title: {
+      fontSize: resizeFonts(28),
+      fontWeight: "bold",
+      marginBottom: responsiveScale(16),
+      color: theme.TEXT_COLOR,
+    },
+    message: {
+      fontSize: resizeFonts(16),
+      marginBottom: responsiveScale(16),
+      textAlign: "center",
+      paddingHorizontal: responsiveScale(32),
+    },
+    bottomButton: {
+      position: "absolute",
+      bottom: responsiveScale(42),
+      left: 0,
+      right: 0,
+    },
+  });
+
+}
