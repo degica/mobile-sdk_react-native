@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
       },
       android: {
         marginBottom: responsiveScale(200),
-        marginTop: -responsiveScale(50)
+        marginTop: -responsiveScale(60)
       },
     }),
   }
