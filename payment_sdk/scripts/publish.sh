@@ -110,7 +110,7 @@ echo "Bumping package.json $RELEASE_TYPE version and tagging commit"
 npm version $RELEASE_TYPE
 
 echo "Publishing release to npm"
-# npm publish --access=public
+npm publish --access=public
 
 echo "Pushing git commit and tag"
 git push --follow-tags
