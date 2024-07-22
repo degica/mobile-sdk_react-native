@@ -16,7 +16,7 @@ EOF
 
 get_latest_changelog() {
     local version=$(node -p "require('./package.json').version")
-    sed -n "/## $version/,/## /p" CHANGELOG.md | sed '$d' | sed '1d'
+    awk "/## $version/,/^$/{ if (!/## $version/ && NF) print }" CHANGELOG.md
 }
 
 create_github_release() {
@@ -24,6 +24,7 @@ create_github_release() {
   local changelog=$(get_latest_changelog)
   local release_notes="v$current_version
 
+Changes:
 $changelog
 
 For full details, see the [CHANGELOG.md](https://github.com/degica/mobile-sdk_react-native/blob/main/payment_sdk/CHANGELOG.md)."
