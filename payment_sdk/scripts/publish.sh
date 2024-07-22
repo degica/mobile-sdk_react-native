@@ -67,7 +67,7 @@ case $RELEASE_TYPE in
 esac
 
 # Make sure our working dir is the repo root directory
-cd "$(git rev-parse --show-toplevel)"
+cd "$(dirname "$0")/.."
 
 echo "Fetching git remotes"
 git fetch
