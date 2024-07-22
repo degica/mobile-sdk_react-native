@@ -34,8 +34,7 @@ For full details, see the [CHANGELOG.md](https://github.com/degica/mobile-sdk_re
   else
     echo "Creating GitHub release for tag: v$current_version"
     echo ""
-    echo -n "    "
-    hub release create -em "$release_notes" "v$current_version"
+    hub release create -m "$release_notes" "v$current_version"
   fi
 }
 
