@@ -18,7 +18,7 @@ create_github_release() {
   local current_version=$(node -p "require('./package.json').version")
   local release_notes="v$current_version
 
-Please see the [CHANGELOG.md](https://github.com/degica/mobile-sdk_react-native/blob/master/CHANGELOG.md) for details on this release."
+Please see the [CHANGELOG.md](https://github.com/degica/mobile-sdk_react-native/blob/main/CHANGELOG.md) for details on this release."
 
   if which hub | grep -q "not found"; then
     create_github_release_fallback "$release_notes"
@@ -73,13 +73,13 @@ echo "Fetching git remotes"
 git fetch
 
 GIT_STATUS=$(git status)
-if ! grep -q 'On branch master' <<< "$GIT_STATUS"; then
-  echo "Error! Must be on master branch to publish"
+if ! grep -q 'On branch main' <<< "$GIT_STATUS"; then
+  echo "Error! Must be on main branch to publish"
   exit 1
 fi
 
-if ! grep -q "Your branch is up to date with 'origin/master'." <<< "$GIT_STATUS"; then
-  echo "Error! Must be up to date with origin/master to publish"
+if ! grep -q "Your branch is up to date with 'origin/main'." <<< "$GIT_STATUS"; then
+  echo "Error! Must be up to date with origin/main to publish"
   exit 1
 fi
 
