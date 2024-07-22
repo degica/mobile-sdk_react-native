@@ -89,7 +89,7 @@ if ! grep -q 'working tree clean' <<< "$GIT_STATUS"; then
 fi
 
 echo "Installing dependencies"
-npm ci
+npm ci --legacy-peer-deps
 
 echo "Running tests"
 npm run test
