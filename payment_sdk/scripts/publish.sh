@@ -1,0 +1,114 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+RELEASE_TYPE=${1:-}
+
+echo_help() {
+  cat << EOF
+USAGE:
+    ./scripts/publish <release_type>
+ARGS:
+    <release_type>
+            A Semantic Versioning release type used to bump the version number. Either "patch", "minor", or "major".
+EOF
+}
+
+create_github_release() {
+  local current_version=$(node -p "require('./package.json').version")
+  local release_notes="v$current_version
+
+Please see the [CHANGELOG.md](https://github.com/degica/mobile-sdk_react-native/blob/master/CHANGELOG.md) for details on this release."
+
+  if which hub | grep -q "not found"; then
+    create_github_release_fallback "$release_notes"
+  else
+    echo "Creating GitHub release for tag: v$current_version"
+    echo ""
+    echo -n "    "
+    hub release create -em "$release_notes" "v$current_version"
+  fi
+}
+
+create_github_release_fallback() {
+  local release_notes=$1
+  cat << EOF
+Remember to create a release on GitHub at https://github.com/degica/mobile-sdk_react-native/releases/new with the following notes:
+$release_notes
+EOF
+}
+
+# Show help if no arguments passed
+if [ $# -eq 0 ]; then
+  echo "Error! Missing release type argument"
+  echo ""
+  echo_help
+  exit 1
+fi
+
+# Show help message if -h, --help, or help passed
+case $1 in
+  -h | --help | help)
+    echo_help
+    exit 0
+    ;;
+esac
+
+# Validate passed release type
+case $RELEASE_TYPE in
+  patch | minor | major)
+    ;;
+  *)
+    echo "Error! Invalid release type supplied"
+    echo ""
+    echo_help
+    exit 1
+    ;;
+esac
+
+# Make sure our working dir is the repo root directory
+cd "$(git rev-parse --show-toplevel)"
+
+echo "Fetching git remotes"
+git fetch
+
+GIT_STATUS=$(git status)
+if ! grep -q 'On branch master' <<< "$GIT_STATUS"; then
+  echo "Error! Must be on master branch to publish"
+  exit 1
+fi
+
+if ! grep -q "Your branch is up to date with 'origin/master'." <<< "$GIT_STATUS"; then
+  echo "Error! Must be up to date with origin/master to publish"
+  exit 1
+fi
+
+if ! grep -q 'working tree clean' <<< "$GIT_STATUS"; then
+  echo "Error! Cannot publish with dirty working tree"
+  exit 1
+fi
+
+echo "Installing dependencies"
+npm ci
+
+echo "Running tests"
+npm run test
+
+echo "Building the project"
+npm run build
+
+echo "Bumping package.json $RELEASE_TYPE version and tagging commit"
+npm version $RELEASE_TYPE
+
+echo "Publishing release to npm"
+npm publish --access=public
+
+echo "Pushing git commit and tag"
+git push --follow-tags
+
+echo "Publish successful!"
+echo ""
+
+create_github_release
+
+echo "Done!"
