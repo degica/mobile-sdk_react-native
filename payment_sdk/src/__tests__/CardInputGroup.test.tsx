@@ -6,6 +6,8 @@ import { Actions, DispatchContext, StateContext } from "../context/state";
 import CardInputGroup from "../components/CardInputGroup";
 import { isCardNumberValid, validateCardExpiry } from "../util/validator";
 
+import { ThemeProvider } from "../context/ThemeContext";
+
 // Mock helper functions
 jest.mock("../util/helpers", () => ({
   formatCreditCardNumber: jest.fn(),
@@ -38,11 +40,13 @@ const mockDispatch = jest.fn();
 describe("CardInputGroup Component", () => {
   const renderWithContext = (component: ReactNode) => {
     return render(
-      <StateContext.Provider value={mockState}>
-        <DispatchContext.Provider value={mockDispatch}>
-          {component}
-        </DispatchContext.Provider>
-      </StateContext.Provider>
+      <ThemeProvider>
+        <StateContext.Provider value={mockState}>
+          <DispatchContext.Provider value={mockDispatch}>
+            {component}
+          </DispatchContext.Provider>
+        </StateContext.Provider>
+      </ThemeProvider>
     );
   };
 
@@ -55,7 +59,7 @@ describe("CardInputGroup Component", () => {
     const { getByTestId } = renderWithContext(
       <CardInputGroup
         inputErrors={inputGroupMockValues}
-        resetError={(data: string) => {}}
+        resetError={(data: string) => { }}
       />
     );
 
@@ -77,7 +81,7 @@ describe("CardInputGroup Component", () => {
     const { getByTestId } = renderWithContext(
       <CardInputGroup
         inputErrors={inputGroupMockValues}
-        resetError={(data: string) => {}}
+        resetError={(data: string) => { }}
       />
     );
 
@@ -102,7 +106,7 @@ describe("CardInputGroup Component", () => {
     const { getByTestId } = renderWithContext(
       <CardInputGroup
         inputErrors={inputGroupMockValues}
-        resetError={(data: string) => {}}
+        resetError={(data: string) => { }}
       />
     );
 
@@ -125,7 +129,7 @@ describe("CardInputGroup Component", () => {
     const { getByTestId } = renderWithContext(
       <CardInputGroup
         inputErrors={inputGroupMockValues}
-        resetError={(data: string) => {}}
+        resetError={(data: string) => { }}
       />
     );
 
@@ -148,7 +152,7 @@ describe("CardInputGroup Component", () => {
     const { getByTestId } = renderWithContext(
       <CardInputGroup
         inputErrors={inputGroupMockValues}
-        resetError={(data: string) => {}}
+        resetError={(data: string) => { }}
       />
     );
 

@@ -78,6 +78,11 @@ export default [
               pattern: "@assets/**",
               group: "internal",
               position: "after"
+            },
+            {
+              pattern: "@theme/**",
+              group: "internal",
+              position: "after"
             }
           ],
           pathGroupsExcludedImportTypes: ["react", "react-native"],

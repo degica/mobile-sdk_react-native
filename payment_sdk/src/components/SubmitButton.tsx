@@ -4,6 +4,11 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
 import { useTranslation } from "react-i18next";
 
+import { ThemeSchemeType } from "@util/types";
+
+import { resizeFonts, responsiveScale } from "@theme/scalling";
+import { useCurrentTheme } from "@theme/useCurrentTheme";
+
 type Props = {
   onPress: () => void;
   label: string;
@@ -13,6 +18,8 @@ type Props = {
 
 const SubmitButton = ({ label, labelSuffix, onPress, testID }: Props) => {
   const { t } = useTranslation();
+  const theme = useCurrentTheme();
+  const styles = getStyles(theme);
   return (
     <TouchableOpacity
       testID={testID}
@@ -28,20 +35,22 @@ const SubmitButton = ({ label, labelSuffix, onPress, testID }: Props) => {
 
 export default SubmitButton;
 
-const styles = StyleSheet.create({
-  buttonWrapper: {
-    backgroundColor: "#0B82EE",
-    borderRadius: 8,
-    height: 50,
-    minHeight: 50,
-    marginHorizontal: 16,
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  label: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-});
+const getStyles = (theme: ThemeSchemeType) => {
+  return StyleSheet.create({
+    buttonWrapper: {
+      backgroundColor: theme.PRIMARY_COLOR,
+      borderRadius: responsiveScale(8),
+      height: responsiveScale(50),
+      marginHorizontal: responsiveScale(16),
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    label: {
+      color: "white",
+      fontSize: resizeFonts(16),
+      fontWeight: "bold",
+    },
+  });
+
+}

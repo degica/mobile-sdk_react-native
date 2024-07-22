@@ -6,6 +6,8 @@ import { WebView } from "react-native-webview";
 
 import { newNavStateProps } from "@util/types";
 
+import { responsiveScale } from "@theme/scalling";
+
 type webViewProps = {
   link: string;
   onNavigationStateChange?: (data: newNavStateProps) => void;
@@ -29,6 +31,6 @@ export default WebViewComponent;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom: 20,
+    marginBottom: responsiveScale(10),
   },
 });

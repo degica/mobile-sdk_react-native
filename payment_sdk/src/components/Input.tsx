@@ -12,6 +12,11 @@ import {
 
 import { useTranslation } from "react-i18next";
 
+import { ThemeSchemeType } from "@util/types";
+
+import { resizeFonts, responsiveScale } from "@theme/scalling";
+import { useCurrentTheme } from "@theme/useCurrentTheme";
+
 interface InputProps extends TextInputProps {
   value: string;
   onChangeText: (text: string) => void;
@@ -35,6 +40,8 @@ const Input: React.FC<InputProps> = ({
   ...rest
 }: InputProps) => {
   const { t } = useTranslation();
+  const theme = useCurrentTheme();
+  const styles = getStyles(theme);
 
   return (
     <View>
@@ -44,7 +51,7 @@ const Input: React.FC<InputProps> = ({
         keyboardType={keyboardType}
         onChangeText={onChangeText}
         placeholder={t(placeholder || "")}
-        placeholderTextColor="#7D8C9B"
+        placeholderTextColor={theme.INPUT_PLACEHOLDER}
         style={[
           styles.input,
           styles.withBorder,
@@ -58,25 +65,28 @@ const Input: React.FC<InputProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
-  label: {
-    fontSize: 16,
-    marginBottom: 8,
-    color: "#172E44",
-  },
-  input: {
-    height: "100%",
-    paddingLeft: 16,
-    fontSize: 16,
-    borderColor: "#CAD6E1",
-    borderWidth: 1,
-    borderRadius: 8,
-    color: "#172E44",
-  },
-  withErrorBorder: {
-    borderColor: "#F24D49",
-  },
-  withBorder: {},
-});
+const getStyles = (theme: ThemeSchemeType) => {
+  return StyleSheet.create({
+    label: {
+      fontSize: resizeFonts(16),
+      marginBottom: responsiveScale(8),
+      color: theme.TEXT_COLOR,
+    },
+    input: {
+      height: "100%",
+      paddingLeft: responsiveScale(16),
+      fontSize: resizeFonts(16),
+      borderColor: theme.CARD_BORDER,
+      borderWidth: responsiveScale(1),
+      borderRadius: responsiveScale(8),
+      backgroundColor: theme.INPUT_BACKGROUND,
+      color: theme.INPUT_TEXT,
+    },
+    withErrorBorder: {
+      borderColor: theme.ERROR,
+    },
+    withBorder: {},
+  });
+}
 
 export default Input;
