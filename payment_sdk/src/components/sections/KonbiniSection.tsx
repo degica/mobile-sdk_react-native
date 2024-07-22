@@ -14,6 +14,8 @@ import {
 } from "@util/types";
 import { validateKonbiniFormFields } from "@util/validator";
 
+import { responsiveScale } from "@theme/scalling";
+
 import Input from "../Input";
 import Pill from "../Pill";
 import SubmitButton from "../SubmitButton";
@@ -72,7 +74,7 @@ const KonbiniSection = (): JSX.Element => {
 
   const shopImage = useCallback(
     (iconUrl: string) => {
-      return <SvgCssUri width={38} height={24} uri={`${iconUrl}`} />;
+      return <SvgCssUri width={responsiveScale(38)} height={responsiveScale(24)} uri={`${iconUrl}`} />;
     },
     [konbiniBrands]
   );
@@ -130,11 +132,13 @@ const KonbiniSection = (): JSX.Element => {
           contentContainerStyle={styles.contentContainer}
         />
       </View>
-      <SubmitButton
-        label="PAY"
-        labelSuffix={formatCurrency({ amount, currency })}
-        onPress={onPay}
-      />
+      <View style={styles.btn}>
+        <SubmitButton
+          label="PAY"
+          labelSuffix={formatCurrency({ amount, currency })}
+          onPress={onPay}
+        />
+      </View>
     </View>
   );
 };
@@ -147,22 +151,25 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   inputContainer: {
-    margin: 16,
-    marginBottom: 24,
-    height: 60,
+    margin: responsiveScale(16),
+    marginBottom: responsiveScale(24),
+    height: responsiveScale(60),
   },
   inputStyle: {
-    height: 50,
+    height: responsiveScale(50),
   },
   shopListContainer: {
-    marginBottom: 26,
-    marginTop: 16,
+    marginBottom: responsiveScale(26),
+    marginTop: responsiveScale(16),
   },
   contentContainer: {
-    paddingLeft: 16,
+    paddingLeft: responsiveScale(16),
   },
   iconStyle: {
-    width: 32,
-    height: 32,
+    width: responsiveScale(32),
+    height: responsiveScale(32),
+  },
+  btn: {
+    height: responsiveScale(60),
   },
 });

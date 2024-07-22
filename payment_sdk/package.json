@@ -12,6 +12,7 @@
     "build": "npm run build:js && npm run build:types && npm pack",
     "build:js": "babel src --out-dir dist --extensions \".ts,.tsx\" --copy-files",
     "build:types": "tsc --emitDeclarationOnly && tsc-alias",
+    "release": "./scripts/publish.sh",
     "test": "jest",
     "lint": "eslint ."
   },

@@ -3,13 +3,17 @@ import React, { ReactNode } from "react";
 import {
   Text,
   StyleSheet,
-  Dimensions,
   TouchableOpacity,
   Image,
   ImageSourcePropType,
 } from "react-native";
 
 import { useTranslation } from "react-i18next";
+
+import { ThemeSchemeType } from "@util/types";
+
+import { resizeFonts, responsiveScale, WINDOW_WIDTH } from "@theme/scalling";
+import { useCurrentTheme } from "@theme/useCurrentTheme";
 
 interface PillProps {
   label: string;
@@ -27,6 +31,8 @@ const Pill: React.FC<PillProps> = ({
   isSelected,
 }) => {
   const { t } = useTranslation();
+  const theme = useCurrentTheme();
+  const styles = getStyles(theme);
 
   return (
     <TouchableOpacity
@@ -40,38 +46,40 @@ const Pill: React.FC<PillProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 16,
-  },
-  pill: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-    height: 82,
-    backgroundColor: "white",
-    borderColor: "#CAD6E1",
-    borderWidth: 1,
-    width: (Dimensions.get("window").width - 32) / 3,
-    marginRight: 8,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-evenly",
-  },
-  icon: {
-    marginRight: 8,
-  },
-  label: {
-    fontSize: 16,
-    color: "#172E44",
-    fontWeight: "500",
-  },
-  activeDeco: {
-    borderColor: "#172E44",
-  },
-});
+const getStyles = (theme: ThemeSchemeType) => {
+  return StyleSheet.create({
+    container: {
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: responsiveScale(16),
+    },
+    pill: {
+      paddingHorizontal: responsiveScale(12),
+      paddingVertical: responsiveScale(8),
+      borderRadius: responsiveScale(8),
+      height: responsiveScale(82),
+      backgroundColor: theme.CARD_BACKGROUND,
+      borderColor: theme.CARD_BORDER,
+      borderWidth: 1,
+      width: (WINDOW_WIDTH - responsiveScale(32)) / 3,
+      marginRight: responsiveScale(8),
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-evenly",
+    },
+    icon: {
+      marginRight: responsiveScale(8),
+    },
+    label: {
+      fontSize: resizeFonts(16),
+      color: theme.TEXT_COLOR,
+      fontWeight: "500",
+    },
+    activeDeco: {
+      borderColor: theme.TEXT_COLOR,
+    },
+  });
+}
 
 export default Pill;

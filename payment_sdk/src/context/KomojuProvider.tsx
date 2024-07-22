@@ -34,6 +34,7 @@ import { validateSessionResponse } from "@util/validator";
 
 import "@assets/languages/i18n";
 import { Actions, DispatchContext, KomojuContext } from "./state";
+import { ThemeProvider } from "./ThemeContext";
 
 type KomojuProviderIprops = {
   children?: ReactNode | ReactNode[];
@@ -43,13 +44,15 @@ export const KomojuProvider = (props: KomojuProviderIprops) => {
   if (props?.language) i18next.changeLanguage(props?.language);
   return (
     <StateProvider>
-      <MainStateProvider
-        publicKey={props.publicKey}
-        payment_methods={props?.payment_methods}
-        language={props?.language}
-      >
-        {props.children}
-      </MainStateProvider>
+      <ThemeProvider>
+        <MainStateProvider
+          publicKey={props.publicKey}
+          payment_methods={props?.payment_methods}
+          language={props?.language}
+        >
+          {props.children}
+        </MainStateProvider>
+      </ThemeProvider>
     </StateProvider>
   );
 };

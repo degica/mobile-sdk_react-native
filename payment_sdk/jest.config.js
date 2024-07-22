@@ -12,4 +12,8 @@ module.exports = {
   setupFilesAfterEnv: ["@testing-library/jest-native/extend-expect"],
   transformIgnorePatterns: [],
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: "<rootDir>/src/" }),
+  testPathIgnorePatterns: [
+    "<rootDir>/node_modules/",
+    "<rootDir>/dist/"
+  ]
 };
