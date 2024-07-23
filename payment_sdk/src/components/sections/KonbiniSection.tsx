@@ -1,18 +1,19 @@
 import React, { useContext, useState, useCallback } from "react";
 
-import { FlatList, StyleSheet, View } from "react-native";
-
-import { SvgCssUri } from "react-native-svg/css";
+import { FlatList, StyleSheet, Image, View } from "react-native";
 
 import { Actions, DispatchContext, StateContext } from "@context/state";
 
 import { formatCurrency, parseBrands } from "@util/helpers";
 import {
   brandType,
+  KonbiniType,
   PaymentType,
   sessionShowPaymentMethodType,
 } from "@util/types";
 import { validateKonbiniFormFields } from "@util/validator";
+
+import KonbiniImages from "@assets/images/konbiniImages";
 
 import { responsiveScale } from "@theme/scalling";
 
@@ -73,14 +74,14 @@ const KonbiniSection = (): JSX.Element => {
   };
 
   const shopImage = useCallback(
-    (iconUrl: string) => {
-      return <SvgCssUri width={responsiveScale(38)} height={responsiveScale(24)} uri={`${iconUrl}`} />;
+    (icon: KonbiniType) => {
+      return <Image source={KonbiniImages[icon]} style={styles.image} />;
     },
     [konbiniBrands]
   );
 
   const renderItem = ({ item }: { item: brandType }) => {
-    const image = shopImage(item?.icon);
+    const image = shopImage(item?.type);
 
     return (
       <Pill
@@ -171,5 +172,10 @@ const styles = StyleSheet.create({
   },
   btn: {
     height: responsiveScale(60),
+  },
+  image: {
+    width: responsiveScale(38),
+    height: responsiveScale(24),
+    resizeMode: "contain",
   },
 });

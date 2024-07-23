@@ -8,12 +8,6 @@ export const API_HEADER = (publicKey: string) => ({
   Authorization: `Basic ${btoa(publicKey + ":")}`,
 });
 
-export const STATIC_CREDIT_CARD_SVG =
-  "https://komoju-fields-demo.herokuapp.com/static/credit_card_number.svg";
-
-export const STATIC_CREDIT_CARD_CVC_SVG =
-  "https://komoju-fields-demo.herokuapp.com/static/credit_card_cvc.svg";
-
 // redirect url parameter to identify if token validation is completed
 export const tokenParameterName = "secure_token_id=";
 // redirect url parameter to identify if session payment is completed
@@ -35,5 +29,4 @@ export const cardTypeRegex = {
 export enum ThemeModes {
   light = "light",
   dark = "dark",
-
 }

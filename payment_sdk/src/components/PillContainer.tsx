@@ -1,13 +1,12 @@
 import React, { useContext } from "react";
 
-import { StyleSheet, View, FlatList } from "react-native";
-
-import { SvgCssUri } from "react-native-svg/css";
+import { StyleSheet, View, Image, FlatList } from "react-native";
 
 import { StateContext } from "@context/state";
 
-import { BASE_URL } from "@util/constants";
 import { PaymentType, sessionShowPaymentMethodType } from "@util/types";
+
+import PaymentMethodImages from "@assets/images/paymentMethodImages";
 
 import { responsiveScale } from "@theme/scalling";
 
@@ -21,14 +20,8 @@ type Props = {
 const PillContainer = ({ onSelect, selectedItem }: Props) => {
   const { paymentMethods } = useContext(StateContext);
 
-  const getIcon = (slug: string) => {
-    return (
-      <SvgCssUri
-        width={38}
-        height={24}
-        uri={`${BASE_URL}/payment_methods/${slug}.svg`}
-      />
-    );
+  const getIcon = (slug: PaymentType) => {
+    return <Image source={PaymentMethodImages[slug]} style={styles.image} />;
   };
 
   const renderItem = ({ item }: { item: sessionShowPaymentMethodType }) => {
@@ -61,6 +54,11 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingLeft: responsiveScale(16),
+  },
+  image: {
+    width: responsiveScale(38),
+    height: responsiveScale(24),
+    resizeMode: "contain",
   },
 });
 

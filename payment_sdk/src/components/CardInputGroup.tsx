@@ -6,32 +6,34 @@ import React, {
   useCallback,
 } from "react";
 
-import { StyleSheet, View } from "react-native";
-
-import { SvgCssUri } from "react-native-svg/css";
+import { StyleSheet, View, Image, Dimensions } from "react-native";
 
 import { Actions, DispatchContext, StateContext } from "@context/state";
 
-import {
-  BASE_URL,
-  STATIC_CREDIT_CARD_CVC_SVG,
-  STATIC_CREDIT_CARD_SVG,
-} from "@util/constants";
 import {
   determineCardType,
   formatCreditCardNumber,
   formatExpiry,
 } from "@util/helpers";
-import { PaymentType, sessionShowPaymentMethodType, ThemeSchemeType } from "@util/types";
+import {
+  CardTypes,
+  PaymentType,
+  sessionShowPaymentMethodType,
+  ThemeSchemeType,
+} from "@util/types";
 import { isCardNumberValid, validateCardExpiry } from "@util/validator";
 
 // import CardScanner from "./CardScanner";
+import CardImages, { CVC, DEFAULT } from "@assets/images/creditCardImages";
+
 import { resizeFonts, responsiveScale } from "@theme/scalling";
 import { useCurrentTheme } from "@theme/useCurrentTheme";
 
 import Input from "./Input";
 import KomojuText from "./KomojuText";
 // import ScanCardButton from "./ScanCardButton";
+
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 type Props = {
   inputErrors: {
@@ -42,12 +44,9 @@ type Props = {
   resetError: (type: string) => void;
 };
 
-const CARD_WIDTH = responsiveScale(30);
-const CARD_HEIGHT = responsiveScale(26);
-
 const CardInputGroup = ({ inputErrors, resetError }: Props) => {
   const dispatch = useContext(DispatchContext);
-  const [cardType, setCardType] = useState<string | null>(null);
+  const [cardType, setCardType] = useState<CardTypes | "unknown" | null>(null);
   // const [toggleScanCard, setToggleScanCard] = useState<boolean>(false);
   const theme = useCurrentTheme();
   const styles = getStyles(theme);
@@ -62,22 +61,27 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
     }
   }, [cardNumber]);
 
-  const renderSvg = (uri: string, widthMultiplier = 1) => (
-    <SvgCssUri
-      width={CARD_WIDTH * widthMultiplier}
-      height={CARD_HEIGHT}
-      uri={uri}
-    />
-  );
-
   //Toggle card scanner
   // const toggleCardScanner = () => {
   //   setToggleScanCard((prevState: boolean) => !prevState);
   // };
 
+  const filterCardToScreenSize = (list: string[]) => {
+    if (SCREEN_WIDTH > 380) {
+      return list;
+    } else if (SCREEN_WIDTH > 360) {
+      return list.slice(0, 5);
+    } else if (SCREEN_WIDTH > 340) {
+      return list.slice(0, 4);
+    } else if (SCREEN_WIDTH > 320) {
+      return list.slice(0, 3);
+    } else {
+      return list.slice(0, 2);
+    }
+  };
+
   // Create card image list
   const cardImage = useCallback(() => {
-    const cardUri = `${BASE_URL}/payment_methods/${PaymentType.CREDIT}.svg?brands=`;
     // Select credit card payment method data from session response payment methods
     const cardPaymentMethodData = paymentMethods?.find(
       (method: sessionShowPaymentMethodType) =>
@@ -85,7 +89,9 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
     );
     // If card number input is empty or user input does not match any card type showing all available card payment methods
     const allCardTypes = cardPaymentMethodData?.brands?.toString();
-    const cardTypesCount = allCardTypes?.split(",")?.length ?? 1;
+    const cardTypesList = filterCardToScreenSize(
+      allCardTypes?.split(",") ?? []
+    );
 
     /**
      * if card number field is empty or less than 2 digits showing all available card brands
@@ -93,11 +99,20 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
      * if card number is more than 2 digits and not matching for any brand showing static credit card svg
      */
     if (cardType === "unknown") {
-      return renderSvg(STATIC_CREDIT_CARD_SVG);
+      return <Image source={DEFAULT} style={styles.cardIcon} />;
     } else if (cardType) {
-      return renderSvg(`${cardUri}${cardType}`);
+      return <Image source={CardImages[cardType]} style={styles.cardIcon} />;
     } else if (allCardTypes) {
-      return renderSvg(`${cardUri}${allCardTypes}`, cardTypesCount);
+      return cardTypesList?.map((card) => {
+        const cardType = card as CardTypes;
+        return Object.values(CardTypes).includes(cardType) ? (
+          <Image
+            key={card}
+            source={CardImages[cardType]}
+            style={styles.cardIcon}
+          />
+        ) : null;
+      });
     }
   }, [cardType, paymentMethods]);
 
@@ -183,7 +198,7 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
               error={inputErrors.cvv}
             />
             <View style={styles.cardContainer}>
-              {renderSvg(STATIC_CREDIT_CARD_CVC_SVG)}
+              <Image source={CVC} style={styles.cardIcon} />
             </View>
           </View>
         </View>
@@ -250,9 +265,9 @@ const getStyles = (theme: ThemeSchemeType) => {
       justifyContent: "space-between",
       alignItems: "center",
       position: "absolute",
-      top: responsiveScale(9),
+      top: responsiveScale(15),
       right: 0,
-      marginRight: responsiveScale(8),
+      marginRight: responsiveScale(6),
     },
     cardImage: {
       width: responsiveScale(26),
@@ -263,6 +278,10 @@ const getStyles = (theme: ThemeSchemeType) => {
       justifyContent: "center",
       alignItems: "center",
     },
+    cardIcon: {
+      width: responsiveScale(25),
+      height: responsiveScale(17),
+      marginRight: responsiveScale(2),
+    },
   });
-
-}
+};
