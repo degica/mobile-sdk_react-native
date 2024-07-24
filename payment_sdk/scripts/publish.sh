@@ -16,22 +16,16 @@ EOF
 
 get_latest_changelog() {
     local version=$(node -p "require('./package.json').version")
-    awk "/## $version/,/^## / { if (!/^## / && !/^$/) print }" CHANGELOG.md | sed 's/^/• /'
+    awk "/## $version/,/^$/ { if (!/^## / && !/^$/) print }" CHANGELOG.md
 }
 
 create_github_release() {
-  # Fetch the new version after bumping
   local current_version=$(node -p "require('./package.json').version")
-  
-  # Fetch the changelog for the updated version
   local changelog=$(get_latest_changelog)
-  
   local release_notes="v$current_version
 
 Changes:
 $changelog
-
-$(echo "$changelog" | sed 's/^/> /')
 
 For full details, see the [CHANGELOG.md](https://github.com/degica/mobile-sdk_react-native/blob/main/payment_sdk/CHANGELOG.md)."
 
@@ -113,16 +107,15 @@ npm run build
 echo "Bumping package.json $RELEASE_TYPE version and tagging commit"
 npm version $RELEASE_TYPE
 
-# Create GitHub release with updated changelog
-create_github_release
-
 echo "Publishing release to npm"
-# npm publish --access=public
+npm publish --access=public
 
 echo "Pushing git commit and tag"
 git push --follow-tags
 
 echo "Publish successful!"
 echo ""
+
+create_github_release
 
 echo "Done!"
