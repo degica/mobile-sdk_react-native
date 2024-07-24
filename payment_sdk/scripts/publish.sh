@@ -20,8 +20,12 @@ get_latest_changelog() {
 }
 
 create_github_release() {
+  # Fetch the new version after bumping
   local current_version=$(node -p "require('./package.json').version")
+  
+  # Fetch the changelog for the updated version
   local changelog=$(get_latest_changelog)
+  
   local release_notes="v$current_version
 
 Changes:
@@ -109,15 +113,16 @@ npm run build
 echo "Bumping package.json $RELEASE_TYPE version and tagging commit"
 npm version $RELEASE_TYPE
 
+# Create GitHub release with updated changelog
+create_github_release
+
 echo "Publishing release to npm"
-npm publish --access=public
+# npm publish --access=public
 
 echo "Pushing git commit and tag"
 git push --follow-tags
 
 echo "Publish successful!"
 echo ""
-
-create_github_release
 
 echo "Done!"
