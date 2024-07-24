@@ -6,6 +6,7 @@ import {
   CardTypes,
   CurrencySign,
   CurrencyTypes,
+  KonbiniType,
   PaymentType,
   sessionShowPaymentMethodType,
 } from "./types";
@@ -114,9 +115,9 @@ export const formatCurrency = ({
 // method to convert konbini payment list brands object to a array of brand type and icon
 export const parseBrands = (
   obj: string[] | { [key: string]: brandsType } | undefined
-) => {
+): { type: KonbiniType; icon: string }[] => {
   // Initialize an empty array to store the converted objects
-  const result = [];
+  const result: { type: KonbiniType; icon: string }[] = [];
 
   // Iterate over the keys of the input object
   for (const key in obj) {
@@ -160,7 +161,9 @@ export const parsePaymentMethods = (
 };
 
 // Determine the card type based on the card number
-export const determineCardType = (cardNumber: string): string | null => {
+export const determineCardType = (
+  cardNumber: string
+): CardTypes | "unknown" | null => {
   if (cardTypeRegex.amex.exec(cardNumber)) {
     return CardTypes.AMEX;
   } else if (cardTypeRegex.diner.exec(cardNumber)) {
