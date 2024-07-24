@@ -23,7 +23,6 @@ npm install @komoju/komoju-react-native
 ```sh
 i18next
 react-i18next
-react-native-svg
 react-native-webview
 ```
 

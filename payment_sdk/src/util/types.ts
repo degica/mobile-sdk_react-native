@@ -36,6 +36,26 @@ export enum PaymentType {
   KONBINI = "konbini",
   CREDIT = "credit_card",
   PAY_PAY = "paypay",
+  LINE_PAY = "linepay",
+  MER_PAY = "merpay",
+  BANK_TRANSFER = "bank_transfer",
+  PAY_EASY = "pay_easy",
+  WEB_MONEY = "web_money",
+  BIT_CASH = "bit_cash",
+  NET_CASH = "net_cash",
+  PAIDY = "paidy",
+  RAKUTEN = "rakutenpay",
+  AU_PAY = "aupay",
+  ALI_PAY = "alipay",
+}
+
+export enum KonbiniType {
+  SEVEN_ELEVEN = "seven-eleven",
+  LAWSON = "lawson",
+  FAMILY_MART = "family-mart",
+  MINI_stop = "ministop",
+  DAILY_YAMAZAKI = "daily-yamazaki",
+  SEICOMART = "seicomart",
 }
 
 export enum CardTypes {
@@ -163,7 +183,7 @@ export type brandsType = {
 };
 
 export type brandType = {
-  type: string;
+  type: KonbiniType;
   icon: string;
 };
 
@@ -181,7 +201,7 @@ export type State = CardDetailsType &
      * Callback function to call relevant api for each payment type.
      */
     // TODO: Fix this type error
-  // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/ban-types
     sessionPay: Function;
     /**
      * Web view url and callback when url change at web view.
@@ -205,9 +225,9 @@ export type State = CardDetailsType &
      * this state is used to toggle(show hide) the success and failed screens.
      */
     paymentState:
-    | ResponseScreenStatuses.SUCCESS
-    | ResponseScreenStatuses.FAILED
-    | "";
+      | ResponseScreenStatuses.SUCCESS
+      | ResponseScreenStatuses.FAILED
+      | "";
   };
 
 export type sessionPayProps = {
@@ -217,7 +237,7 @@ export type sessionPayProps = {
 
 // TODO: Fix this type error
 // eslint-disable-next-line no-empty-pattern
-export const webViewDataInitialState = { link: "", onNavChange: ({ }) => { } };
+export const webViewDataInitialState = { link: "", onNavChange: ({}) => {} };
 
 // Define the initial state
 export const initialState: State = {
@@ -238,7 +258,7 @@ export const initialState: State = {
   email: "",
   /** konbini pay related states start */
 
-  sessionPay: () => { },
+  sessionPay: () => {},
   webViewData: webViewDataInitialState,
   amount: "",
   currency: CurrencyTypes.JPY,

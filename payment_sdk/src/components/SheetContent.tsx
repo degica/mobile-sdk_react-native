@@ -70,12 +70,15 @@ const SheetContent = () => {
   return (
     <View style={styles.mainContent}>
       <FlatList
-      showsVerticalScrollIndicator={false}
-        data={[{ key: 'content' }]}
+        showsVerticalScrollIndicator={false}
+        data={[{ key: "content" }]}
         bounces={false}
         renderItem={renderItem}
         keyExtractor={(item) => item.key}
-        contentContainerStyle={[styles.flatListContent, { paddingBottom: keyboardHeight }]}
+        contentContainerStyle={[
+          styles.flatListContent,
+          { paddingBottom: keyboardHeight },
+        ]}
         ListFooterComponent={<SheetFooter />}
         ListFooterComponentStyle={styles.footerContent}
       />
@@ -91,20 +94,20 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   item: {
-    height: "100%"
+    height: "100%",
   },
   footerContent: {
     ...Platform.select({
       ios: {
         marginBottom: responsiveScale(200),
-        marginTop: -responsiveScale(60)
+        marginTop: -responsiveScale(60),
       },
       android: {
         marginBottom: responsiveScale(200),
-        marginTop: -responsiveScale(60)
+        marginTop: -responsiveScale(60),
       },
     }),
-  }
+  },
 });
 
 export default SheetContent;
