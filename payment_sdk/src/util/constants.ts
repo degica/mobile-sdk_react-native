@@ -1,4 +1,4 @@
-export const noop = () => {};
+export const noop = () => { };
 export const BASE_URL = "https://komoju.com";
 export const BASE_URL_API = `${BASE_URL}/api/v1`;
 export const API_HEADER = (publicKey: string) => ({
@@ -29,4 +29,21 @@ export const cardTypeRegex = {
 export enum ThemeModes {
   light = "light",
   dark = "dark",
+}
+
+export enum SimpleRedirectTypeModes {
+  paypay = "PAY_PAY",
+  alipay = "ALI_PAY",
+  linepay = "LINE_PAY",
+  merpay = "MER_PAY",
+  rakuten = "RAKUTEN",
+  aupay = "AU_PAY"
+}
+
+export enum BasePaymentScreenType {
+  CARD = "CARD",
+  SIMPLE_REDIRECT = "SIMPLE_REDIRECT",
+  ONE_INPUT = "ONE_INPUT",
+  PAIDY = "PAIDY",
+  KONBINI = "KONBINI"
 }

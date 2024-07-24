@@ -11,8 +11,8 @@ import LanguageSelectComponent from './components/languageSelectComponet';
  * Your publishable key is required in order for Fields to access the KOMOJU API.
  * Your secret key is required in order to create a session. This should be done in your backend on a real world application
  */
-const PUBLIC_KEY = '';
-const SECRET_KEY = '';
+const PUBLIC_KEY = 'pk_test_2x4ik3fz8bvr3kp59akrxas1';
+const SECRET_KEY = 'sk_test_c32wbbp6icmcs51v82pj476p';
 
 function App(): React.JSX.Element {
   const [komojuKeys, setKomojuKeys] = useState({
