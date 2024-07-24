@@ -14,35 +14,56 @@ ARGS:
 EOF
 }
 
-get_latest_changelog() {
-    local version=$(node -p "require('./package.json').version")
-    awk "/## $version/,/^$/ { if (!/^## / && !/^$/) print }" CHANGELOG.md
+percentEncodeString() {
+  jq -rn --arg x "$1" '$x|@uri'
 }
 
 create_github_release() {
-  local current_version=$(node -p "require('./package.json').version")
-  local changelog=$(get_latest_changelog)
-  local release_notes="v$current_version
+  local release_notes
+  local changelog
+  local is_collecting=0
+  while IFS= read -r line; do
+    if [[ $line == \#\#[[:space:]]*[[:digit:]]* ]]; then
+      if [ $is_collecting == 0 ] ; then
+        # Reached the entry for the version that is to be published
+        is_collecting=1
+        local version_and_date="${line#* }"
+      else
+        # Reached the next version entry, we're done.
+        break
+      fi
+    elif [ $is_collecting == 1 ] ; then
+      changelog+="${line}
+"
+    fi
+  done < CHANGELOG.md
+  
+  release_notes="$(cat << EOF
+$version_and_date
 
-Changes:
 $changelog
 
-For full details, see the [CHANGELOG.md](https://github.com/degica/mobile-sdk_react-native/blob/main/payment_sdk/CHANGELOG.md)."
+Please [see the changelog](https://github.com/degica/mobile-sdk_react-native/blob/main/payment_sdk/CHANGELOG.md) for additional details.
+EOF
+)"
 
   if ! command -v hub &> /dev/null; then
-    echo "hub command not found. Falling back to manual release creation."
     create_github_release_fallback "$release_notes"
   else
+    local current_version=${version_and_date% -*}
     echo "Creating GitHub release for tag: v$current_version"
     echo ""
-    hub release create -m "$release_notes" "v$current_version"
+    echo -n "    "
+    hub release create -em "$release_notes" "v$current_version"
   fi
 }
 
 create_github_release_fallback() {
   local release_notes=$1
-  echo "Please create a release manually on GitHub at https://github.com/degica/mobile-sdk_react-native/releases/new with the following notes:"
-  echo "$release_notes"
+  cat << EOF
+Remember to create a release on GitHub at https://github.com/degica/mobile-sdk_react-native/releases/new with the following notes:
+$release_notes
+EOF
 }
 
 # Show help if no arguments passed
@@ -108,7 +129,7 @@ echo "Bumping package.json $RELEASE_TYPE version and tagging commit"
 npm version $RELEASE_TYPE
 
 echo "Publishing release to npm"
-npm publish --access=public
+# npm publish --access=public
 
 echo "Pushing git commit and tag"
 git push --follow-tags
