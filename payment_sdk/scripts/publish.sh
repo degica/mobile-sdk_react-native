@@ -16,7 +16,7 @@ EOF
 
 get_latest_changelog() {
     local version=$(node -p "require('./package.json').version")
-    awk "/## $version/,/^$/ { if (!/^## / && !/^$/) print }" CHANGELOG.md
+    awk "/## $version/,/^## / { if (!/^## / && !/^$/) print }" CHANGELOG.md | sed 's/^/• /'
 }
 
 create_github_release() {
