@@ -4,13 +4,15 @@ import { StyleSheet, View } from "react-native";
 
 import { StateContext } from "@context/state";
 
+import LightBox from "@components/LightBox";
+
+import { LangKeys } from "@util/constants";
 import { PaymentType, ThemeSchemeType } from "@util/types";
 
 import { resizeFonts, responsiveScale } from "@theme/scalling";
 import { useCurrentTheme } from "@theme/useCurrentTheme";
 
 import KomojuText from "../KomojuText";
-import LightBox from "../LightBox";
 import SubmitButton from "../SubmitButton";
 
 type SimpleRedirectSectionProps = {
@@ -25,26 +27,22 @@ const SimpleRedirectSection = ({ type }: SimpleRedirectSectionProps) => {
         sessionPay({ paymentType: PaymentType.PAY_PAY });
     };
 
-    const getLanguageKey = () => {
-
-    }
-
     return (
         <View style={styles.container}>
             <View style={styles.textContent}>
-                <KomojuText style={styles.title}>PAYMENT_VIA_PAY_PAY</KomojuText>
+                <KomojuText style={styles.title}>{`PAYMENT_VIA_${LangKeys[type]}`}</KomojuText>
                 <KomojuText style={styles.description}>
-                    PAY_PAY_REDIRECT_MESSAGE
+                    {`${LangKeys[type]}_REDIRECT_MESSAGE`}
                 </KomojuText>
             </View>
             <View style={styles.lbWrapper}>
                 <LightBox
-                    content="Lorem ipsum dolor sit amet consectetur. Etiam accumsan nunc "
-                    icon="📱"
+                    content="LIGHT_BOX_CONTENT"
+                    icon="⚡️"
                 />
             </View>
             <View style={styles.btn}>
-                <SubmitButton onPress={onPay} label="CONTINUE_TO_PAY_PAY" />
+                <SubmitButton onPress={onPay} label={`CONTINUE_TO_${LangKeys[type]}`} />
             </View>
         </View>
     );

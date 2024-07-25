@@ -75,11 +75,11 @@ const SheetContent = () => {
         return <SingleInputFormSection type={paymentType} />
       case PaymentType.BANK_TRANSFER:
       case PaymentType.PAY_EASY:
-        return <TransferFormSection type={paymentType} />
+        return <TransferFormSection type={paymentType}/>
       case PaymentType.KONBINI:
         return <KonbiniSection />
       case PaymentType.PAIDY:
-        return <PaidyFormSection />
+        return <PaidyFormSection type={paymentType}/>
       default:
         break;
     }

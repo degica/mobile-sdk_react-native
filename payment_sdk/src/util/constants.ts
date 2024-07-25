@@ -1,3 +1,5 @@
+import { PaymentType } from "./types";
+
 export const noop = () => { };
 export const BASE_URL = "https://komoju.com";
 export const BASE_URL_API = `${BASE_URL}/api/v1`;
@@ -40,10 +42,20 @@ export enum SimpleRedirectTypeModes {
   aupay = "AU_PAY"
 }
 
-export enum BasePaymentScreenType {
-  CARD = "CARD",
-  SIMPLE_REDIRECT = "SIMPLE_REDIRECT",
-  ONE_INPUT = "ONE_INPUT",
-  PAIDY = "PAIDY",
-  KONBINI = "KONBINI"
-}
+export const LangKeys: { [key in PaymentType]: string } = {
+  [PaymentType.ALI_PAY]: "ALI_PAY",
+  [PaymentType.AU_PAY]: "AU_PAY",
+  [PaymentType.BANK_TRANSFER]: "BANK_TRANSFER",
+  [PaymentType.BIT_CASH]: "BIT_CASH",
+  [PaymentType.CREDIT]: "CREDIT",
+  [PaymentType.KONBINI]: "KONBINI",
+  [PaymentType.LINE_PAY]: "LINE_PAY",
+  [PaymentType.MER_PAY]: "MER_PAY",
+  [PaymentType.PAIDY]: "PAIDY",
+  [PaymentType.PAY_EASY]: "PAY_EASY",
+  [PaymentType.PAY_PAY]: "PAY_PAY",
+  [PaymentType.RAKUTEN]: "RAKUTEN",
+  [PaymentType.WEB_MONEY]: "WEB_MONEY",
+  [PaymentType.NET_CASH]: "NET_CASH",
+
+};
