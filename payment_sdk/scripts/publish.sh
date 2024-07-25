@@ -134,6 +134,11 @@ npm publish --access=public
 echo "Pushing git commit and tag"
 git push --follow-tags
 
+# echo "Pushing git changes to main brach"
+# git add package.json
+# git commit -m  "package.json"
+# git push origin main
+
 echo "Publish successful!"
 echo ""
 
