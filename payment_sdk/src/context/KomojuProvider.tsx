@@ -2,11 +2,12 @@ import React, {
   ReactNode,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useRef,
 } from "react";
 
-import { Alert } from "react-native";
+import { Alert, Linking } from "react-native";
 
 import i18next from "i18next";
 
@@ -42,6 +43,31 @@ type KomojuProviderIprops = {
 
 export const KomojuProvider = (props: KomojuProviderIprops) => {
   if (props?.language) i18next.changeLanguage(props?.language);
+
+  useEffect(() => {
+    const handleDeepLink = (event: { url: string }) => {
+      // Handle the deep link
+      console.log('Deep link handled:', event.url);
+      Alert.alert(event.url)
+      // You can parse the URL and extract any data you need
+    };
+
+    // Add event listener for deep links
+    const subscription = Linking.addEventListener('url', handleDeepLink);
+
+    // Check for any pending initial URL
+    Linking.getInitialURL().then(url => {
+      if (url) {
+        handleDeepLink({ url });
+      }
+    });
+
+    // Cleanup
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
   return (
     <StateProvider>
       <ThemeProvider>
@@ -267,14 +293,15 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
       stopLoading();
 
       if (response?.status === PaymentStatuses.PENDING) {
-        dispatch({
-          type: Actions.SET_WEBVIEW_LINK,
-          payload: {
-            link: response.redirect_url,
-            onNavChange: (newNavState: newNavStateProps) =>
-              handleWebViewNavigationStateChange(newNavState, paymentType),
-          },
-        });
+        Linking.openURL(response.redirect_url);
+        // dispatch({
+        //   type: Actions.SET_WEBVIEW_LINK,
+        //   payload: {
+        //     link: response.redirect_url,
+        //     onNavChange: (newNavState: newNavStateProps) =>
+        //       handleWebViewNavigationStateChange(newNavState, paymentType),
+        //   },
+        // });
       } else if (
         paymentType === PaymentType.KONBINI &&
         response?.payment?.payment_details?.instructions_url
