@@ -17,10 +17,16 @@ import {
   Keyboard,
 } from "react-native";
 
+import { useTranslation } from "react-i18next";
+
 import { Actions, DispatchContext, StateContext } from "@context/state";
 import { useTheme } from "@context/ThemeContext";
 
-import { paymentFailedCtaText, paymentSuccessCtaText, ThemeModes } from "@util/constants";
+import {
+  paymentFailedCtaText,
+  paymentSuccessCtaText,
+  ThemeModes,
+} from "@util/constants";
 import { ResponseScreenStatuses, ThemeSchemeType } from "@util/types";
 
 import closeIcon from "@assets/images/close.png";
@@ -33,7 +39,7 @@ import KomojuText from "./KomojuText";
 import ResponseScreen from "./ResponseScreen";
 import SheetContent from "./SheetContent";
 
-const MAX_TRANSLATE_Y = - WINDOW_HEIGHT + responsiveScale(50);
+const MAX_TRANSLATE_Y = -WINDOW_HEIGHT + responsiveScale(50);
 
 type SheetProps = {
   children?: React.ReactNode;
@@ -51,6 +57,8 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
   { swipeClose, onDismiss },
   ref
 ) => {
+  const { t } = useTranslation();
+
   const translateY = useRef(new RNAnimated.Value(0)).current;
   const active = useRef(new RNAnimated.Value(0)).current;
   const context = useRef(new RNAnimated.Value(0)).current;
@@ -63,7 +71,7 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
   const dispatch = useContext(DispatchContext);
   const theme = useCurrentTheme();
   const styles = getStyles(theme);
-  const {mode} = useTheme();
+  const { mode } = useTheme();
 
   useEffect(() => {
     const yListener = translateY.addListener(({ value }) => {
@@ -101,14 +109,14 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
 
     if (showAlert) {
       // showing an alert when user try to close the SDK modal
-      Alert.alert("Cancel Payment?", "", [
+      Alert.alert(`${t("CANCEL_PAYMENT")}?`, "", [
         {
-          text: "No",
+          text: t("NO"),
           onPress: () => scrollTo(MAX_TRANSLATE_Y + 50),
           style: "cancel",
         },
         {
-          text: "Yes",
+          text: t("YES"),
           onPress: () => {
             // invoking client provided onDismiss() callback when closing the SDK modal
             onDismiss && onDismiss();
@@ -212,7 +220,9 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
               )
             }
           >
-            <Image source={mode === ThemeModes.light ? closeIcon : closeDMIcon} />
+            <Image
+              source={mode === ThemeModes.light ? closeIcon : closeDMIcon}
+            />
           </TouchableOpacity>
         </RNAnimated.View>
         {
@@ -226,7 +236,8 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
             />
           ) : (
             <SheetContent />
-          )}
+          )
+        }
       </RNAnimated.View>
     </>
   );
@@ -270,6 +281,6 @@ const getStyles = (theme: ThemeSchemeType) => {
       flex: 1,
     },
   });
-}
+};
 
 export default React.forwardRef<SheetRefProps, SheetProps>(Sheet);

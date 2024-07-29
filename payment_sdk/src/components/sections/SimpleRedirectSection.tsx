@@ -24,7 +24,7 @@ const SimpleRedirectSection = ({ type }: SimpleRedirectSectionProps) => {
     const theme = useCurrentTheme();
     const styles = getStyles(theme);
     const onPay = () => {
-        sessionPay({ paymentType: PaymentType.PAY_PAY });
+        sessionPay({ paymentType: type });
     };
 
     return (
@@ -77,6 +77,7 @@ const getStyles = (theme: ThemeSchemeType) => {
         },
         btn: {
             height: responsiveScale(60),
+            marginBottom: responsiveScale(24),
         },
     });
 }

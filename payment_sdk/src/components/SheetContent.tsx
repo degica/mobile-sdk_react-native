@@ -106,7 +106,13 @@ const SheetContent = () => {
           styles.flatListContent,
           { paddingBottom: keyboardHeight },
         ]}
-        ListFooterComponent={<SheetFooter />}
+        ListFooterComponent={
+          <>
+            <View style={styles.footerSpace} />
+            <SheetFooter />
+          </>
+
+        }
         ListFooterComponentStyle={styles.footerContent}
       />
     </View>
@@ -123,14 +129,17 @@ const styles = StyleSheet.create({
   item: {
     height: "100%",
   },
+  footerSpace: {
+    flex: 1,
+  },
   footerContent: {
     ...Platform.select({
       ios: {
-        marginBottom: responsiveScale(200),
+        marginBottom: responsiveScale(100),
         marginTop: -responsiveScale(60),
       },
       android: {
-        marginBottom: responsiveScale(200),
+        marginBottom: responsiveScale(100),
         marginTop: -responsiveScale(60),
       },
     }),

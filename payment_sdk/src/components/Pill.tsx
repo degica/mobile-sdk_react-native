@@ -1,19 +1,18 @@
 import React, { ReactNode } from "react";
 
 import {
-  Text,
   StyleSheet,
   TouchableOpacity,
   Image,
   ImageSourcePropType,
 } from "react-native";
 
-import { useTranslation } from "react-i18next";
-
 import { ThemeSchemeType } from "@util/types";
 
 import { resizeFonts, responsiveScale, WINDOW_WIDTH } from "@theme/scalling";
 import { useCurrentTheme } from "@theme/useCurrentTheme";
+
+import KomojuText from "./KomojuText";
 
 interface PillProps {
   label: string;
@@ -30,7 +29,6 @@ const Pill: React.FC<PillProps> = ({
   onPress,
   isSelected,
 }) => {
-  const { t } = useTranslation();
   const theme = useCurrentTheme();
   const styles = getStyles(theme);
 
@@ -41,7 +39,7 @@ const Pill: React.FC<PillProps> = ({
     >
       {image ? image : <Image style={styles.icon} source={icon} />}
 
-      <Text style={styles.label}>{t(label)}</Text>
+      <KomojuText style={styles.label}>{label}</KomojuText>
     </TouchableOpacity>
   );
 };
@@ -70,9 +68,11 @@ const getStyles = (theme: ThemeSchemeType) => {
     },
     icon: {
       marginRight: responsiveScale(8),
+      flex:1
     },
     label: {
-      fontSize: resizeFonts(16),
+      width: '90%',
+      fontSize: resizeFonts(14),
       color: theme.TEXT_COLOR,
       fontWeight: "500",
     },
@@ -80,6 +80,6 @@ const getStyles = (theme: ThemeSchemeType) => {
       borderColor: theme.TEXT_COLOR,
     },
   });
-}
+};
 
 export default Pill;

@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     height: responsiveScale(60),
-    marginTop: responsiveScale(24),
+    marginVertical: responsiveScale(24),
   },
   inputStyle: {
     height: responsiveScale(50),
