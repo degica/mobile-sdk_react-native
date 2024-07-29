@@ -3,7 +3,7 @@ import { fireEvent, render, waitFor } from "@testing-library/react-native";
 
 import CardSection from "../components/sections/CardSection";
 
-import StateProvider from "../components/paymentState/stateProvider";
+import StateProvider from "../context/StateProvider";
 import { DispatchContext, StateContext } from "../context/state";
 import { PaymentType } from "../util/types";
 

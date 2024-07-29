@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export type InitPrams = {
   publicKey: string;
   payment_methods?: Array<PaymentType>;
@@ -285,3 +287,7 @@ export interface ThemeSchemeType {
   CARD_SHADOW_IOS_COLOR: string;
   CARD_SHADOW_ANDROID_COLOR: string;
 }
+
+export type KomojuProviderIprops = {
+  children?: ReactNode | ReactNode[];
+} & InitPrams;

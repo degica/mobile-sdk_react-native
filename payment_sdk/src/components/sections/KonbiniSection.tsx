@@ -115,6 +115,7 @@ const KonbiniSection = (): JSX.Element => {
           value={email ?? ""}
           label="EMAIL"
           placeholder="EXAMPLE_EMAIL"
+          autoCapitalize="none"
           onChangeText={(text: string) => {
             resetError("email");
             dispatch({ type: Actions.SET_EMAIL, payload: text });
