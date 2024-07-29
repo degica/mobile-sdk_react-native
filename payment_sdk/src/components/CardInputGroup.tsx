@@ -253,6 +253,7 @@ const getStyles = (theme: ThemeSchemeType) => {
       borderTopLeftRadius: 0,
       borderTopRightRadius: 0,
       borderBottomLeftRadius: 0,
+      marginLeft: -responsiveScale(1),
     },
     titleScanRow: {
       flexDirection: "row",

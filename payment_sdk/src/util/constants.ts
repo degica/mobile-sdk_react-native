@@ -13,8 +13,8 @@ export const tokenParameterName = "secure_token_id=";
 // redirect url parameter to identify if session payment is completed
 export const sessionParameterName = "sessions";
 
-export const paymentSuccessCtaText = "Back to store";
-export const paymentFailedCtaText = "Update payment method";
+export const paymentSuccessCtaText = "BACK_TO_STORE";
+export const paymentFailedCtaText = "UPDATE_PAYMENT_METHOD";
 
 export const emailRegex = /^[a-zA-Z0–9._-]+@[a-zA-Z0–9.-]+\.[a-zA-Z]{2,4}$/;
 export const cardTypeRegex = {

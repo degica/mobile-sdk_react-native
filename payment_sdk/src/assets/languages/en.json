@@ -34,6 +34,15 @@
       "PAYMENT_VIA_PAY_PAY": "Payment via Paypay",
       "PAY_PAY_REDIRECT_MESSAGE": "You will be redirected to Paypay to complete the payment",
       "CONTINUE_TO_PAY_PAY": "Continue to Paypay",      
+      "YES": "Yes",      
+      "NO": "No",      
+      "CANCEL_PAYMENT": "Cancel Payment",      
+      "PAYMENT_SUCCESS": "Payment Success",      
+      "PAYMENT_FAILED": "Payment Failed",      
+      "ORDER_THANK_YOU_NOTE": "Thank you for your order",      
+      "PAYMENT_RE_TRY_MSG": "Hey there, We tried to charge your card but, something went wrong. Please update your payment method below to continue",      
+      "BACK_TO_STORE": "Back to store",      
+      "UPDATE_PAYMENT_METHOD": "Update payment method",      
       "": ""
    }
   }
