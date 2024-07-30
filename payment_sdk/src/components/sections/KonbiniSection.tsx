@@ -173,6 +173,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     height: responsiveScale(60),
+    marginBottom: responsiveScale(24),
   },
   image: {
     width: responsiveScale(38),

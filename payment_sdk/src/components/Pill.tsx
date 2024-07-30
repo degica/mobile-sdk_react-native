@@ -68,9 +68,11 @@ const getStyles = (theme: ThemeSchemeType) => {
     },
     icon: {
       marginRight: responsiveScale(8),
+      flex:1
     },
     label: {
-      fontSize: resizeFonts(16),
+      width: '90%',
+      fontSize: resizeFonts(14),
       color: theme.TEXT_COLOR,
       fontWeight: "500",
     },

@@ -13,8 +13,11 @@ import Loader from "./Loader";
 import PillContainer from "./PillContainer";
 import CardSection from "./sections/CardSection";
 import KonbiniSection from "./sections/KonbiniSection";
-import PayPaySection from "./sections/PayPaySection";
+import PaidyFormSection from "./sections/PaidyFormSection";
 import SheetFooter from "./sections/SheetFooter";
+import SimpleRedirectSection from "./sections/SimpleRedirectSection";
+import SingleInputFormSection from "./sections/SingleInputFormSection";
+import TransferFormSection from "./sections/TransferFormSection";
 import WebView from "./WebView";
 
 // const KEYBOARD_OFFSET = isAndroid() ? 120 : 80;
@@ -55,13 +58,37 @@ const SheetContent = () => {
       />
     );
 
+  const getBaseScreenByPaymentType = (paymentType: PaymentType) => {
+    switch (paymentType) {
+      case PaymentType.CREDIT:
+        return <CardSection />
+      case PaymentType.ALI_PAY:
+      case PaymentType.AU_PAY:
+      case PaymentType.PAY_PAY:
+      case PaymentType.LINE_PAY:
+      case PaymentType.MER_PAY:
+      case PaymentType.RAKUTEN:
+        return <SimpleRedirectSection type={paymentType} />
+      case PaymentType.NET_CASH:
+      case PaymentType.BIT_CASH:
+      case PaymentType.WEB_MONEY:
+        return <SingleInputFormSection type={paymentType} />
+      case PaymentType.BANK_TRANSFER:
+      case PaymentType.PAY_EASY:
+        return <TransferFormSection type={paymentType}/>
+      case PaymentType.KONBINI:
+        return <KonbiniSection />
+      case PaymentType.PAIDY:
+        return <PaidyFormSection type={paymentType}/>
+      default:
+        break;
+    }
+  }
   const renderItem = () => {
     return (
       <View style={styles.item}>
         <PillContainer onSelect={handlePillSelect} selectedItem={paymentType} />
-        {paymentType === PaymentType.CREDIT && <CardSection />}
-        {paymentType === PaymentType.PAY_PAY && <PayPaySection />}
-        {paymentType === PaymentType.KONBINI && <KonbiniSection />}
+        {getBaseScreenByPaymentType(paymentType)}
         {renderLoading}
       </View>
     );
@@ -79,7 +106,13 @@ const SheetContent = () => {
           styles.flatListContent,
           { paddingBottom: keyboardHeight },
         ]}
-        ListFooterComponent={<SheetFooter />}
+        ListFooterComponent={
+          <>
+            <View style={styles.footerSpace} />
+            <SheetFooter />
+          </>
+
+        }
         ListFooterComponentStyle={styles.footerContent}
       />
     </View>
@@ -96,14 +129,17 @@ const styles = StyleSheet.create({
   item: {
     height: "100%",
   },
+  footerSpace: {
+    flex: 1,
+  },
   footerContent: {
     ...Platform.select({
       ios: {
-        marginBottom: responsiveScale(200),
+        marginBottom: responsiveScale(100),
         marginTop: -responsiveScale(60),
       },
       android: {
-        marginBottom: responsiveScale(200),
+        marginBottom: responsiveScale(100),
         marginTop: -responsiveScale(60),
       },
     }),
