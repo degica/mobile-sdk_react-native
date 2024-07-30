@@ -19,7 +19,7 @@ type TransferFormSectionProps = {
 
 const TransferFormSection = ({ type }: TransferFormSectionProps) => {
   const onPay = () => {
-    sessionPay({ paymentType: PaymentType.PAY_PAY });
+    sessionPay({ paymentType: type });
   };
 
   const {
@@ -36,6 +36,7 @@ const TransferFormSection = ({ type }: TransferFormSectionProps) => {
           label="SURNAME"
           placeholder="SURNAME"
           onChangeText={(text: string) => {
+            console.log(text)
             // resetError("name");
             // dispatch({ type: Actions.SET_NAME, payload: text });
           }}
@@ -49,6 +50,7 @@ const TransferFormSection = ({ type }: TransferFormSectionProps) => {
           label="GIVEN_NAME"
           placeholder="GIVEN_NAME"
           onChangeText={(text: string) => {
+            console.log(text)
             // resetError("email");
             // dispatch({ type: Actions.SET_EMAIL, payload: text });
           }}
@@ -62,6 +64,7 @@ const TransferFormSection = ({ type }: TransferFormSectionProps) => {
           label="LAST_NAME"
           placeholder="LAST_NAME"
           onChangeText={(text: string) => {
+            console.log(text)
             // resetError("email");
             // dispatch({ type: Actions.SET_EMAIL, payload: text });
           }}
@@ -75,6 +78,7 @@ const TransferFormSection = ({ type }: TransferFormSectionProps) => {
           label="FIRST_NAME"
           placeholder="FIRST_NAME"
           onChangeText={(text: string) => {
+            console.log(text)
             // resetError("email");
             // dispatch({ type: Actions.SET_EMAIL, payload: text });
           }}
@@ -88,6 +92,7 @@ const TransferFormSection = ({ type }: TransferFormSectionProps) => {
           label="EMAIL"
           placeholder="EXAMPLE_EMAIL"
           onChangeText={(text: string) => {
+            console.log(text)
             // resetError("email");
             // dispatch({ type: Actions.SET_EMAIL, payload: text });
           }}
@@ -101,6 +106,7 @@ const TransferFormSection = ({ type }: TransferFormSectionProps) => {
           label="TELEPHONE_NUMBER"
           placeholder="TELEPHONE_NUMBER_PLACEHOLDER"
           onChangeText={(text: string) => {
+            console.log(text)
             // resetError("email");
             // dispatch({ type: Actions.SET_EMAIL, payload: text });
           }}

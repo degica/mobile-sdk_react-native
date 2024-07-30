@@ -24,8 +24,6 @@ const PaidyFormSection = ({ type }: PaidyFormSectionProps) => {
 
   const {
     sessionPay,
-    amount,
-    currency,
   } = useContext(StateContext);
 
   return (
@@ -36,6 +34,7 @@ const PaidyFormSection = ({ type }: PaidyFormSectionProps) => {
           label="FULL_NAME"
           placeholder="FULL_NAME_PLACEHOLDER"
           onChangeText={(text: string) => {
+            console.log(text)
             // resetError("name");
             // dispatch({ type: Actions.SET_NAME, payload: text });
           }}
@@ -49,11 +48,12 @@ const PaidyFormSection = ({ type }: PaidyFormSectionProps) => {
           label="TELEPHONE_NUMBER"
           placeholder="TELEPHONE_NUMBER_PLACEHOLDER"
           onChangeText={(text: string) => {
+            console.log(text)
             // resetError("email");
             // dispatch({ type: Actions.SET_EMAIL, payload: text });
           }}
           inputStyle={styles.inputStyle}
-          // error={inputErrors.email}
+        // error={inputErrors.email}
         />
       </View>
       <View style={styles.btn}>

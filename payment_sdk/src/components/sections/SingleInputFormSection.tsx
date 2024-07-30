@@ -37,6 +37,7 @@ const SingleInputFormSection = ({ type }: SingleInputFormSectionProps) => {
           label={`${LangKeys[type]}_INPUT_LABEL`}
           placeholder={`${LangKeys[type]}_INPUT_PLACEHOLDER`}
           onChangeText={(text: string) => {
+            console.log(text)
             // resetError("name");
             // dispatch({ type: Actions.SET_CARDHOLDER_NAME, payload: text });
           }}
