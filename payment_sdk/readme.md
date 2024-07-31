@@ -18,12 +18,11 @@ or
 npm install @komoju/komoju-react-native
 ```
 
-> ### _In order to use the SDK you will have to install bellow packages as dependancies._
+> ### _In order to use the SDK you will have to install bellow packages as dependencies._
 
 ```sh
 i18next
 react-i18next
-react-native-webview
 ```
 
 ## Usage example

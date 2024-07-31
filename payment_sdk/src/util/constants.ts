@@ -10,11 +10,6 @@ export const API_HEADER = (publicKey: string) => ({
   Authorization: `Basic ${btoa(publicKey + ":")}`,
 });
 
-// redirect url parameter to identify if token validation is completed
-export const tokenParameterName = "secure_token_id=";
-// redirect url parameter to identify if session payment is completed
-export const sessionParameterName = "sessions";
-
 export const paymentSuccessCtaText = "BACK_TO_STORE";
 export const paymentFailedCtaText = "UPDATE_PAYMENT_METHOD";
 

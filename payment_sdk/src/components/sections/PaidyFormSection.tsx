@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 import { StyleSheet, View } from "react-native";
 
@@ -8,6 +8,7 @@ import Input from "@components/Input";
 
 import { LangKeys } from "@util/constants";
 import { PaymentType } from "@util/types";
+import { validatePaidyFormFields } from "@util/validator";
 
 import { responsiveScale } from "@theme/scalling";
 
@@ -15,45 +16,60 @@ import SubmitButton from "../SubmitButton";
 
 type PaidyFormSectionProps = {
   type: PaymentType;
-}
+};
 
 const PaidyFormSection = ({ type }: PaidyFormSectionProps) => {
+  const [inputValues, setInputValues] = useState({ name: "", phone: "" });
+  const [inputErrors, setInputErrors] = useState({ name: false, phone: false });
+
+  const { sessionPay } = useContext(StateContext);
+
   const onPay = () => {
-    sessionPay({ paymentType: PaymentType.PAY_PAY });
+    const isValid = validatePaidyFormFields({
+      ...inputValues,
+      // @ts-expect-error - Type 'string' cannot be used to index type 'object'.
+      setInputErrors,
+    });
+    if (isValid) {
+      sessionPay({
+        paymentType: type,
+        paymentDetails: {
+          ...inputValues,
+        },
+      });
+    }
   };
 
-  const {
-    sessionPay,
-  } = useContext(StateContext);
+  const onNameChange = (text: string) => {
+    setInputErrors((pre) => ({ ...pre, name: false }));
+    setInputValues((pre) => ({ ...pre, name: text }));
+  };
+
+  const onPhoneChange = (text: string) => {
+    setInputErrors((pre) => ({ ...pre, phone: false }));
+    setInputValues((pre) => ({ ...pre, phone: text }));
+  };
 
   return (
     <View style={styles.mainContainer}>
       <View style={styles.inputContainer}>
         <Input
-          value={""}
+          value={inputValues.name}
           label="FULL_NAME"
           placeholder="FULL_NAME_PLACEHOLDER"
-          onChangeText={(text: string) => {
-            console.log(text)
-            // resetError("name");
-            // dispatch({ type: Actions.SET_NAME, payload: text });
-          }}
+          onChangeText={onNameChange}
           inputStyle={styles.inputStyle}
-        // error={inputErrors.name}
+          error={inputErrors.name}
         />
       </View>
       <View style={styles.inputContainer}>
         <Input
-          value={""}
+          value={inputValues.phone}
           label="TELEPHONE_NUMBER"
           placeholder="TELEPHONE_NUMBER_PLACEHOLDER"
-          onChangeText={(text: string) => {
-            console.log(text)
-            // resetError("email");
-            // dispatch({ type: Actions.SET_EMAIL, payload: text });
-          }}
+          onChangeText={onPhoneChange}
           inputStyle={styles.inputStyle}
-        // error={inputErrors.email}
+          error={inputErrors.phone}
         />
       </View>
       <View style={styles.btn}>

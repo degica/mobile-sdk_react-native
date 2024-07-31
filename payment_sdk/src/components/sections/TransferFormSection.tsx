@@ -1,13 +1,14 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 import { StyleSheet, View } from "react-native";
 
-import { StateContext } from "@context/state";
+import { Actions, DispatchContext, StateContext } from "@context/state";
 
 import Input from "@components/Input";
 
 import { formatCurrency } from "@util/helpers";
 import { PaymentType } from "@util/types";
+import { validateTransferFormFields } from "@util/validator";
 
 import { responsiveScale } from "@theme/scalling";
 
@@ -15,103 +16,131 @@ import SubmitButton from "../SubmitButton";
 
 type TransferFormSectionProps = {
   type: PaymentType;
-}
+};
+
+const initialErrors = {
+  lastName: false,
+  firstName: false,
+  lastNamePhonetic: false,
+  firstNamePhonetic: false,
+  email: false,
+  phone: false,
+};
 
 const TransferFormSection = ({ type }: TransferFormSectionProps) => {
+  const dispatch = useContext(DispatchContext);
+  const [inputErrors, setInputErrors] =
+    useState<typeof initialErrors>(initialErrors);
+
+  const { sessionPay, amount, currency, transferFormFields } =
+    useContext(StateContext);
+
   const onPay = () => {
-    sessionPay({ paymentType: type });
+    const isValid = validateTransferFormFields({
+      ...transferFormFields,
+      // @ts-expect-error - Type 'string' cannot be used to index type 'object'.
+      setInputErrors,
+    });
+
+    if (isValid) {
+      sessionPay({
+        paymentType: type,
+        paymentDetails: {
+          ...transferFormFields,
+        },
+      });
+    }
   };
 
-  const {
-    sessionPay,
-    amount,
-    currency,
-  } = useContext(StateContext);
+  const resetError = (typeKey: keyof typeof initialErrors) => {
+    setInputErrors((pre) => ({ ...pre, [typeKey]: false }));
+  };
+
+  const changeTextHandler = (
+    text: string,
+    typeKey: keyof typeof initialErrors
+  ) => {
+    resetError(typeKey);
+    const copyOfTransferFormFields = { ...transferFormFields };
+    copyOfTransferFormFields[typeKey] = text;
+    dispatch({
+      type: Actions.SET_TRANSFER_FORM_FIELDS,
+      payload: copyOfTransferFormFields,
+    });
+  };
 
   return (
     <View style={styles.mainContainer}>
       <View style={styles.inputContainer}>
         <Input
-          value={""}
-          label="SURNAME"
-          placeholder="SURNAME"
-          onChangeText={(text: string) => {
-            console.log(text)
-            // resetError("name");
-            // dispatch({ type: Actions.SET_NAME, payload: text });
-          }}
-          inputStyle={styles.inputStyle}
-        // error={inputErrors.name}
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Input
-          value={""}
-          label="GIVEN_NAME"
-          placeholder="GIVEN_NAME"
-          onChangeText={(text: string) => {
-            console.log(text)
-            // resetError("email");
-            // dispatch({ type: Actions.SET_EMAIL, payload: text });
-          }}
-          inputStyle={styles.inputStyle}
-        // error={inputErrors.email}
-        />
-      </View>
-      <View style={styles.inputContainer}>
-        <Input
-          value={""}
+          value={transferFormFields?.lastName || ""}
           label="LAST_NAME"
           placeholder="LAST_NAME"
           onChangeText={(text: string) => {
-            console.log(text)
-            // resetError("email");
-            // dispatch({ type: Actions.SET_EMAIL, payload: text });
+            changeTextHandler(text, "lastName");
           }}
           inputStyle={styles.inputStyle}
-        // error={inputErrors.email}
+          error={inputErrors.lastName}
         />
       </View>
       <View style={styles.inputContainer}>
         <Input
-          value={""}
+          value={transferFormFields?.firstName || ""}
           label="FIRST_NAME"
           placeholder="FIRST_NAME"
           onChangeText={(text: string) => {
-            console.log(text)
-            // resetError("email");
-            // dispatch({ type: Actions.SET_EMAIL, payload: text });
+            changeTextHandler(text, "firstName");
           }}
           inputStyle={styles.inputStyle}
-        // error={inputErrors.email}
+          error={inputErrors.firstName}
         />
       </View>
       <View style={styles.inputContainer}>
         <Input
-          value={""}
+          value={transferFormFields?.lastNamePhonetic || ""}
+          label="LAST_NAME_PHONETIC"
+          placeholder="LAST_NAME_PHONETIC"
+          onChangeText={(text: string) => {
+            changeTextHandler(text, "lastNamePhonetic");
+          }}
+          inputStyle={styles.inputStyle}
+          error={inputErrors.lastNamePhonetic}
+        />
+      </View>
+      <View style={styles.inputContainer}>
+        <Input
+          value={transferFormFields?.firstNamePhonetic || ""}
+          label="FIRST_NAME_PHONETIC"
+          placeholder="FIRST_NAME_PHONETIC"
+          onChangeText={(text: string) => {
+            changeTextHandler(text, "firstNamePhonetic");
+          }}
+          inputStyle={styles.inputStyle}
+          error={inputErrors.firstNamePhonetic}
+        />
+      </View>
+      <View style={styles.inputContainer}>
+        <Input
+          value={transferFormFields?.email || ""}
           label="EMAIL"
           placeholder="EXAMPLE_EMAIL"
           onChangeText={(text: string) => {
-            console.log(text)
-            // resetError("email");
-            // dispatch({ type: Actions.SET_EMAIL, payload: text });
+            changeTextHandler(text, "email");
           }}
           inputStyle={styles.inputStyle}
-        // error={inputErrors.email}
+          error={inputErrors.email}
         />
       </View>
       <View style={styles.inputContainer}>
         <Input
-          value={""}
+          value={transferFormFields?.phone || ""}
           label="TELEPHONE_NUMBER"
           placeholder="TELEPHONE_NUMBER_PLACEHOLDER"
           onChangeText={(text: string) => {
-            console.log(text)
-            // resetError("email");
-            // dispatch({ type: Actions.SET_EMAIL, payload: text });
+            changeTextHandler(text, "phone");
           }}
           inputStyle={styles.inputStyle}
-        // error={inputErrors.email}
+          error={inputErrors.phone}
         />
       </View>
       <View style={styles.btn}>
