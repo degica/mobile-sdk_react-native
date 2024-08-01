@@ -45,7 +45,7 @@ describe("validateCardExpiry", () => {
   it("returns false for expiry date in the past", () => {
     const pastDate = new Date();
     pastDate.setMonth(pastDate.getMonth() - 1); // One month in the past
-    const pastMonth = String(pastDate.getMonth() + 1).padStart(2, "0");
+    const pastMonth = String(pastDate.getMonth()).padStart(2, "0");
     const pastYear = String(pastDate.getFullYear() % 100).padStart(2, "0");
     expect(validateCardExpiry(`${pastMonth} / ${pastYear}`)).toBe(false);
   });

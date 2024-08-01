@@ -23,7 +23,8 @@ export const Actions = {
   SET_CARD_CVV: "SET_CARD_CVV",
   SET_NAME: "SET_NAME",
   SET_EMAIL: "SET_EMAIL",
-  SET_WEBVIEW_LINK: "SET_WEBVIEW_LINK",
+  SET_TRANSFER_FORM_FIELDS: "SET_TRANSFER_FORM_FIELDS",
+  SET_SINGLE_INPUT_FORM_FIELD: "SET_SINGLE_INPUT_FORM_FIELD",
   SET_LOADING: "SET_LOADING",
   SET_CURRENCY: "SET_CURRENCY",
   SET_AMOUNT: "SET_AMOUNT",
@@ -87,10 +88,10 @@ export function reducer(state: State, action: ActionType) {
         ...state,
         email: action.payload,
       };
-    case Actions.SET_WEBVIEW_LINK:
+    case Actions.SET_TRANSFER_FORM_FIELDS:
       return {
         ...state,
-        webViewData: action.payload,
+        transferFormFields: action.payload,
       };
     case Actions.SESSION_PAY:
       return {

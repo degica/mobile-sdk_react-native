@@ -27,7 +27,7 @@ const lightTheme = {
     WHITE50: '#00000050',
     CARD_BACKGROUND: '#ffffff',
     CARD_BORDER: '#CAD6E1',
-    LIGHT_BOX: '#BCBCBC',
+    LIGHT_BOX: '#dbdbdb',
     CARD_SHADOW_IOS_COLOR: '#D9D9D9',
     CARD_SHADOW_ANDROID_COLOR: '#c4c2c2',
 };

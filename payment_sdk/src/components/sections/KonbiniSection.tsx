@@ -115,6 +115,7 @@ const KonbiniSection = (): JSX.Element => {
           value={email ?? ""}
           label="EMAIL"
           placeholder="EXAMPLE_EMAIL"
+          autoCapitalize="none"
           onChangeText={(text: string) => {
             resetError("email");
             dispatch({ type: Actions.SET_EMAIL, payload: text });
@@ -172,6 +173,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     height: responsiveScale(60),
+    marginBottom: responsiveScale(24),
   },
   image: {
     width: responsiveScale(38),

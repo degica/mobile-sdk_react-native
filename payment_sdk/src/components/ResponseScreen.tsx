@@ -1,12 +1,13 @@
 import React, { useCallback, useMemo } from "react";
 
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 
 import { ResponseScreenStatuses, ThemeSchemeType } from "@util/types";
 
 import { resizeFonts, responsiveScale } from "@theme/scalling";
 import { useCurrentTheme } from "@theme/useCurrentTheme";
 
+import KomojuText from "./KomojuText";
 import SubmitButton from "./SubmitButton";
 
 type Props = {
@@ -17,25 +18,24 @@ type Props = {
 };
 
 const ResponseScreen = ({ status, message, onPress, onPressLabel }: Props) => {
-
   const theme = useCurrentTheme();
   const styles = getStyles(theme);
 
   const renderMessageContent = useMemo(() => {
     const title =
       status === ResponseScreenStatuses.SUCCESS
-        ? "Payment Success"
-        : "Payment Failed";
+        ? "PAYMENT_SUCCESS"
+        : "PAYMENT_FAILED";
     const defaultMessage =
       status === ResponseScreenStatuses.SUCCESS
-        ? "Thank you for your order"
-        : "Hey there, We tried to charge your card but, something went wrong. Please update your payment method below to continue";
+        ? "ORDER_THANK_YOU_NOTE"
+        : "PAYMENT_RE_TRY_MSG";
     const msg = message || defaultMessage;
 
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.message}>{msg}</Text>
+        <KomojuText style={styles.title}>{title}</KomojuText>
+        <KomojuText style={styles.message}>{msg}</KomojuText>
       </View>
     );
   }, [status, message]);
@@ -99,5 +99,4 @@ const getStyles = (theme: ThemeSchemeType) => {
       right: 0,
     },
   });
-
-}
+};

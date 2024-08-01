@@ -21,7 +21,7 @@ const LightBox = ({ content, icon }: Props) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.iconWrapper}>{icon && <Text>{icon}</Text>}</View>
+      <View style={styles.iconWrapper}>{icon && <Text style={styles.icon}>{icon}</Text>}</View>
       <Text style={styles.content}>{t(content)}</Text>
     </View>
   );
@@ -48,13 +48,16 @@ const getStyles = (theme: ThemeSchemeType) => {
     iconWrapper: {
       marginRight: responsiveScale(8),
       borderRadius: responsiveScale(100),
-      backgroundColor: theme.WHITE50,
+      backgroundColor: theme.BACKGROUND_COLOR,
       width: responsiveScale(38),
       height: responsiveScale(38),
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center'
     },
+    icon: {
+      fontSize: resizeFonts(20)
+    }
   });
 
 }
