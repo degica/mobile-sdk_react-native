@@ -32,6 +32,7 @@ const createSession = async ({
         default_locale: 'en',
         amount,
         currency,
+        return_url: 'komapp://',
       }),
     };
     const response = await fetch(url, options);

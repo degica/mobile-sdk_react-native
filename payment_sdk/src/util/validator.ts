@@ -4,6 +4,8 @@ import {
   konbiniValidationFuncProps,
   PaymentStatuses,
   SessionShowResponseType,
+  setInputErrorType,
+  TransferFormFieldsType,
 } from "./types";
 
 const MAX_CARD_LENGTH = 19;
@@ -109,6 +111,45 @@ export const validateCardFormFields = ({
   return valid;
 };
 
+export const validateTransferFormFields = ({
+  lastName,
+  firstName,
+  lastNamePhonetic,
+  firstNamePhonetic,
+  email,
+  phone,
+  setInputErrors,
+}: TransferFormFieldsType & setInputErrorType): boolean => {
+  let valid = true;
+
+  if (!lastName) {
+    setInputErrors((pre: object) => ({ ...pre, lastName: true }));
+    valid = false;
+  }
+  if (!firstName) {
+    setInputErrors((pre: object) => ({ ...pre, firstName: true }));
+    valid = false;
+  }
+  if (!lastNamePhonetic) {
+    setInputErrors((pre: object) => ({ ...pre, lastNamePhonetic: true }));
+    valid = false;
+  }
+  if (!firstNamePhonetic) {
+    setInputErrors((pre: object) => ({ ...pre, firstNamePhonetic: true }));
+    valid = false;
+  }
+  if (!email || !validateEmail(email)) {
+    setInputErrors((pre: object) => ({ ...pre, email: true }));
+    valid = false;
+  }
+  if (!phone) {
+    setInputErrors((pre: object) => ({ ...pre, phone: true }));
+    valid = false;
+  }
+
+  return valid;
+};
+
 export const validateKonbiniFormFields = ({
   name,
   email,
@@ -122,6 +163,25 @@ export const validateKonbiniFormFields = ({
   }
   if (!email || !validateEmail(email)) {
     setInputErrors((pre: object) => ({ ...pre, email: true }));
+    valid = false;
+  }
+
+  return valid;
+};
+
+export const validatePaidyFormFields = ({
+  name,
+  phone,
+  setInputErrors,
+}: { name: string; phone: string } & setInputErrorType): boolean => {
+  let valid = true;
+
+  if (!name) {
+    setInputErrors((pre: object) => ({ ...pre, name: true }));
+    valid = false;
+  }
+  if (!phone) {
+    setInputErrors((pre: object) => ({ ...pre, phone: true }));
     valid = false;
   }
 

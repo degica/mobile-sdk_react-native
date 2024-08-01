@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { Dispatch, ReactNode, SetStateAction } from "react";
 
 export type InitPrams = {
   publicKey: string;
@@ -105,7 +105,14 @@ export type payForSessionProps = {
   publicKey: string;
   sessionId: string;
   paymentType: PaymentType;
-  paymentDetails?: CardDetailsType & KonbiniDetailsType;
+  paymentDetails?: CardDetailsType &
+    KonbiniDetailsType &
+    TransferFormFieldsType &
+    paymentTypeInputs;
+};
+
+type paymentTypeInputs = {
+  singleInput?: string;
 };
 
 type CardDetailsType = {
@@ -119,6 +126,15 @@ type KonbiniDetailsType = {
   selectedStore?: string;
   name?: string;
   email?: string;
+};
+
+export type TransferFormFieldsType = {
+  lastName?: string;
+  firstName?: string;
+  lastNamePhonetic?: string;
+  firstNamePhonetic?: string;
+  email?: string;
+  phone?: string;
 };
 
 export type newNavStateProps = {
@@ -159,12 +175,15 @@ export type SessionShowResponseType = {
   cancelled_at: string;
   completed_at: string;
   error?: boolean;
+  payment?: {
+    payment_details: {
+      instructions_url?: string;
+    };
+  };
 };
 
-type setInputErrorType = {
-  // TODO: Fix this type error
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  setInputErrors: (data: object) => {};
+export type setInputErrorType = {
+  setInputErrors: Dispatch<SetStateAction<{ [key: string]: boolean }>>;
 };
 
 export type cardValidationFuncProps = CardDetailsType & setInputErrorType;
@@ -172,11 +191,6 @@ export type cardValidationFuncProps = CardDetailsType & setInputErrorType;
 export type konbiniValidationFuncProps = KonbiniDetailsType & setInputErrorType;
 
 export type Nullable<T> = T | null;
-
-type webViewDataProps = {
-  link: string;
-  onNavChange: (data: newNavStateProps) => void;
-};
 
 export type brandsType = {
   [key: string]: {
@@ -206,11 +220,6 @@ export type State = CardDetailsType &
     // eslint-disable-next-line @typescript-eslint/ban-types
     sessionPay: Function;
     /**
-     * Web view url and callback when url change at web view.
-     * when field is also used to toggle(show hide) the web view.
-     */
-    webViewData: webViewDataProps;
-    /**
      * Amount for the payment
      */
     amount: string;
@@ -230,16 +239,16 @@ export type State = CardDetailsType &
       | ResponseScreenStatuses.SUCCESS
       | ResponseScreenStatuses.FAILED
       | "";
+    /**
+     * States of the Bank transfer and Pay Easy fields.
+     */
+    transferFormFields?: TransferFormFieldsType;
   };
 
 export type sessionPayProps = {
   paymentType: PaymentType;
   paymentDetails?: CardDetailsType;
 };
-
-// TODO: Fix this type error
-// eslint-disable-next-line no-empty-pattern
-export const webViewDataInitialState = { link: "", onNavChange: ({}) => {} };
 
 // Define the initial state
 export const initialState: State = {
@@ -260,8 +269,18 @@ export const initialState: State = {
   email: "",
   /** konbini pay related states start */
 
+  /** Bank transfer and Pay Easy related states start */
+  transferFormFields: {
+    lastName: "",
+    firstName: "",
+    lastNamePhonetic: "",
+    firstNamePhonetic: "",
+    email: "",
+    phone: "",
+  },
+  /** Bank transfer and Pay Easy related states end */
+
   sessionPay: () => {},
-  webViewData: webViewDataInitialState,
   amount: "",
   currency: CurrencyTypes.JPY,
   paymentState: "",

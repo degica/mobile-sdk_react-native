@@ -61,9 +61,14 @@ const payForSession = async ({
         break;
       // paypay payment type payment type
       case PaymentType.PAY_PAY:
+      case PaymentType.ALI_PAY:
+      case PaymentType.AU_PAY:
+      case PaymentType.LINE_PAY:
+      case PaymentType.MER_PAY:
+      case PaymentType.RAKUTEN:
         // paypay payment_details mandatory parameters type only
         payment_details = {
-          type: PaymentType.PAY_PAY,
+          type: paymentType,
         };
         break;
       // konbini payment type payment type
@@ -74,6 +79,33 @@ const payForSession = async ({
           store: paymentDetails?.selectedStore,
           name: paymentDetails?.name,
           email: paymentDetails?.email,
+        };
+        break;
+      case PaymentType.BANK_TRANSFER:
+      case PaymentType.PAY_EASY:
+        payment_details = {
+          type: paymentType,
+          family_name: paymentDetails?.lastName,
+          given_name: paymentDetails?.firstName,
+          family_name_kana: paymentDetails?.lastNamePhonetic,
+          given_name_kana: paymentDetails?.firstNamePhonetic,
+          email: paymentDetails?.email,
+          phone: paymentDetails?.phone,
+        };
+        break;
+      case PaymentType.WEB_MONEY:
+      case PaymentType.NET_CASH:
+      case PaymentType.BIT_CASH:
+        payment_details = {
+          type: paymentType,
+          prepaid_number: paymentDetails?.singleInput,
+        };
+        break;
+      case PaymentType.PAIDY:
+        payment_details = {
+          type: paymentType,
+          customer_name: paymentDetails?.name,
+          phone: paymentDetails?.phone,
         };
         break;
       default:

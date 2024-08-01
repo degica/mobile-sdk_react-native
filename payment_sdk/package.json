@@ -60,8 +60,7 @@
   },
   "dependencies": {
     "i18next": "^23.11.5",
-    "react-i18next": "^14.1.2",
-    "react-native-webview": "^13.10.2"
+    "react-i18next": "^14.1.2"
   },
   "resolutions": {
     "@types/react": "^18.2.44"

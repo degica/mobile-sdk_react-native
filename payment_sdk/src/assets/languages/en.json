@@ -20,6 +20,7 @@
     "ministop": "Ministop",
     "daily-yamazaki": "Daily Yamazaki",
     "seicomart": "Seicomart",
+    
     "PAYMENT_OPTIONS": "Payment Options",
     "CARD_HOLDER_NAME": "Cardholder name",
     "FULL_NAME_ON_CARD": "Full name on card",
@@ -42,6 +43,7 @@
     "PAYMENT_RE_TRY_MSG": "Hey there, We tried to charge your card but, something went wrong. Please update your payment method below to continue",
     "BACK_TO_STORE": "Back to store",
     "UPDATE_PAYMENT_METHOD": "Update payment method",
+
     "PAYMENT_VIA_ALI_PAY": "Payment via Alipay",
     "ALI_PAY_REDIRECT_MESSAGE": "You will be redirected to Alipay to complete the payment",
     "CONTINUE_TO_ALI_PAY": "Continue to Alipay",
@@ -67,12 +69,12 @@
     "WEB_MONEY_INPUT_PLACEHOLDER": "Prepaid number",
     "FULL_NAME": "Full Name",
     "FULL_NAME_PLACEHOLDER": "Enter your name",
-    "TELEPHONE_NUMBER": "Telephone Number",
+    "TELEPHONE_NUMBER": "Phone Number",
     "TELEPHONE_NUMBER_PLACEHOLDER": "Enter your phone number",
-    "SURNAME": "Surname",
-    "GIVEN_NAME": "Given Name",
-    "LAST_NAME": "Last Name (Katakana)",
-    "FIRST_NAME": "First Name (Katakana)",
+    "LAST_NAME": "Last Name",
+    "FIRST_NAME": "First Name",
+    "LAST_NAME_PHONETIC": "Last Name (Phonetic)",
+    "FIRST_NAME_PHONETIC": "First Name (Phonetic)",
     "": ""
   }
 }

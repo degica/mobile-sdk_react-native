@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 
 import { StyleSheet, View } from "react-native";
 
@@ -16,34 +16,41 @@ import SubmitButton from "../SubmitButton";
 
 type SingleInputFormSectionProps = {
   type: PaymentType;
-}
+};
 
 const SingleInputFormSection = ({ type }: SingleInputFormSectionProps) => {
+  const [inputText, setInputText] = useState("");
+  const [inputError, setInputError] = useState(false);
+  const { sessionPay, amount, currency } = useContext(StateContext);
+
   const onPay = () => {
-    sessionPay({ paymentType: PaymentType.PAY_PAY });
+    if (!inputText) {
+      setInputError(true);
+    } else {
+      sessionPay({
+        paymentType: type,
+        paymentDetails: {
+          singleInput: inputText,
+        },
+      });
+    }
   };
 
-  const {
-    sessionPay,
-    amount,
-    currency,
-  } = useContext(StateContext);
+  const changeTextHandler = (text: string) => {
+    setInputError(false);
+    setInputText(text);
+  };
 
   return (
     <View style={styles.cardContainer}>
       <View style={styles.cardNameContainer}>
         <Input
-          value={""}
+          value={inputText}
           label={`${LangKeys[type]}_INPUT_LABEL`}
           placeholder={`${LangKeys[type]}_INPUT_PLACEHOLDER`}
-          onChangeText={(text: string) => {
-            console.log(text)
-            // resetError("name");
-            // dispatch({ type: Actions.SET_CARDHOLDER_NAME, payload: text });
-          }}
+          onChangeText={changeTextHandler}
           inputStyle={styles.inputStyle}
-          // error={inputErrors.name}
-          testID="cardHolderName"
+          error={inputError}
         />
       </View>
       <View style={styles.btn}>
