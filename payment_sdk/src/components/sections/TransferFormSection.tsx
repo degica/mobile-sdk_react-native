@@ -122,6 +122,7 @@ const TransferFormSection = ({ type }: TransferFormSectionProps) => {
       <View style={styles.inputContainer}>
         <Input
           value={transferFormFields?.email || ""}
+          autoCapitalize="none"
           label="EMAIL"
           placeholder="EXAMPLE_EMAIL"
           onChangeText={(text: string) => {
