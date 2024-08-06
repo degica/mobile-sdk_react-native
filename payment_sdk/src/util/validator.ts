@@ -1,11 +1,15 @@
 import { emailRegex } from "./constants";
+import { CardPaymentScheme, KonbiniPaymentScheme, PaidyPaymentScheme, TransferPaymentScheme } from "./payment-scheme";
 import {
   cardValidationFuncProps,
+  InputErrors,
   konbiniValidationFuncProps,
+  PaidyValidationFuncProps,
   PaymentStatuses,
   SessionShowResponseType,
   setInputErrorType,
   TransferFormFieldsType,
+  ValidationFields,
 } from "./types";
 
 const MAX_CARD_LENGTH = 19;
@@ -32,6 +36,7 @@ export const isCardNumberValid = (cardString: string) => {
     return false;
   }
 };
+
 export const validateCardExpiry = (expiry: string) => {
   try {
     if (expiry?.length <= 0) {
@@ -82,6 +87,36 @@ export const validateSessionResponse = (
   );
 };
 
+const validateFields = (
+  fields: ValidationFields,
+  setInputErrors: React.Dispatch<React.SetStateAction<InputErrors>>
+): boolean => {
+  let isValid = true;
+
+  Object.entries(fields).forEach(([fieldName, field]) => {
+    const { value, required, validator } = field;
+    let fieldValid = true;
+
+    if (required && !value) {
+      fieldValid = false;
+    } else if (validator && !validator(value)) {
+      fieldValid = false;
+    }
+
+    if (!fieldValid) {
+      setInputErrors((prev) => ({ ...prev, [fieldName]: true }));
+      isValid = false;
+    }
+  });
+
+  return isValid;
+};
+
+export const validateEmail = (email: string) => {
+  return emailRegex.test(email);
+};
+
+// validate the card form fields
 export const validateCardFormFields = ({
   cardholderName,
   cardNumber,
@@ -89,28 +124,19 @@ export const validateCardFormFields = ({
   cardCVV,
   setInputErrors,
 }: cardValidationFuncProps): boolean => {
-  let valid = true;
-
-  if (!cardholderName) {
-    setInputErrors((pre: object) => ({ ...pre, name: true }));
-    valid = false;
-  }
-  if (!cardNumber) {
-    setInputErrors((pre: object) => ({ ...pre, number: true }));
-    valid = false;
-  }
-  if (!cardExpiredDate) {
-    setInputErrors((pre: object) => ({ ...pre, expiry: true }));
-    valid = false;
-  }
-  if (!cardCVV) {
-    setInputErrors((pre: object) => ({ ...pre, cvv: true }));
-    valid = false;
-  }
-
-  return valid;
+  return validateFields(
+    {
+      name: { ...CardPaymentScheme.name, value: cardholderName as string },
+      number: { ...CardPaymentScheme.number, value: cardNumber as string },
+      expiry: { ...CardPaymentScheme.expiry, value: cardExpiredDate as string },
+      cvv: { ...CardPaymentScheme.cvv, value: cardCVV as string },
+    },
+    setInputErrors
+  );
 };
 
+
+// validate the transfer form fields
 export const validateTransferFormFields = ({
   lastName,
   firstName,
@@ -120,74 +146,44 @@ export const validateTransferFormFields = ({
   phone,
   setInputErrors,
 }: TransferFormFieldsType & setInputErrorType): boolean => {
-  let valid = true;
-
-  if (!lastName) {
-    setInputErrors((pre: object) => ({ ...pre, lastName: true }));
-    valid = false;
-  }
-  if (!firstName) {
-    setInputErrors((pre: object) => ({ ...pre, firstName: true }));
-    valid = false;
-  }
-  if (!lastNamePhonetic) {
-    setInputErrors((pre: object) => ({ ...pre, lastNamePhonetic: true }));
-    valid = false;
-  }
-  if (!firstNamePhonetic) {
-    setInputErrors((pre: object) => ({ ...pre, firstNamePhonetic: true }));
-    valid = false;
-  }
-  if (!email || !validateEmail(email)) {
-    setInputErrors((pre: object) => ({ ...pre, email: true }));
-    valid = false;
-  }
-  if (!phone) {
-    setInputErrors((pre: object) => ({ ...pre, phone: true }));
-    valid = false;
-  }
-
-  return valid;
+  return validateFields(
+    {
+      lastName: { ...TransferPaymentScheme.lastName, value: lastName as string },
+      firstName: { ...TransferPaymentScheme.firstName, value: firstName as string },
+      lastNamePhonetic: { ...TransferPaymentScheme.lastNamePhonetic, value: lastNamePhonetic as string },
+      firstNamePhonetic: { ...TransferPaymentScheme.firstNamePhonetic, value: firstNamePhonetic as string },
+      email: { ...TransferPaymentScheme.email, value: email as string },
+      phone: { ...TransferPaymentScheme.phone, value: phone as string },
+    },
+    setInputErrors
+  );
 };
 
+// 
 export const validateKonbiniFormFields = ({
   name,
   email,
   setInputErrors,
 }: konbiniValidationFuncProps): boolean => {
-  let valid = true;
-
-  if (!name) {
-    setInputErrors((pre: object) => ({ ...pre, name: true }));
-    valid = false;
-  }
-  if (!email || !validateEmail(email)) {
-    setInputErrors((pre: object) => ({ ...pre, email: true }));
-    valid = false;
-  }
-
-  return valid;
+  return validateFields(
+    {
+      name: { ...KonbiniPaymentScheme.name, value: name as string },
+      email: { ...KonbiniPaymentScheme.email, value: email as string },
+    },
+    setInputErrors
+  );
 };
 
 export const validatePaidyFormFields = ({
   name,
   phone,
   setInputErrors,
-}: { name: string; phone: string } & setInputErrorType): boolean => {
-  let valid = true;
-
-  if (!name) {
-    setInputErrors((pre: object) => ({ ...pre, name: true }));
-    valid = false;
-  }
-  if (!phone) {
-    setInputErrors((pre: object) => ({ ...pre, phone: true }));
-    valid = false;
-  }
-
-  return valid;
-};
-
-export const validateEmail = (email: string) => {
-  return emailRegex.test(email);
+}: PaidyValidationFuncProps): boolean => {
+  return validateFields(
+    {
+      name: { ...PaidyPaymentScheme.name, value: name },
+      phone: { ...PaidyPaymentScheme.phone, value: phone },
+    },
+    setInputErrors
+  );
 };

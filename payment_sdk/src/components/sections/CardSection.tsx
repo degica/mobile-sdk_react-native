@@ -4,7 +4,8 @@ import { StyleSheet, View } from "react-native";
 
 import { Actions, DispatchContext, StateContext } from "@context/state";
 
-import { formatCurrency } from "@util/helpers";
+import { formatCurrency, generateInitialErrors } from "@util/helpers";
+import { CardPaymentScheme } from "@util/payment-scheme";
 import { PaymentType } from "@util/types";
 import { validateCardFormFields } from "@util/validator";
 
@@ -14,13 +15,6 @@ import CardInputGroup from "../CardInputGroup";
 import Input from "../Input";
 import SubmitButton from "../SubmitButton";
 
-const initialErrors = {
-  name: false,
-  number: false,
-  expiry: false,
-  cvv: false,
-};
-
 /**
  * CardSection component for displaying and handling the card payment form.
  * @param {Props} props - The props for the CardSection component.
@@ -28,6 +22,7 @@ const initialErrors = {
  */
 
 const CardSection = (): JSX.Element => {
+  const initialErrors = generateInitialErrors(CardPaymentScheme);
   const [inputErrors, setInputErrors] = useState(initialErrors);
 
   const {
@@ -43,7 +38,6 @@ const CardSection = (): JSX.Element => {
 
   const resetError = (type: string) => {
     // TODO: Fix this type error
-    // @ts-expect-error - Type 'string' cannot be used to index type 'object'.
     setInputErrors((pre: object) => ({ ...pre, [type]: false }));
   };
 
@@ -54,7 +48,6 @@ const CardSection = (): JSX.Element => {
       cardNumber,
       cardExpiredDate,
       // TODO: Fix this type error
-      // @ts-expect-error - Type 'object' is not assignable to type 'SetStateAction<object>'.
       setInputErrors,
     });
 

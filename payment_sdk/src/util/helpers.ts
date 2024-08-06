@@ -6,9 +6,11 @@ import {
   CardTypes,
   CurrencySign,
   CurrencyTypes,
+  FormStateType,
   KonbiniType,
   PaymentType,
   sessionShowPaymentMethodType,
+  ValidationFields,
 } from "./types";
 
 export const isDevApp = __DEV__;
@@ -184,3 +186,10 @@ export const determineCardType = (
 export const isAndroid = () => Platform.OS === "android";
 export const isIOS = () => Platform.OS === "ios";
 export const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+
+export const generateInitialErrors = (paymentScheme: ValidationFields) => {
+  return Object.keys(paymentScheme).reduce((acc, key) => {
+    acc[key] = false;
+    return acc;
+  }, {} as FormStateType);
+};

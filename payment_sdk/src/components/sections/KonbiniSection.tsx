@@ -4,7 +4,8 @@ import { FlatList, StyleSheet, Image, View } from "react-native";
 
 import { Actions, DispatchContext, StateContext } from "@context/state";
 
-import { formatCurrency, parseBrands } from "@util/helpers";
+import { formatCurrency, generateInitialErrors, parseBrands } from "@util/helpers";
+import { KonbiniPaymentScheme } from "@util/payment-scheme";
 import {
   brandType,
   KonbiniType,
@@ -21,12 +22,8 @@ import Input from "../Input";
 import Pill from "../Pill";
 import SubmitButton from "../SubmitButton";
 
-const initialErrors = {
-  name: false,
-  email: false,
-};
-
 const KonbiniSection = (): JSX.Element => {
+  const initialErrors = generateInitialErrors(KonbiniPaymentScheme);
   const [inputErrors, setInputErrors] = useState(initialErrors);
 
   const {
@@ -48,7 +45,6 @@ const KonbiniSection = (): JSX.Element => {
 
   const onPay = () => {
     // TODO: Fix this type error
-    // @ts-expect-error - Type 'string' is not assignable to type 'object'.
     const isValid = validateKonbiniFormFields({ name, email, setInputErrors });
 
     if (isValid) {
@@ -65,7 +61,6 @@ const KonbiniSection = (): JSX.Element => {
 
   const resetError = (type: string) => {
     // TODO: Fix this type error
-    // @ts-expect-error - Type 'string' cannot be used to index type 'object'.
     setInputErrors((pre: object) => ({ ...pre, [type]: false }));
   };
 

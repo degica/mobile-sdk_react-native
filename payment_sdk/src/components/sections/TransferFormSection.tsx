@@ -6,8 +6,9 @@ import { Actions, DispatchContext, StateContext } from "@context/state";
 
 import Input from "@components/Input";
 
-import { formatCurrency } from "@util/helpers";
-import { PaymentType } from "@util/types";
+import { formatCurrency, generateInitialErrors } from "@util/helpers";
+import { TransferPaymentScheme } from "@util/payment-scheme";
+import { FormStateType, PaymentType } from "@util/types";
 import { validateTransferFormFields } from "@util/validator";
 
 import { responsiveScale } from "@theme/scalling";
@@ -18,19 +19,11 @@ type TransferFormSectionProps = {
   type: PaymentType;
 };
 
-const initialErrors = {
-  lastName: false,
-  firstName: false,
-  lastNamePhonetic: false,
-  firstNamePhonetic: false,
-  email: false,
-  phone: false,
-};
-
 const TransferFormSection = ({ type }: TransferFormSectionProps) => {
+  const initialErrors = generateInitialErrors(TransferPaymentScheme);
   const dispatch = useContext(DispatchContext);
   const [inputErrors, setInputErrors] =
-    useState<typeof initialErrors>(initialErrors);
+    useState<FormStateType>(initialErrors);
 
   const { sessionPay, amount, currency, transferFormFields } =
     useContext(StateContext);
@@ -38,7 +31,6 @@ const TransferFormSection = ({ type }: TransferFormSectionProps) => {
   const onPay = () => {
     const isValid = validateTransferFormFields({
       ...transferFormFields,
-      // @ts-expect-error - Type 'string' cannot be used to index type 'object'.
       setInputErrors,
     });
 
@@ -62,7 +54,9 @@ const TransferFormSection = ({ type }: TransferFormSectionProps) => {
   ) => {
     resetError(typeKey);
     const copyOfTransferFormFields = { ...transferFormFields };
-    copyOfTransferFormFields[typeKey] = text;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    copyOfTransferFormFields[typeKey]  = text;
     dispatch({
       type: Actions.SET_TRANSFER_FORM_FIELDS,
       payload: copyOfTransferFormFields,

@@ -310,3 +310,22 @@ export interface ThemeSchemeType {
 export type KomojuProviderIprops = {
   children?: ReactNode | ReactNode[];
 } & InitPrams;
+
+
+export type ValidationField = {
+  value: string;
+  required: boolean;
+  validator?: (value: string) => boolean;
+};
+
+export type ValidationFields = Record<string, ValidationField>;
+
+export type InputErrors = { [key: string]: boolean };
+
+export type PaidyValidationFuncProps = {
+  name: string;
+  phone: string;
+  setInputErrors: React.Dispatch<React.SetStateAction<InputErrors>>;
+};
+
+export type FormStateType = Record<string, boolean>

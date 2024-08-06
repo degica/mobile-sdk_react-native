@@ -17,6 +17,7 @@ import {
 } from "@util/helpers";
 import {
   CardTypes,
+  FormStateType,
   PaymentType,
   sessionShowPaymentMethodType,
   ThemeSchemeType,
@@ -36,11 +37,7 @@ import KomojuText from "./KomojuText";
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 type Props = {
-  inputErrors: {
-    number: boolean;
-    expiry: boolean;
-    cvv: boolean;
-  };
+  inputErrors: FormStateType
   resetError: (type: string) => void;
 };
 
