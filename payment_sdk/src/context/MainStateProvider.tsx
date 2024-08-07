@@ -4,12 +4,14 @@ import React, {
   useEffect,
   useMemo,
   useRef,
+  useState,
 } from "react";
 
 import { Alert, Linking } from "react-native";
 
 import i18next from "i18next";
 
+import PaymentModal from "@components/PaymentModal";
 import Sheet, { SheetRefProps } from "@components/Sheet";
 
 import payForSession from "@services/payForSessionService";
@@ -32,6 +34,7 @@ import { Actions, DispatchContext, KomojuContext } from "./state";
 
 export const MainStateProvider = (props: KomojuProviderIprops) => {
   const dispatch = useContext(DispatchContext);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const sheetRef = useRef<SheetRefProps>(null);
   // ref to hold client provided onComplete callback
@@ -52,6 +55,21 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
       subscription.remove();
     };
   }, []);
+
+  const openPaymentSheet = () => {
+    if (props?.useBottomSheet) {
+      sheetRef?.current?.open();
+    } else {
+      setModalVisible(true);
+    }
+  };
+
+  const closePaymentSheet = () => {
+    // TODO: Fix this type error
+    // @ts-expect-error - Object is possibly 'null'.
+    sheetRef?.current?.close(false);
+    setModalVisible(false);
+  };
 
   // when payment is success global state is rest and invoking the success screen
   const onPaymentSuccess = () => {
@@ -122,9 +140,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
 
     // validating the session data and closing the payment gateway if data is not valid
     if (validateSessionResponse(sessionData)) {
-      // TODO: Fix this type error
-      // @ts-expect-error - Object is possibly 'null'.
-      sheetRef?.current?.close(false);
+      closePaymentSheet();
       Alert.alert("Error", "Invalid Session");
     } else {
       // if explicitly language is not set. set to the localization from session
@@ -253,7 +269,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
           sessionId,
         }),
       });
-      sheetRef?.current?.open();
+      openPaymentSheet();
     },
     [props]
   );
@@ -267,9 +283,17 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
   const initializeKomoju = useCallback((params: InitPrams) => {}, []);
 
   const renderPaymentUI = useMemo(() => {
-    const UI = <Sheet ref={sheetRef} onDismiss={onUserCancel} />;
+    const UI = props?.useBottomSheet ? (
+      <Sheet ref={sheetRef} onDismiss={onUserCancel} />
+    ) : (
+      <PaymentModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        onDismiss={onUserCancel}
+      />
+    );
     return UI;
-  }, [sheetRef]);
+  }, [sheetRef, modalVisible]);
 
   const renderChildren = useMemo(() => props?.children, [props.children]);
 
