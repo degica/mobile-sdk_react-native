@@ -4,6 +4,7 @@ export type InitPrams = {
   publicKey: string;
   payment_methods?: Array<PaymentType>;
   language?: LanguageTypes;
+  useBottomSheet?: boolean;
 };
 
 export type CreatePaymentFuncType = {
