@@ -157,12 +157,7 @@ export const StateContext = createContext(initialState);
  * Dispatch context for the Komoju payment system.
  * @type {React.Context<(action: ActionType) => ActionType>}
  */
-export const DispatchContext = createContext(
-  ({ type, payload }: ActionType) => ({
-    type,
-    payload,
-  })
-);
+export const DispatchContext = createContext<React.Dispatch<ActionType>>(() => {});
 
 /**
  * Komoju context providing default functions for payment operations.

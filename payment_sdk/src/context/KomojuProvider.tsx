@@ -1,24 +1,30 @@
-import React from "react";
+import React, { useReducer } from "react";
 
-import { KomojuProviderIprops } from "@util/types";
+import { DispatchContext, StateContext, reducer } from "@context/state";
+
+import { initialState, KomojuProviderIprops } from "@util/types";
 
 import "@assets/languages/i18n";
 import { MainStateProvider } from "./MainStateProvider";
-import StateProvider from "./StateProvider";
 import { ThemeProvider } from "./ThemeContext";
 
 export const KomojuProvider = (props: KomojuProviderIprops) => {
+
+  const [state, dispatch] = useReducer(reducer, initialState);
+
   return (
-    <StateProvider>
-      <ThemeProvider>
-        <MainStateProvider
-          publicKey={props.publicKey}
-          payment_methods={props?.payment_methods}
-          language={props?.language}
-        >
-          {props.children}
-        </MainStateProvider>
-      </ThemeProvider>
-    </StateProvider>
+    <StateContext.Provider value={state}>
+      <DispatchContext.Provider value={dispatch}>
+        <ThemeProvider>
+          <MainStateProvider
+            publicKey={props.publicKey}
+            payment_methods={props?.payment_methods}
+            language={props?.language}
+          >
+            {props.children}
+          </MainStateProvider>
+        </ThemeProvider>
+      </DispatchContext.Provider>
+    </StateContext.Provider>
   );
 };
