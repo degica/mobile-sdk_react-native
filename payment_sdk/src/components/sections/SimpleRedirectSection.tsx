@@ -38,7 +38,6 @@ const SimpleRedirectSection = ({ type }: SimpleRedirectSectionProps) => {
             <View style={styles.lbWrapper}>
                 <LightBox
                     content="LIGHT_BOX_CONTENT"
-                    icon="⚡️"
                 />
             </View>
             <View style={styles.btn}>

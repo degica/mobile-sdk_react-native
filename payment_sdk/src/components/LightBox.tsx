@@ -1,27 +1,31 @@
 import React from "react";
 
-import { StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 
 import { useTranslation } from "react-i18next";
 
 import { ThemeSchemeType } from "@util/types";
 
+import Thunder from "@assets/images/thunder.png"
+
 import { resizeFonts, responsiveScale } from "@theme/scalling";
 import { useCurrentTheme } from "@theme/useCurrentTheme";
 
+
 type Props = {
   content: string;
-  icon?: string;
 };
 
-const LightBox = ({ content, icon }: Props) => {
+const LightBox = ({ content }: Props) => {
   const { t } = useTranslation();
   const theme = useCurrentTheme();
   const styles = getStyles(theme);
 
   return (
     <View style={styles.container}>
-      <View style={styles.iconWrapper}>{icon && <Text style={styles.icon}>{icon}</Text>}</View>
+      <View style={styles.iconWrapper}>
+        <Image source={Thunder} style={styles.icon} />
+      </View>
       <Text style={styles.content}>{t(content)}</Text>
     </View>
   );
@@ -37,13 +41,12 @@ const getStyles = (theme: ThemeSchemeType) => {
       flexDirection: "row",
       backgroundColor: theme.LIGHT_BOX,
       borderRadius: responsiveScale(8),
-      justifyContent: "center",
       alignItems: "center",
     },
     content: {
       fontSize: resizeFonts(16),
       color: theme.TEXT_COLOR,
-      flex: 0.9,
+      flex: 1,
     },
     iconWrapper: {
       marginRight: responsiveScale(8),
@@ -56,7 +59,8 @@ const getStyles = (theme: ThemeSchemeType) => {
       alignItems: 'center'
     },
     icon: {
-      fontSize: resizeFonts(20)
+      width: responsiveScale(18),
+      height: responsiveScale(18),
     }
   });
 

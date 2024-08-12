@@ -64,6 +64,15 @@ export default function PaymentScreen() {
 
 You can [visit our docs](https://doc.komoju.com/reference/createsession) to see how a session id can be created
 
+### Setup a return URL.
+
+Many payment method types require a return URL, so if you fail to provide it, we can’t present those payment methods to your user, even if you’ve enabled them.
+When a customer exits your app, for example to authenticate in Safari or their banking app, provide a way for them to automatically return to your app afterward.
+#### 1. Use `return_url` parameter when creating a session 
+#### 2. [Configure the custom URL scheme](https://reactnative.dev/docs/linking) in your AndroidManifest.xml and Info.plist files
+> Note:
+> If you’re using Expo, [set your scheme](https://docs.expo.dev/guides/linking/#in-a-standalone-app) in the app.json file.
+
 To initialize Komoju in your React Native app, use the `KomojuSDK.KomojuProvider` component in the root component of your application.
 
 `KomojuProvider` can accept `publicKey`, `payment_methods` and `language` as props. Only `publicKey` is required.
