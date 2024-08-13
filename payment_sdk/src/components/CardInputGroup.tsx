@@ -283,6 +283,7 @@ const getStyles = (theme: ThemeSchemeType) => {
       width: responsiveScale(25),
       height: responsiveScale(17),
       marginRight: responsiveScale(2),
+      resizeMode: "contain",
     },
   });
 };

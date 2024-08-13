@@ -1,11 +1,11 @@
 {
     "translation": {
-      "credit_card": "クレジットカード",
+      "credit_card": "カード",
       "paypay": "PayPay",
       "linepay": "LINE Pay",
       "merpay": "メルペイ",
       "rakutenpay": "楽天ペイ",
-      "paidy": "ペイディ(Paidy)",
+      "paidy": "ペイディ",
       "konbini": "コンビニ",
       "bank_transfer": "銀行振込",
       "pay_easy": "Pay Easy",
@@ -52,7 +52,7 @@
       "CONTINUE_TO_LINE_PAY": "LINE Payに進む",
       "PAYMENT_VIA_MER_PAY": "メルペイでのお支払い",
       "MER_PAY_REDIRECT_MESSAGE": "支払いを完了するには、Mer Pay にリダイレクトされます。",
-      "CONTINUE_TO_MER_PAY": "Mer Pay に進む",
+      "CONTINUE_TO_MER_PAY": "メルペイに進む",
       "PAYMENT_VIA_RAKUTEN": "楽天でのお支払い",
       "RAKUTEN_REDIRECT_MESSAGE": "楽天にリダイレクトされ、支払いが完了します",
       "CONTINUE_TO_RAKUTEN": "引き続き楽天へ",
