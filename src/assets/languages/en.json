@@ -40,7 +40,7 @@
     "PAYMENT_SUCCESS": "Payment Success",
     "PAYMENT_FAILED": "Payment Failed",
     "ORDER_THANK_YOU_NOTE": "Thank you for your order",
-    "PAYMENT_RE_TRY_MSG": "Hey there, We tried to charge your card but, something went wrong. Please update your payment method below to continue",
+    "PAYMENT_RE_TRY_MSG": "We tried to charge your card but, something went wrong. Please update your payment method below to continue",
     "BACK_TO_STORE": "Back to store",
     "UPDATE_PAYMENT_METHOD": "Update payment method",
 
