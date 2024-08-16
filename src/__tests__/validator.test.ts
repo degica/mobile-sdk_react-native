@@ -1,4 +1,4 @@
-// util/helpers.test.js
+// @ts-nocheck
 
 import { PaymentStatuses } from "../util/types";
 import {

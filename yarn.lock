@@ -1997,11 +1997,11 @@ __metadata:
   linkType: hard
 
 "@evilmartians/lefthook@npm:^1.5.0":
-  version: 1.7.12
-  resolution: "@evilmartians/lefthook@npm:1.7.12"
+  version: 1.7.13
+  resolution: "@evilmartians/lefthook@npm:1.7.13"
   bin:
     lefthook: bin/index.js
-  checksum: 2c2e19b298ca40dca6d87482e997bb559f4a481d39453dd8893b60b5e9cff8b8db89917eee38e9f8c482e91d26040ea1aa5a1da11cec6c93a6501a1c6cb8ce6a
+  checksum: 57aa863a1fbec269a7aba17081289c15d9a32d71025ec6ef56fcbef20cc18636bd38b49fa362befadca2cb7cf77f6befcc0ce56e16649f2537f7c90a83761a63
   conditions: (os=darwin | os=linux | os=win32) & (cpu=x64 | cpu=arm64 | cpu=ia32)
   languageName: node
   linkType: hard
@@ -3640,8 +3640,8 @@ __metadata:
   linkType: hard
 
 "@testing-library/react-native@npm:^12.5.3":
-  version: 12.5.3
-  resolution: "@testing-library/react-native@npm:12.5.3"
+  version: 12.6.0
+  resolution: "@testing-library/react-native@npm:12.6.0"
   dependencies:
     jest-matcher-utils: ^29.7.0
     pretty-format: ^29.7.0
@@ -3654,7 +3654,7 @@ __metadata:
   peerDependenciesMeta:
     jest:
       optional: true
-  checksum: d1467bf479a620efa50738946faeaa0dca6fed42b6d6cab36aaae5ebe3b5276b0dcbfba81a78e64479f7495e579151a3ec3066727cfb65bfbbc091a284b26f6f
+  checksum: ccd1fd5c5080b50a10d147697066035e4caad11520f89b8e04cf9e4e9251b9a12ab0e729e7363c18c3484da75d7eb27adf2dcae97e64ed6f61b2dd7b81b22330
   languageName: node
   linkType: hard
 
@@ -6447,9 +6447,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.5.4":
-  version: 1.5.8
-  resolution: "electron-to-chromium@npm:1.5.8"
-  checksum: b9200c76fdeb4fc47deb3ea08e2eee65fa86dcc69ce4c78b0ff944b78ecca5635e39e68a2c0bbea40c2fac2893dd73e06ff9fb8df07fd33ea16432cd2dc5d05b
+  version: 1.5.9
+  resolution: "electron-to-chromium@npm:1.5.9"
+  checksum: 6be72b08540830554c71c9bf96c27fa53275ca12159659a49a47bb8905713c488c5bc025d4dca66ffdd899eb95548b09cc23310551c67f153d2a4f6fd0015231
   languageName: node
   linkType: hard
 
@@ -8494,11 +8494,11 @@ __metadata:
   linkType: hard
 
 "i18next@npm:^23.12.3":
-  version: 23.12.3
-  resolution: "i18next@npm:23.12.3"
+  version: 23.13.0
+  resolution: "i18next@npm:23.13.0"
   dependencies:
     "@babel/runtime": ^7.23.2
-  checksum: 5a776a9c5254a4249550457941b2be7a05d436e87e216941c9e0196a55f3d421de1de43c27f8028176acc172f3af190a3cf4266ab8db8b7d051d95b028fd156a
+  checksum: fe7d955ae388f382736a22b8761f295482341b2c8cab887da6c1578050d5e54538c7ce87b8b0f350047d3e980620d893a9768c409184111d0b62624cb56bcb15
   languageName: node
   linkType: hard
 

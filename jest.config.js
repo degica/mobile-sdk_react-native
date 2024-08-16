@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 const { pathsToModuleNameMapper } = require("ts-jest");
 
 const { compilerOptions } = require("./tsconfig.json");

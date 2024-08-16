@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import React, { ReactNode } from "react";
 import { fireEvent, render, waitFor } from "@testing-library/react-native";
 

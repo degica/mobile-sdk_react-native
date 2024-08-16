@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import payForSession from "../services/payForSessionService";
 import { PaymentType } from "../util/types";
 

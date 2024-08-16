@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction} from 'react';
+import {Dispatch, SetStateAction} from 'react';
 import {View, Pressable, StyleSheet, Text, useColorScheme} from 'react-native';
 import {LanguageTypes} from '@komoju/komoju-react-native';
 
