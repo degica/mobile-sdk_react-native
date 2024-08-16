@@ -1,0 +1,10 @@
+{
+    "parserOptions": {
+        "project": "./tsconfig.json",
+        "sourceType": "module",
+        "ecmaVersion": 2015
+    },
+    "rules": {
+        "react-hooks/exhaustive-deps": "off"
+    }
+}
