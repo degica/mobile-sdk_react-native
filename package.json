@@ -39,7 +39,7 @@
     "example": "yarn workspace @komoju/komoju-react-native-example",
     "test": "jest",
     "typecheck": "tsc",
-    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "lint": "eslint \"src/**/*.{js,ts,tsx}\" --ignore-pattern \"src/__tests__/**\" --ignore-pattern \"src/assets/**\"",
     "clean": "del-cli lib",
     "prepare": "bob build",
     "release": "release-it"
