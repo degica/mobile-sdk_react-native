@@ -1,5 +1,4 @@
 // @ts-nocheck
-
 import React, { ReactNode } from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 
