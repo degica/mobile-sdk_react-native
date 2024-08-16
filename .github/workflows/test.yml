@@ -25,10 +25,10 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies
-        run: cd payment_sdk && yarn install
+        run:  yarn install
 
       - name: Run Lint Check
-        run: cd payment_sdk && yarn lint
+        run: yarn lint
 
       - name: Run Jest tests
-        run: cd payment_sdk && yarn test
+        run: yarn test
