@@ -25,7 +25,7 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies
-        run:  yarn install --update-lockfile
+        run:  yarn install
 
       - name: Run Lint Check
         run: yarn lint
