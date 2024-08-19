@@ -26,11 +26,11 @@ export const KomojuSDK = {
 
 export {
   /**
-   * Supported payment types to parse for payment_methods prop.
+   * Supported payment types to parse for paymentMethods prop.
    */
   PaymentType as PaymentTypes,
   /**
-   * Supported payment types to parse for payment_methods prop.
+   * Supported languages to parse for language prop.
    */
   LanguageTypes,
 };

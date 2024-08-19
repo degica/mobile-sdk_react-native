@@ -2,7 +2,7 @@ import { Dispatch, ReactNode, SetStateAction } from "react";
 
 export type InitPrams = {
   publicKey: string;
-  payment_methods?: Array<PaymentType>;
+  paymentMethods?: Array<PaymentType>;
   language?: LanguageTypes;
   useBottomSheet?: boolean;
 };

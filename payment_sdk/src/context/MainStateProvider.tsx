@@ -156,7 +156,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
 
       // if user provided explicitly payments methods via props, will give priority to that over session payment methods
       const paymentMethods = parsePaymentMethods(
-        props?.payment_methods,
+        props?.paymentMethods,
         sessionData?.payment_methods
       );
 

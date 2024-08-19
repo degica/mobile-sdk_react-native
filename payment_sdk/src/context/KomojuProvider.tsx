@@ -13,7 +13,7 @@ export const KomojuProvider = (props: KomojuProviderIprops) => {
       <ThemeProvider>
         <MainStateProvider
           publicKey={props.publicKey}
-          payment_methods={props?.payment_methods}
+          paymentMethods={props?.paymentMethods}
           language={props?.language}
           useBottomSheet={props?.useBottomSheet}
         >
