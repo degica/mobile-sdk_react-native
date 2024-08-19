@@ -17,10 +17,10 @@ const darkTheme = {
 
 const lightTheme = {
     PRIMARY_COLOR: "#0B82EE",
-    BACKGROUND_COLOR: "#FBFBFB",
+    BACKGROUND_COLOR: "#FFFFFF",
     ERROR: "#fc5d5d",
     TEXT_COLOR: "#172E44",
-    INPUT_BACKGROUND: '#F7F8F8',
+    INPUT_BACKGROUND: '#FFFFFF',
     INPUT_TEXT: '#172E44',
     INPUT_PLACEHOLDER: '#ADA4A5',
     INVERTED_CONTENT: '#fff',
