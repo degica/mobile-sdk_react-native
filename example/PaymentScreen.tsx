@@ -17,7 +17,7 @@ export enum CurrencyTypes {
   USD = 'USD',
 }
 
-const PaymentScreen = ({secretKey}: {secretKey: string}) => {
+const PaymentScreen = () => {
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState(CurrencyTypes.JPY);
   const colorScheme = useColorScheme(); // Detects the color scheme of the device
@@ -32,7 +32,7 @@ const PaymentScreen = ({secretKey}: {secretKey: string}) => {
     }
 
     // fetch a session Id to initiate payment
-    const sessionId = await createSession({amount, currency, secretKey});
+    const sessionId = await createSession({amount, currency});
 
     // invoke createPayment method with sessionId as parameters to open the payment portal
     createPayment({
