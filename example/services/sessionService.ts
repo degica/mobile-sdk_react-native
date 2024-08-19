@@ -1,4 +1,5 @@
 import {Alert} from 'react-native';
+import {CREATE_SESSION_URL} from './constants';
 
 // Refer documentation on https://doc.komoju.com/reference/post_sessions
 // for creating a session
@@ -13,7 +14,6 @@ const createSession = async ({
   currency,
 }: createSessionProps): Promise<string | null> => {
   try {
-    const url = 'https://rn-komoju-app.glitch.me/create-session';
     const options = {
       method: 'POST',
       headers: {
@@ -25,7 +25,7 @@ const createSession = async ({
         currency,
       }),
     };
-    const response = await fetch(url, options);
+    const response = await fetch(CREATE_SESSION_URL, options);
     const {sessionId} = await response.json();
 
     return sessionId;

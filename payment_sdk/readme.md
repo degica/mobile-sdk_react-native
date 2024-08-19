@@ -33,7 +33,7 @@ import { KomojuSDK } from "@komoju/komoju-react-native";
 
 function App() {
   return (
-    <KomojuSDK.KomojuProvider publicKey={PUBLIC_KEY}>
+    <KomojuSDK.KomojuProvider publishableKey={PUBLISHABLE_KEY}>
       <PaymentScreen />
     </KomojuSDK.KomojuProvider>
   );
@@ -78,7 +78,7 @@ When a customer exits your app, for example to authenticate in Safari or their b
 
 To initialize Komoju in your React Native app, use the `KomojuSDK.KomojuProvider` component in the root component of your application.
 
-`KomojuProvider` can accept `publicKey`, `paymentMethods` and `language` as props. Only `publicKey` is required.
+`KomojuProvider` can accept `publishableKey`, `paymentMethods` and `language` as props. Only `publishableKey` is required.
 
 ```tsx
 import {
@@ -88,20 +88,20 @@ import {
 } from "@komoju/komoju-react-native";
 
 function App() {
-  const [publicKey, setPublicKey] = useState("");
+  const [publishableKey, setpublishableKey] = useState("");
 
-  const fetchPublicKey = async () => {
+  const fetchpublishableKey = async () => {
     const key = await fetchKey(); // fetch key from your server here
-    setPublicKey(key);
+    setpublishableKey(key);
   };
 
   useEffect(() => {
-    fetchPublicKey();
+    fetchpublishableKey();
   }, []);
 
   return (
     <KomojuSDK.KomojuProvider
-      publicKey={publicKey}
+      publishableKey={publishableKey}
       paymentMethods={[PaymentTypes.KONBINI]} // explicitly set the payment method(s) for purchase
       language={LanguageTypes.JAPANESE} // explicitly set the language, if not set language will be picked from your session Id
     >
@@ -115,6 +115,6 @@ function App() {
 
 | property           | type                     | description                                                                                                   |
 | ------------------ | ------------------------ | ------------------------------------------------------------------------------------------------------------- |
-| **publicKey**      | `string`                 | Your publishable key from the KOMOJU [merchant settings page](https://komoju.com/sign_in/) (this is mandtory) |
+| **publishableKey** | `string`                 | Your publishable key from the KOMOJU [merchant settings page](https://komoju.com/sign_in/) (this is mandtory) |
 | **paymentMethods** | `Array <PaymentTypes>`   | explicitly set the payment method(s) for purchase. (optional)                                                 |
 | **language**       | `string (LanguageTypes)` | explicitly set the language, if not set language will be picked from your session Id (optional)               |

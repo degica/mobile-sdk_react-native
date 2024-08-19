@@ -1,9 +1,9 @@
 import {Alert} from 'react-native';
+import {PUBLISHABLE_KEY_URL} from './constants';
 
 const getPublishableKey = async () => {
   try {
-    const url = 'https://rn-komoju-app.glitch.me/serve-keys';
-    const response = await fetch(url);
+    const response = await fetch(PUBLISHABLE_KEY_URL);
     const {publishableKey} = await response.json();
 
     return publishableKey;

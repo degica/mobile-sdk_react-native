@@ -5,7 +5,7 @@ import { PaymentType } from "../util/types";
 global.fetch = jest.fn();
 
 const paymentDetails = {
-  publicKey: "samplepublickKey",
+  publishableKey: "samplepublishablekKey",
   sessionId: "sessionID123",
   paymentType: PaymentType.CREDIT,
   paymentDetails: {

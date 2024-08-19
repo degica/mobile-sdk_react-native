@@ -29,7 +29,9 @@ function App(): React.JSX.Element {
     <SafeAreaView style={styles.mainContainer}>
       <LanguageSelectComponent language={language} setLanguage={setLanguage} />
 
-      <KomojuSDK.KomojuProvider publicKey={publishableKey} language={language}>
+      <KomojuSDK.KomojuProvider
+        publishableKey={publishableKey}
+        language={language}>
         <PaymentScreen />
       </KomojuSDK.KomojuProvider>
     </SafeAreaView>
