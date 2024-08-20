@@ -5,6 +5,7 @@ import {KomojuSDK, LanguageTypes} from '@komoju/komoju-react-native';
 import PaymentScreen from './PaymentScreen';
 import LanguageSelectComponent from './components/languageSelectComponet';
 import getPublishableKey from './services/keyService';
+import Loader from './components/Loader';
 
 /**
  * You can get your Publishable key and Secret keys from https://komoju.com/en/sign_in
@@ -14,12 +15,14 @@ import getPublishableKey from './services/keyService';
 
 function App(): React.JSX.Element {
   const [publishableKey, setPublishableKey] = useState('');
+  const [loading, setLoading] = useState(true);
   const [language, setLanguage] = useState(LanguageTypes.ENGLISH);
 
   useEffect(() => {
     const keyService = async () => {
       const key = await getPublishableKey();
       setPublishableKey(key);
+      setLoading(false);
     };
 
     keyService();
@@ -32,8 +35,10 @@ function App(): React.JSX.Element {
       <KomojuSDK.KomojuProvider
         publishableKey={publishableKey}
         language={language}>
-        <PaymentScreen />
+        <PaymentScreen setLoading={setLoading} />
       </KomojuSDK.KomojuProvider>
+
+      {loading ? <Loader /> : null}
     </SafeAreaView>
   );
 }

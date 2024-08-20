@@ -54,7 +54,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
     return () => {
       subscription.remove();
     };
-  }, []);
+  }, [props]);
 
   const openPaymentSheet = () => {
     if (props?.useBottomSheet) {
