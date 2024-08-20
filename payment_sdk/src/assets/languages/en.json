@@ -79,6 +79,7 @@
     "CARD_NUMBER_ERROR": "You have entered an invalid card number",
     "EXPIRY_DATE_ERROR": "Please input the full expiration date",
     "CVV_ERROR": "Please input the CVV",
+    "EMAIL_ERROR": "Please enter a valid email address",
     "": ""
   }
 }

@@ -108,6 +108,7 @@ const KonbiniSection = (): JSX.Element => {
           }}
           inputStyle={styles.inputStyle}
           error={inputErrors.name}
+          errorText="REQUIRED"
         />
       </View>
       <View style={styles.inputContainer}>
@@ -122,6 +123,7 @@ const KonbiniSection = (): JSX.Element => {
           }}
           inputStyle={styles.inputStyle}
           error={inputErrors.email}
+          errorText="EMAIL_ERROR"
           inputMode="email"
         />
       </View>
@@ -154,8 +156,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     margin: responsiveScale(16),
-    marginBottom: responsiveScale(24),
-    height: responsiveScale(60),
+    marginBottom: responsiveScale(8),
   },
   inputStyle: {
     height: responsiveScale(50),

@@ -79,6 +79,7 @@
       "CARD_NUMBER_ERROR": "無効なカード番号を入力しました",
       "EXPIRY_DATE_ERROR": "有効期限を完全に入力してください",
       "CVV_ERROR": "CVVを入力してください",
+      "EMAIL_ERROR": "有効なメールアドレスを入力してください",
       "": ""
    }
   }

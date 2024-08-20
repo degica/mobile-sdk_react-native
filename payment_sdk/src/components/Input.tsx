@@ -80,6 +80,7 @@ const getStyles = (theme: ThemeSchemeType) => {
     errorMsg: {
       fontSize: resizeFonts(14),
       color: theme.ERROR,
+      marginTop: responsiveScale(5),
     },
     input: {
       height: "100%",

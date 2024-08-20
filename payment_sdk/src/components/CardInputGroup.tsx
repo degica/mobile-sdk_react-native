@@ -320,10 +320,9 @@ const getStyles = (theme: ThemeSchemeType) => {
     },
     errorText: {
       color: theme.ERROR,
-      fontSize: resizeFonts(16),
-      textAlign: "center",
-      top: -responsiveScale(10),
-      marginBottom: responsiveScale(5),
+      fontSize: resizeFonts(14),
+      marginLeft: responsiveScale(16),
+      top: -responsiveScale(20),
     },
   });
 };
