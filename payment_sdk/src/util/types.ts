@@ -1,8 +1,8 @@
 import { Dispatch, ReactNode, SetStateAction } from "react";
 
 export type InitPrams = {
-  publicKey: string;
-  payment_methods?: Array<PaymentType>;
+  publishableKey: string;
+  paymentMethods?: Array<PaymentType>;
   language?: LanguageTypes;
   useBottomSheet?: boolean;
 };
@@ -103,7 +103,7 @@ export enum CurrencyTypes {
 }
 
 export type payForSessionProps = {
-  publicKey: string;
+  publishableKey: string;
   sessionId: string;
   paymentType: PaymentType;
   paymentDetails?: CardDetailsType &

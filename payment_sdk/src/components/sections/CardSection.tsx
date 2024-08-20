@@ -84,6 +84,7 @@ const CardSection = (): JSX.Element => {
           }}
           inputStyle={styles.inputStyle}
           error={inputErrors.name}
+          errorText="REQUIRED"
           testID="cardHolderName"
         />
       </View>

@@ -1,13 +1,13 @@
 import { PaymentType } from "./types";
 
-export const noop = () => { };
+export const noop = () => {};
 export const BASE_URL = "https://komoju.com";
 export const BASE_URL_API = `${BASE_URL}/api/v1`;
-export const API_HEADER = (publicKey: string) => ({
+export const API_HEADER = (publishableKey: string) => ({
   accept: "application/json",
   "content-type": "application/json",
   "KOMOJU-VIA": "mobile_react",
-  Authorization: `Basic ${btoa(publicKey + ":")}`,
+  Authorization: `Basic ${btoa(publishableKey + ":")}`,
 });
 
 export const paymentSuccessCtaText = "BACK_TO_STORE";
@@ -34,7 +34,7 @@ export enum SimpleRedirectTypeModes {
   linepay = "LINE_PAY",
   merpay = "MER_PAY",
   rakuten = "RAKUTEN",
-  aupay = "AU_PAY"
+  aupay = "AU_PAY",
 }
 
 export const LangKeys: { [key in PaymentType]: string } = {
@@ -52,5 +52,4 @@ export const LangKeys: { [key in PaymentType]: string } = {
   [PaymentType.RAKUTEN]: "RAKUTEN",
   [PaymentType.WEB_MONEY]: "WEB_MONEY",
   [PaymentType.NET_CASH]: "NET_CASH",
-
 };

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {Dispatch, SetStateAction, useState} from 'react';
 import {
   useColorScheme,
   View,
@@ -17,7 +17,11 @@ export enum CurrencyTypes {
   USD = 'USD',
 }
 
-const PaymentScreen = ({secretKey}: {secretKey: string}) => {
+const PaymentScreen = ({
+  setLoading,
+}: {
+  setLoading: Dispatch<SetStateAction<boolean>>;
+}) => {
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState(CurrencyTypes.JPY);
   const colorScheme = useColorScheme(); // Detects the color scheme of the device
@@ -26,13 +30,15 @@ const PaymentScreen = ({secretKey}: {secretKey: string}) => {
   const {createPayment} = KomojuSDK.useKomoju();
 
   const handleSessionPay = async () => {
+    setLoading(true);
     if (!amount) {
       Alert.alert('Error', 'Please enter an amount to checkout');
       return;
     }
 
     // fetch a session Id to initiate payment
-    const sessionId = await createSession({amount, currency, secretKey});
+    const sessionId = await createSession({amount, currency});
+    setLoading(false);
 
     // invoke createPayment method with sessionId as parameters to open the payment portal
     createPayment({
