@@ -60,7 +60,7 @@
       "PAYMENT_VIA_AU_PAY": "AU Payでのお支払い",
       "AU_PAY_REDIRECT_MESSAGE": "支払いを完了するには、AU Pay にリダイレクトされます。",
       "CONTINUE_TO_AU_PAY": "AU Payへ進む",
-      "LIGHT_BOX_CONTENT": "ブラウザ ウィンドウが開くことに注意してください。購入後はリダイレクトされて戻ります。",
+      "LIGHT_BOX_CONTENT": "ブラウザのウィンドウが開きます。ご購入後、自動的にこのアプリに戻ります。",
       "NET_CASH_INPUT_LABEL": "NET CASH情報",
       "NET_CASH_INPUT_PLACEHOLDER": "NET CASH id",
       "BIT_CASH_INPUT_LABEL": "BITCASH情報",
