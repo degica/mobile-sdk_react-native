@@ -8,7 +8,10 @@ const getPublishableKey = async () => {
 
     return publishableKey;
   } catch (e) {
-    Alert.alert('Error', 'Unable to fetch session. Is your server running?');
+    Alert.alert(
+      'Error',
+      'Unable to fetch publishable Key. Is your server running?',
+    );
     return null;
   }
 };
