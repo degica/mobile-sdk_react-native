@@ -84,6 +84,7 @@ const CardSection = (): JSX.Element => {
           }}
           inputStyle={styles.inputStyle}
           error={inputErrors.name}
+          errorText="REQUIRED"
           testID="cardHolderName"
         />
       </View>
@@ -109,8 +110,7 @@ const styles = StyleSheet.create({
   },
   cardNameContainer: {
     margin: responsiveScale(16),
-    marginBottom: responsiveScale(24),
-    height: responsiveScale(60),
+    marginBottom: responsiveScale(8),
   },
   btn: {
     height: responsiveScale(60),

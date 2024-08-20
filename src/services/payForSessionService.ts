@@ -9,7 +9,7 @@ import {
 /**
  * Processes a payment for a given session.
  * @param {object} params - The parameters for processing the payment.
- * @param {string} params.publicKey - The public key for authorization.
+ * @param {string} params.publishableKey - The publishable key for authorization.
  * @param {string} params.sessionId - The session ID for the payment.
  * @param {PaymentType} params.paymentType - The type of payment to process.
  * @param {object} params.paymentDetails - The details of the relevant payment type.
@@ -23,7 +23,7 @@ import {
  */
 
 const payForSession = async ({
-  publicKey,
+  publishableKey,
   sessionId,
   paymentType,
   paymentDetails,
@@ -114,8 +114,8 @@ const payForSession = async ({
 
     // payment POST request options of headers and body should be as bellow
     const options = {
-      method: 'POST',
-      headers: API_HEADER(publicKey),
+      method: "POST",
+      headers: API_HEADER(publishableKey),
       body: JSON.stringify({
         capture: 'auto',
         payment_details,

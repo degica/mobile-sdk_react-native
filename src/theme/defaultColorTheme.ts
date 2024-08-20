@@ -1,13 +1,13 @@
 const darkTheme = {
-  PRIMARY_COLOR: '#0071D7',
-  BACKGROUND_COLOR: '#1E1E1E',
-  ERROR: '#fc4747',
-  TEXT_COLOR: '#fff',
+  PRIMARY_COLOR: "#0071D7",
+  BACKGROUND_COLOR: "#1E1E1E",
+  ERROR: "#fc4747",
+  TEXT_COLOR: "#fff",
   INPUT_BACKGROUND: '#2C2C2C',
   INPUT_TEXT: '#F7F8F8',
   INPUT_PLACEHOLDER: '#958d8e',
   INVERTED_CONTENT: '#1D1617',
-  WHITE50: '#00000080',
+  WHITE50: "#00000080",
   CARD_BACKGROUND: '#171717',
   CARD_BORDER: '#33414c',
   LIGHT_BOX: '#2C2C2C',
@@ -16,11 +16,11 @@ const darkTheme = {
 };
 
 const lightTheme = {
-  PRIMARY_COLOR: '#0B82EE',
-  BACKGROUND_COLOR: '#FBFBFB',
-  ERROR: '#fc5d5d',
-  TEXT_COLOR: '#172E44',
-  INPUT_BACKGROUND: '#F7F8F8',
+  PRIMARY_COLOR: "#0B82EE",
+  BACKGROUND_COLOR: "#FFFFFF",
+  ERROR: "#fc5d5d",
+  TEXT_COLOR: "#172E44",
+  INPUT_BACKGROUND: '#FFFFFF',
   INPUT_TEXT: '#172E44',
   INPUT_PLACEHOLDER: '#ADA4A5',
   INVERTED_CONTENT: '#fff',
@@ -34,5 +34,5 @@ const lightTheme = {
 
 export const appTheme = {
   dark: darkTheme,
-  light: lightTheme,
-};
+  light: lightTheme
+}

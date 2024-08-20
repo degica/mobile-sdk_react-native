@@ -54,7 +54,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
     return () => {
       subscription.remove();
     };
-  }, []);
+  }, [props]);
 
   const openPaymentSheet = () => {
     if (props?.useBottomSheet) {
@@ -93,7 +93,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
   const onUserCancel = async () => {
     if (onDismissCallback.current) {
       const sessionShowPayload = {
-        publicKey: props?.publicKey,
+        publishableKey: props?.publishableKey,
         sessionId: sessionIdRef.current,
       };
 
@@ -135,7 +135,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
     // Fetching session data from given session ID
     const sessionData = await sessionShow({
       sessionId,
-      publicKey: props.publicKey,
+      publishableKey: props.publishableKey,
     });
 
     // validating the session data and closing the payment gateway if data is not valid
@@ -156,7 +156,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
 
       // if user provided explicitly payments methods via props, will give priority to that over session payment methods
       const paymentMethods = parsePaymentMethods(
-        props?.payment_methods,
+        props?.paymentMethods,
         sessionData?.payment_methods
       );
 
@@ -180,7 +180,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
 
     // if this is a session flow, check until session response changes from 'pending' to 'completed' or 'error'
     const sessionShowPayload = {
-      publicKey: props.publicKey,
+      publishableKey: props.publishableKey,
       sessionId: sessionIdRef.current,
     };
 
@@ -221,7 +221,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
       const response = await payForSession({
         paymentType,
         sessionId,
-        publicKey: props.publicKey,
+        publishableKey: props.publishableKey,
         paymentDetails,
       });
 

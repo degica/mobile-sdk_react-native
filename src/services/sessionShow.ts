@@ -4,18 +4,18 @@ import { SessionShowResponseType } from '../util/types';
 
 type SessionShowProps = {
   sessionId: string;
-  publicKey: string;
+  publishableKey: string;
 };
 
 const sessionShow = async ({
   sessionId,
-  publicKey,
+  publishableKey,
 }: SessionShowProps): Promise<SessionShowResponseType | null> => {
   try {
     const url = `${BASE_URL_API}/sessions/${sessionId}`;
     const options = {
-      method: 'GET',
-      headers: API_HEADER(publicKey),
+      method: "GET",
+      headers: API_HEADER(publishableKey),
     };
 
     const response = await fetch(url, options);

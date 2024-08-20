@@ -75,6 +75,11 @@
     "FIRST_NAME": "First Name",
     "LAST_NAME_PHONETIC": "Last Name (Phonetic)",
     "FIRST_NAME_PHONETIC": "First Name (Phonetic)",
+    "REQUIRED": "Required",
+    "CARD_NUMBER_ERROR": "You have entered an invalid card number",
+    "EXPIRY_DATE_ERROR": "Please input the full expiration date",
+    "CVV_ERROR": "Please input the CVV",
+    "EMAIL_ERROR": "Please enter a valid email address",
     "": ""
   }
 }

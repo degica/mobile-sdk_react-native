@@ -99,7 +99,11 @@ export const validateCardFormFields = ({
     setInputErrors((pre: object) => ({ ...pre, number: true }));
     valid = false;
   }
-  if (!cardExpiredDate) {
+  if (!luhnCheck(cardNumber ?? "")) {
+    setInputErrors((pre: object) => ({ ...pre, number: true }));
+    valid = false;
+  }
+  if (!expiryDateCheck(cardExpiredDate ?? "")) {
     setInputErrors((pre: object) => ({ ...pre, expiry: true }));
     valid = false;
   }
@@ -109,6 +113,40 @@ export const validateCardFormFields = ({
   }
 
   return valid;
+};
+
+const luhnCheck = (cardNumber: string) => {
+  // accept only digits and spaces
+  if (/[^0-9\s]+/.test(cardNumber)) {
+    return false;
+  }
+
+  let sum = 0;
+  let shouldDouble = false;
+  cardNumber = cardNumber.replace(/\D/g, "");
+  const length = cardNumber.length;
+
+  // iterating backwards, double every second digit
+  for (let i = length - 1; i >= 0; --i) {
+    let digit = parseInt(cardNumber.charAt(i), 10);
+
+    // double. if doubled digit is > 9, subtract 9
+    if (shouldDouble && (digit *= 2) > 9) {
+      digit -= 9;
+    }
+
+    sum += digit;
+    shouldDouble = !shouldDouble;
+  }
+
+  return sum % 10 === 0;
+};
+
+const expiryDateCheck = (expiry: string) => {
+  const derivedExpiry = expiry.replace(" / ", "");
+
+  if (derivedExpiry.length !== 4) return false;
+  else return true;
 };
 
 export const validateTransferFormFields = ({
