@@ -74,6 +74,7 @@ export enum PaymentStatuses {
   ERROR = "error",
   SUCCESS = "completed",
   PENDING = "pending",
+  CANCELLED = 'cancelled'
 }
 
 export enum TokenResponseStatuses {
@@ -90,6 +91,8 @@ export enum ResponseScreenStatuses {
   FAILED = "failed",
   /** For displaying payment instruction screens and disabling the cancel payment popup */
   COMPLETE = "complete",
+  /** For displaying payment instruction screens for cancelled by the user */
+  CANCELLED = 'cancelled',
 }
 
 export enum CurrencySign {
@@ -180,6 +183,7 @@ export type SessionShowResponseType = {
     payment_details: {
       instructions_url?: string;
     };
+    status?: string
   };
 };
 
@@ -239,6 +243,7 @@ export type State = CardDetailsType &
     paymentState:
       | ResponseScreenStatuses.SUCCESS
       | ResponseScreenStatuses.FAILED
+      | ResponseScreenStatuses.CANCELLED
       | "";
     /**
      * States of the Bank transfer and Pay Easy fields.

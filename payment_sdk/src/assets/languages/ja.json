@@ -38,9 +38,11 @@
       "NO": "いいえ",  
       "CANCEL_PAYMENT": "支払いのキャンセル",      
       "PAYMENT_SUCCESS": "支払い完了",      
-      "PAYMENT_FAILED": "支払いができませんでした",      
+      "PAYMENT_FAILED": "支払いができませんでした",   
+      "PAYMENT_CANCELLED": "支払いがキャンセルされました",   
       "ORDER_THANK_YOU_NOTE": "ご購入ありがとうございました",      
       "PAYMENT_RE_TRY_MSG": "入力していただいたカードで支払いを行うことができませんでした。別の支払い方法を試してみてください。",
+      "PAYMENT_CANCELLED_MSG": "お支払いプロセスがキャンセルされたことを確認しました。もしこれが誤りであれば、再度お試しいただき、購入を完了してください。",
       "BACK_TO_STORE": "ストアに戻る",      
       "UPDATE_PAYMENT_METHOD": "支払い方法を変更する",    
       
