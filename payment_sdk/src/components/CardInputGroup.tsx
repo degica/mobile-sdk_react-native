@@ -222,7 +222,12 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
                   if (text?.length < 11)
                     dispatch({ type: Actions.SET_CARD_CVV, payload: text });
                 }}
-                inputStyle={styles.cvvInputStyle}
+                inputStyle={[
+                  styles.cvvInputStyle,
+                  inputErrors.cvv &&
+                    !inputErrors.expiry &&
+                    styles.cvvInputErrorStyle,
+                ]}
                 error={inputErrors.cvv}
               />
               <View style={styles.cardContainer}>
@@ -286,7 +291,10 @@ const getStyles = (theme: ThemeSchemeType) => {
       borderTopLeftRadius: 0,
       borderTopRightRadius: 0,
       borderBottomLeftRadius: 0,
-      marginLeft: -responsiveScale(1),
+      borderLeftWidth: 0,
+    },
+    cvvInputErrorStyle: {
+      borderLeftWidth: 1,
     },
     titleScanRow: {
       flexDirection: "row",
