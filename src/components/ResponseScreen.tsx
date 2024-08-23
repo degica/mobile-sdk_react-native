@@ -11,7 +11,7 @@ import KomojuText from "./KomojuText";
 import SubmitButton from "./SubmitButton";
 
 type Props = {
-  status: ResponseScreenStatuses.SUCCESS | ResponseScreenStatuses.FAILED;
+  status: ResponseScreenStatuses.SUCCESS | ResponseScreenStatuses.FAILED | ResponseScreenStatuses.CANCELLED;
   message?: string;
   onPressLabel: string;
   onPress: () => void;
@@ -24,12 +24,12 @@ const ResponseScreen = ({ status, message, onPress, onPressLabel }: Props) => {
   const renderMessageContent = useMemo(() => {
     const title =
       status === ResponseScreenStatuses.SUCCESS
-        ? "PAYMENT_SUCCESS"
-        : "PAYMENT_FAILED";
+        ? "PAYMENT_SUCCESS" : status === ResponseScreenStatuses.CANCELLED ?
+          "PAYMENT_CANCELLED" : "PAYMENT_FAILED";
     const defaultMessage =
       status === ResponseScreenStatuses.SUCCESS
-        ? "ORDER_THANK_YOU_NOTE"
-        : "PAYMENT_RE_TRY_MSG";
+        ? "ORDER_THANK_YOU_NOTE" : status === ResponseScreenStatuses.CANCELLED ?
+          "PAYMENT_CANCELLED_MSG" : "PAYMENT_RE_TRY_MSG";
     const msg = message || defaultMessage;
 
     return (
