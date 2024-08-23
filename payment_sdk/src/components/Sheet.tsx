@@ -171,6 +171,8 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
         return paymentSuccessCtaText;
       case ResponseScreenStatuses.FAILED:
         return paymentFailedCtaText;
+      case ResponseScreenStatuses.CANCELLED:
+        return paymentSuccessCtaText;
       default:
         return "";
     }
@@ -185,6 +187,8 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
           type: Actions.SET_PAYMENT_STATE,
           payload: "",
         });
+      case ResponseScreenStatuses.CANCELLED:
+        return closeSheet(false);
       default:
         return "";
     }
@@ -213,6 +217,7 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
               closeSheet(
                 !(
                   paymentState === ResponseScreenStatuses.SUCCESS ||
+                  paymentState === ResponseScreenStatuses.CANCELLED ||
                   // TODO: Fix this type error
                   // @ts-expect-error - Property 'COMPLETE' does not exist on type 'ResponseScreenStatuses'.
                   paymentState === ResponseScreenStatuses.COMPLETE
@@ -227,8 +232,7 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
         </RNAnimated.View>
         {
           // TODO: Fix this type error
-          // @ts-expect-error - Property 'COMPLETE' does not exist on type 'ResponseScreenStatuses'.
-          paymentState && paymentState !== ResponseScreenStatuses.COMPLETE ? (
+          paymentState ? (
             <ResponseScreen
               status={paymentState}
               onPress={ctaOnPress}

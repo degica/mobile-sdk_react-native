@@ -82,6 +82,8 @@ const PaymentModal = ({
         return paymentSuccessCtaText;
       case ResponseScreenStatuses.FAILED:
         return paymentFailedCtaText;
+      case ResponseScreenStatuses.CANCELLED:
+        return paymentSuccessCtaText;
       default:
         return "";
     }
@@ -96,6 +98,8 @@ const PaymentModal = ({
           type: Actions.SET_PAYMENT_STATE,
           payload: "",
         });
+      case ResponseScreenStatuses.CANCELLED:
+        return closeSheet(false);
       default:
         return "";
     }
@@ -105,6 +109,7 @@ const PaymentModal = ({
     closeSheet(
       !(
         paymentState === ResponseScreenStatuses.SUCCESS ||
+        paymentState === ResponseScreenStatuses.CANCELLED ||
         // TODO: Fix this type error
         // @ts-expect-error - Property 'COMPLETE' does not exist on type 'ResponseScreenStatuses'.
         paymentState === ResponseScreenStatuses.COMPLETE
@@ -123,7 +128,7 @@ const PaymentModal = ({
 
       <View style={styles.bottomSheetContainer}>
         <View style={styles.line}>
-          <KomojuText style={styles.headerLabel}>PAYMENT_OPTIONS</KomojuText>
+          <KomojuText style={styles.headerLabel}>{!paymentState ? 'PAYMENT_OPTIONS' : ''}</KomojuText>
           <TouchableOpacity style={styles.crossBtn} onPress={onCloseModal}>
             <Image
               source={mode === ThemeModes.light ? closeIcon : closeDMIcon}

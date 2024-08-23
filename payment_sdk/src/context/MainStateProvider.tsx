@@ -90,6 +90,18 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
       payload: ResponseScreenStatuses.FAILED,
     });
 
+  // when payment is cancelled by the user
+  const onPaymentCancelled = () => {
+    dispatch({
+      type: Actions.RESET_STATES,
+      payload: initialState,
+    });
+    dispatch({
+      type: Actions.SET_PAYMENT_STATE,
+      payload: ResponseScreenStatuses.CANCELLED,
+    });
+  }
+
   const onUserCancel = async () => {
     if (onDismissCallback.current) {
       const sessionShowPayload = {
@@ -188,7 +200,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
     let sessionResponse = await sessionShow(sessionShowPayload);
 
     // Polling until session verification status changes
-    while (sessionResponse?.status === PaymentStatuses.PENDING) {
+    while (sessionResponse?.status === PaymentStatuses.PENDING && sessionResponse?.payment?.status !== PaymentStatuses.CANCELLED) {
       sessionResponse = await sessionShow(sessionShowPayload);
     }
 
@@ -203,6 +215,8 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
         // TODO: Fix this type error
         // @ts-expect-error - Argument of type 'PaymentSessionResponse' is not assignable to parameter of type 'string'.
         onCompleteCallback.current(sessionResponse);
+    } else if (sessionResponse?.payment?.status === PaymentStatuses.CANCELLED) {
+      onPaymentCancelled();
     } else {
       onPaymentFailed();
     }
