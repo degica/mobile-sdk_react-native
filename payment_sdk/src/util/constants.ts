@@ -7,6 +7,7 @@ export const API_HEADER = (publishableKey: string) => ({
   accept: "application/json",
   "content-type": "application/json",
   "KOMOJU-VIA": "mobile_react",
+  "X-KOMOJU-API-VERSION": "2024-07-15",
   Authorization: `Basic ${btoa(publishableKey + ":")}`,
 });
 

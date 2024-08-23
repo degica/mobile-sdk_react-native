@@ -8,6 +8,7 @@ import {
   ViewStyle,
   KeyboardTypeOptions,
   TextInputProps,
+  StyleProp,
 } from "react-native";
 
 import { useTranslation } from "react-i18next";
@@ -22,7 +23,7 @@ interface InputProps extends TextInputProps {
   onChangeText: (text: string) => void;
   label?: string;
   placeholder?: string;
-  inputStyle?: ViewStyle;
+  inputStyle?: StyleProp<ViewStyle>;
   testID?: string;
   error?: boolean;
   errorText?: string;
