@@ -7,11 +7,13 @@ import {CREATE_SESSION_URL} from './constants';
 type createSessionProps = {
   amount: string;
   currency: string;
+  language: string;
 };
 
 const createSession = async ({
   amount,
   currency,
+  language,
 }: createSessionProps): Promise<string | null> => {
   try {
     const options = {
@@ -23,6 +25,7 @@ const createSession = async ({
       body: JSON.stringify({
         amount,
         currency,
+        language,
       }),
     };
     const response = await fetch(CREATE_SESSION_URL, options);

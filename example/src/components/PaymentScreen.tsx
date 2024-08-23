@@ -18,8 +18,10 @@ export enum CurrencyTypes {
 }
 
 const PaymentScreen = ({
+  language,
   setLoading,
 }: {
+  language: string;
   setLoading: Dispatch<SetStateAction<boolean>>;
 }) => {
   const [amount, setAmount] = useState('');
@@ -37,7 +39,7 @@ const PaymentScreen = ({
     }
 
     // fetch a session Id to initiate payment
-    const sessionId = await createSession({ amount, currency });
+    const sessionId = await createSession({amount, currency, language});
     setLoading(false);
 
     // invoke createPayment method with sessionId as parameters to open the payment portal

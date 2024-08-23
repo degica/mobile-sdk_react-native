@@ -35,7 +35,7 @@ function App(): React.JSX.Element {
       <KomojuSDK.KomojuProvider
         publishableKey={publishableKey}
         language={language}>
-        <PaymentScreen setLoading={setLoading} />
+        <PaymentScreen language={language} setLoading={setLoading} />
       </KomojuSDK.KomojuProvider>
 
       {loading ? <Loader /> : null}
