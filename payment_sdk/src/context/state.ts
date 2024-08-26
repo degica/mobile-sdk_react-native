@@ -32,6 +32,7 @@ export const Actions = {
   SET_PAYMENT_STATE: "SET_PAYMENT_STATE",
   SET_PAYMENT_METHODS: "SET_PAYMENT_METHODS",
   SESSION_PAY: "SESSION_PAY",
+  SET_PROCEED_PAYMENT: "SET_PROCEED_PAYMENT",
 };
 
 /**
@@ -122,6 +123,11 @@ export function reducer(state: State, action: ActionType) {
       return {
         ...state,
         paymentMethods: action.payload,
+      };
+    case Actions.SET_PROCEED_PAYMENT:
+      return {
+        ...state,
+        processedPayment: action.payload,
       };
     default:
       throw new Error();

@@ -220,6 +220,10 @@ export type State = CardDetailsType &
      */
     loading: boolean;
     /**
+     * Global processedPayment state. to indicate whether the payment was processed
+     */
+    processedPayment: boolean;
+    /**
      * Callback function to call relevant api for each payment type.
      */
     // TODO: Fix this type error
@@ -262,6 +266,7 @@ export type sessionPayProps = {
 export const initialState: State = {
   paymentType: PaymentType.CREDIT,
   loading: false,
+  processedPayment: false,
 
   /** credit card payment related states start */
   cardholderName: "",

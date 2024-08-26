@@ -111,6 +111,7 @@ const getStyles = (theme: ThemeSchemeType) => {
       marginBottom: responsiveScale(16),
       textAlign: "center",
       paddingHorizontal: responsiveScale(32),
+      color: theme.TEXT_COLOR,
     },
     bottomButton: {
       position: "absolute",
