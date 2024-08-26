@@ -86,7 +86,8 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
       // Polling until session verification status changes
       while (
         sessionResponse?.status === PaymentStatuses.PENDING &&
-        sessionResponse?.payment?.status !== PaymentStatuses.CANCELLED
+        sessionResponse?.payment?.status !== PaymentStatuses.CANCELLED &&
+        !sessionResponse?.expired
       ) {
         sessionResponse = await sessionShow(sessionShowPayload);
       }
@@ -104,6 +105,8 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
           onCompleteCallback.current(sessionResponse);
       } else if (sessionResponse?.payment?.status === PaymentStatuses.CANCELLED) {
         onPaymentCancelled();
+      } else if (sessionResponse?.expired) {
+        onSessionExpired()
       } else {
         onPaymentFailed();
       }
@@ -167,6 +170,13 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
       payload: ResponseScreenStatuses.COMPLETE,
     });
   };
+
+  // when payment is failed invoking the error screen
+  const onSessionExpired = () =>
+    dispatch({
+      type: Actions.SET_PAYMENT_STATE,
+      payload: ResponseScreenStatuses.EXPIRED,
+    });
 
   const onUserCancel = async () => {
     if (onDismissCallback.current) {

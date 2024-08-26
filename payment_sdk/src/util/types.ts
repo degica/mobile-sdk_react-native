@@ -75,6 +75,7 @@ export enum PaymentStatuses {
   SUCCESS = "completed",
   PENDING = "pending",
   CANCELLED = "cancelled",
+  EXPIRED = "expired",
 }
 
 export enum TokenResponseStatuses {
@@ -93,6 +94,8 @@ export enum ResponseScreenStatuses {
   COMPLETE = "complete",
   /** For displaying payment instruction screens for cancelled by the user */
   CANCELLED = "cancelled",
+  /** For displaying payment instruction screens for expired user session */
+  EXPIRED = "expired",
 }
 
 export enum CurrencySign {
@@ -250,6 +253,7 @@ export type State = CardDetailsType &
       | ResponseScreenStatuses.COMPLETE
       | ResponseScreenStatuses.FAILED
       | ResponseScreenStatuses.CANCELLED
+      | ResponseScreenStatuses.EXPIRED
       | "";
     /**
      * States of the Bank transfer and Pay Easy fields.
