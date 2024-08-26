@@ -27,7 +27,12 @@ const statusConfigs: Partial<Record<ResponseScreenStatuses, StatusConfig>> = {
   [ResponseScreenStatuses.CANCELLED]: {
     title: "PAYMENT_CANCELLED",
     defaultMessage: "PAYMENT_CANCELLED_MSG",
-    image: require("../assets/images/cancelled.png"),
+    image: require("../assets/images/error.png"),
+  },
+  [ResponseScreenStatuses.COMPLETE]: {
+    title: "PAYMENT_WAITING",
+    defaultMessage: "PAYMENT_CANCELLED_MSG",
+    image: require("../assets/images/awaitingPayment.png"),
   },
 };
 
