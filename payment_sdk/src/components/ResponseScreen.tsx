@@ -1,8 +1,12 @@
 import React, { useCallback, useMemo } from "react";
+
 import { Image, StyleSheet, View, ImageSourcePropType } from "react-native";
+
 import { ResponseScreenStatuses, ThemeSchemeType } from "@util/types";
+
 import { resizeFonts, responsiveScale } from "@theme/scalling";
 import { useCurrentTheme } from "@theme/useCurrentTheme";
+
 import KomojuText from "./KomojuText";
 import SubmitButton from "./SubmitButton";
 
