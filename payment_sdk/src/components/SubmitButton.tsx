@@ -1,6 +1,6 @@
 import React from "react";
 
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Keyboard, StyleSheet, Text, TouchableOpacity } from "react-native";
 
 import { useTranslation } from "react-i18next";
 
@@ -21,11 +21,16 @@ const SubmitButton = ({ label, labelSuffix, onPress, testID }: Props) => {
   const theme = useCurrentTheme();
   const styles = getStyles(theme);
 
+  const onSubmit = () => {
+    Keyboard.dismiss();
+    onPress();
+  };
+
   return (
     <TouchableOpacity
       testID={testID}
       style={styles.buttonWrapper}
-      onPress={onPress}
+      onPress={onSubmit}
     >
       <Text style={styles.label}>
         {labelSuffix ? `${t(label)} ${labelSuffix}` : t(label)}
