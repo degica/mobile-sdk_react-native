@@ -7,7 +7,7 @@ import React, {
   useState,
 } from "react";
 
-import { Alert, Linking } from "react-native";
+import { Alert, AppState, Linking } from "react-native";
 
 import i18next from "i18next";
 
@@ -30,11 +30,12 @@ import {
 import { validateSessionResponse } from "@util/validator";
 
 import "@assets/languages/i18n";
-import { Actions, DispatchContext, KomojuContext } from "./state";
+import { Actions, DispatchContext, KomojuContext, StateContext } from "./state";
 
 export const MainStateProvider = (props: KomojuProviderIprops) => {
   const dispatch = useContext(DispatchContext);
   const [modalVisible, setModalVisible] = useState(false);
+  const { processedPayment } = useContext(StateContext)
 
   const sheetRef = useRef<SheetRefProps>(null);
   // ref to hold client provided onComplete callback
@@ -55,6 +56,65 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
       subscription.remove();
     };
   }, [props]);
+
+  useEffect(() => {
+    // Add event listener for deep links
+    const subscription = AppState.addEventListener(
+      "change",
+      handleBackgroundStateChange
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, [processedPayment]);
+
+  // This callback method is used to check the background state
+  const handleBackgroundStateChange = async () => {
+    startLoading();
+
+    if (processedPayment) {
+      // if this is a session flow, check until session response changes from 'pending' to 'completed' or 'error'
+      const sessionShowPayload = {
+        publishableKey: props.publishableKey,
+        sessionId: sessionIdRef.current,
+      };
+
+      // fetch session status to check if the payment is completed
+      let sessionResponse = await sessionShow(sessionShowPayload);
+
+      // Polling until session verification status changes
+      while (
+        sessionResponse?.status === PaymentStatuses.PENDING &&
+        sessionResponse?.payment?.status !== PaymentStatuses.CANCELLED &&
+        !sessionResponse?.expired
+      ) {
+        sessionResponse = await sessionShow(sessionShowPayload);
+      }
+
+      // if payment success showing success screen or if failed showing error screen
+      if (sessionResponse?.status === PaymentStatuses.SUCCESS) {
+        if (sessionResponse?.payment?.payment_details?.instructions_url) {
+          openURL(sessionResponse?.payment?.payment_details?.instructions_url);
+        }
+        onPaymentSuccess();
+        // calling user passed onComplete method with session response data
+        onCompleteCallback.current &&
+          // TODO: Fix this type error
+          // @ts-expect-error - Argument of type 'PaymentSessionResponse' is not assignable to parameter of type 'string'.
+          onCompleteCallback.current(sessionResponse);
+      } else if (sessionResponse?.payment?.status === PaymentStatuses.CANCELLED) {
+        onPaymentCancelled();
+      } else if (sessionResponse?.expired) {
+        onSessionExpired()
+      } else {
+        onPaymentFailed();
+      }
+    }
+    dispatch({ type: Actions.SET_PROCEED_PAYMENT, payload: false });
+    // after all api calls are done stopping the loading indicator
+    stopLoading();
+  };
 
   const openPaymentSheet = () => {
     if (props?.useBottomSheet) {
@@ -110,6 +170,13 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
       payload: ResponseScreenStatuses.COMPLETE,
     });
   };
+
+  // when payment is failed invoking the error screen
+  const onSessionExpired = () =>
+    dispatch({
+      type: Actions.SET_PAYMENT_STATE,
+      payload: ResponseScreenStatuses.EXPIRED,
+    });
 
   const onUserCancel = async () => {
     if (onDismissCallback.current) {
@@ -233,6 +300,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
       onPaymentFailed();
     }
 
+    dispatch({ type: Actions.SET_PROCEED_PAYMENT, payload: false });
     // after all api calls are done stopping the loading indicator
     stopLoading();
   };
@@ -302,7 +370,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
 
   // TODO: Fix this type error
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const initializeKomoju = useCallback((params: InitPrams) => {}, []);
+  const initializeKomoju = useCallback((params: InitPrams) => { }, []);
 
   const renderPaymentUI = useMemo(() => {
     const UI = props?.useBottomSheet ? (

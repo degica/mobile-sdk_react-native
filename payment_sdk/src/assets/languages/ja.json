@@ -44,7 +44,9 @@
       "PAYMENT_RE_TRY_MSG": "入力していただいたカードで支払いを行うことができませんでした。別の支払い方法を試してみてください。",
       "PAYMENT_CANCELLED_MSG": "お支払いプロセスがキャンセルされたことを確認しました。もしこれが誤りであれば、再度お試しいただき、購入を完了してください。",
       "BACK_TO_STORE": "ストアに戻る",      
-      "UPDATE_PAYMENT_METHOD": "支払い方法を変更する",    
+      "UPDATE_PAYMENT_METHOD": "支払い方法を変更する",
+      "SESSION_EXPIRED": "セッションが期限切れ",
+      "SESSION_EXPIRED_MSG": "このセッションは既に期限切れです。再度お試しください。",
       
       "PAYMENT_VIA_ALI_PAY": "Alipayによる支払い",
       "ALI_PAY_REDIRECT_MESSAGE": "支払いを完了するには、Alipay にリダイレクトされます。",

@@ -81,6 +81,7 @@ const PaymentModal = ({
       case ResponseScreenStatuses.SUCCESS:
       case ResponseScreenStatuses.COMPLETE:
       case ResponseScreenStatuses.CANCELLED:
+      case ResponseScreenStatuses.EXPIRED:
         return paymentSuccessCtaText;
       case ResponseScreenStatuses.FAILED:
         return paymentFailedCtaText;
@@ -94,6 +95,8 @@ const PaymentModal = ({
       case ResponseScreenStatuses.SUCCESS:
       case ResponseScreenStatuses.COMPLETE:
       case ResponseScreenStatuses.CANCELLED:
+        return closeSheet(false);
+      case ResponseScreenStatuses.EXPIRED:
         return closeSheet(false);
       case ResponseScreenStatuses.FAILED:
         return dispatch({
@@ -110,7 +113,8 @@ const PaymentModal = ({
       !(
         paymentState === ResponseScreenStatuses.SUCCESS ||
         paymentState === ResponseScreenStatuses.CANCELLED ||
-        paymentState === ResponseScreenStatuses.COMPLETE
+        paymentState === ResponseScreenStatuses.COMPLETE ||
+        paymentState === ResponseScreenStatuses.EXPIRED
       )
     );
   };

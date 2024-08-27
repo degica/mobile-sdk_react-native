@@ -38,6 +38,11 @@ const statusConfigs: Partial<Record<ResponseScreenStatuses, StatusConfig>> = {
     defaultMessage: "PAYMENT_CANCELLED_MSG",
     image: require("../assets/images/awaitingPayment.png"),
   },
+  [ResponseScreenStatuses.EXPIRED]: {
+    title: "SESSION_EXPIRED",
+    defaultMessage: "SESSION_EXPIRED_MSG",
+    image: require("../assets/images/error.png"),
+  },
 };
 
 type Props = {
@@ -111,6 +116,7 @@ const getStyles = (theme: ThemeSchemeType) => {
       marginBottom: responsiveScale(16),
       textAlign: "center",
       paddingHorizontal: responsiveScale(32),
+      color: theme.TEXT_COLOR,
     },
     bottomButton: {
       position: "absolute",
