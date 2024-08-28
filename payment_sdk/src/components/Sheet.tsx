@@ -67,7 +67,7 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
   const translateYState = useRef(0);
   const contextState = useRef(0);
 
-  const { paymentState } = useContext(StateContext);
+  const { paymentState, paymentType } = useContext(StateContext);
   const dispatch = useContext(DispatchContext);
   const theme = useCurrentTheme();
   const styles = getStyles(theme);
@@ -233,6 +233,7 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
             status={paymentState}
             onPress={ctaOnPress}
             onPressLabel={getCtaText()}
+            paymentType={paymentType}
           />
         ) : (
           <SheetContent />
