@@ -47,7 +47,9 @@
       "UPDATE_PAYMENT_METHOD": "支払い方法を変更する",
       "SESSION_EXPIRED": "セッションが期限切れ",
       "SESSION_EXPIRED_MSG": "このセッションは既に期限切れです。再度お試しください。",
-      
+      "PAYMENT_WAITING": "支払い待ち",
+      "PAYMENT_WAITING_MSG": "お支払いはまだ完了していません。購入を完了するための手順を電子メールで送信しました。",
+
       "PAYMENT_VIA_ALI_PAY": "Alipayによる支払い",
       "ALI_PAY_REDIRECT_MESSAGE": "支払いを完了するには、Alipay にリダイレクトされます。",
       "CONTINUE_TO_ALI_PAY": "アリペイに進む",

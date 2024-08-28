@@ -3,7 +3,11 @@ import { useContext } from "react";
 import { KomojuProvider } from "@context/KomojuProvider";
 import { KomojuContext } from "@context/state";
 
-import { LanguageTypes, PaymentType } from "@util/types";
+import {
+  LanguageTypes,
+  PaymentType,
+  SessionShowResponseType,
+} from "@util/types";
 
 /**
  * KomojuSDK provides context utilities for the Komoju payment system.
@@ -33,4 +37,8 @@ export {
    * Supported languages to parse for language prop.
    */
   LanguageTypes,
+  /**
+   * Response payload for onComplete and onDismiss callbacks.
+   */
+  SessionShowResponseType,
 };
