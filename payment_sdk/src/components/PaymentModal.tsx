@@ -43,7 +43,7 @@ const PaymentModal = ({
   setModalVisible,
   onDismiss,
 }: PaymentModalProps) => {
-  const { paymentState } = useContext(StateContext);
+  const { paymentState, paymentType } = useContext(StateContext);
   const dispatch = useContext(DispatchContext);
 
   const theme = useCurrentTheme();
@@ -144,6 +144,7 @@ const PaymentModal = ({
             status={paymentState}
             onPress={ctaOnPress}
             onPressLabel={getCtaText()}
+            paymentType={paymentType}
           />
         ) : (
           <SheetContent />

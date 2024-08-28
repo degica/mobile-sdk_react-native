@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from "react";
 
 import { Image, StyleSheet, View, ImageSourcePropType } from "react-native";
 
-import { ResponseScreenStatuses, ThemeSchemeType } from "@util/types";
+import { PaymentType, ResponseScreenStatuses, ThemeSchemeType } from "@util/types";
 
 import { resizeFonts, responsiveScale } from "@theme/scalling";
 import { useCurrentTheme } from "@theme/useCurrentTheme";
@@ -50,17 +50,25 @@ type Props = {
   message?: string;
   onPressLabel: string;
   onPress: () => void;
+  paymentType: PaymentType
 };
 
-const ResponseScreen = ({ status, message, onPress, onPressLabel }: Props) => {
+const ResponseScreen = ({ status, message, onPress, onPressLabel, paymentType }: Props) => {
   const theme = useCurrentTheme();
   const styles = getStyles(theme);
 
   const statusConfig = statusConfigs[status];
 
   const renderMessageContent = useMemo(() => {
-    const msg = message || statusConfig?.defaultMessage;
-
+    let msg: string = '';
+    switch (paymentType) {
+      case PaymentType.CREDIT:
+        msg = (message || statusConfig?.defaultMessage) as string;
+        break;
+      default:
+        msg = `${message || statusConfig?.defaultMessage + "_OTHERS"}`;
+        break;
+    }
     return (
       <View style={styles.container}>
         <KomojuText style={styles.title}>{statusConfig?.title}</KomojuText>
