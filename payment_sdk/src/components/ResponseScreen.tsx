@@ -60,14 +60,16 @@ const ResponseScreen = ({ status, message, onPress, onPressLabel, paymentType }:
   const statusConfig = statusConfigs[status];
 
   const renderMessageContent = useMemo(() => {
-    let msg: string = '';
-    switch (paymentType) {
-      case PaymentType.CREDIT:
-        msg = (message || statusConfig?.defaultMessage) as string;
-        break;
-      default:
-        msg = `${message || statusConfig?.defaultMessage + "_OTHERS"}`;
-        break;
+    let msg: string = (message || statusConfig?.defaultMessage) as string;
+    if (status === ResponseScreenStatuses.FAILED) {
+      switch (paymentType) {
+        case PaymentType.CREDIT:
+          msg = (message || statusConfig?.defaultMessage) as string;
+          break;
+        default:
+          msg = `${message || statusConfig?.defaultMessage + "_OTHERS"}`;
+          break;
+      }
     }
     return (
       <View style={styles.container}>
