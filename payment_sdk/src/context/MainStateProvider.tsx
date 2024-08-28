@@ -321,7 +321,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
       if (response?.status === PaymentStatuses.PENDING) {
         openURL(response.redirect_url);
       } else if (response?.status === PaymentStatuses.SUCCESS) {
-        if (response?.payment?.status === PaymentStatuses.SUCCESS) {
+        if (response?.payment?.status === TokenResponseStatuses.CAPTURED) {
           onPaymentSuccess();
         } else if (response?.payment?.payment_details?.instructions_url) {
           openURL(response?.payment?.payment_details?.instructions_url);
