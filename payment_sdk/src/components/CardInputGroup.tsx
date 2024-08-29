@@ -131,79 +131,114 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
   //   []
   // );
 
+  const RenderCardError = () => {
+    if (inputErrors.number)
+      return (
+        <KomojuText style={styles.errorText}>CARD_NUMBER_ERROR</KomojuText>
+      );
+    if (inputErrors.expiry)
+      return (
+        <KomojuText style={styles.errorText}>EXPIRY_DATE_ERROR</KomojuText>
+      );
+    if (inputErrors.cvv)
+      return <KomojuText style={styles.errorText}>CVV_ERROR</KomojuText>;
+
+    return null;
+  };
+
   return (
-    <View style={styles.parentContainer}>
-      <View style={styles.titleScanRow}>
-        <KomojuText style={styles.label}>CARD_NUMBER</KomojuText>
-        {/* <ScanCardButton onPress={toggleCardScanner} /> */}
-      </View>
-      <View style={styles.container}>
-        <View style={styles.cardNumberRow}>
-          <Input
-            value={cardNumber ?? ""}
-            testID="cardNumberInput"
-            keyboardType="number-pad"
-            placeholder="1234 1234 1234 1234"
-            onChangeText={(text: string) => {
-              resetError("number");
-              if (isCardNumberValid(text)) {
-                const derivedText = formatCreditCardNumber(text);
-                dispatch({
-                  type: Actions.SET_CARD_NUMBER,
-                  payload: derivedText,
-                });
-                // Determine card type and set it
-                const type = determineCardType(text);
-                setCardType(type);
-              }
-            }}
-            inputStyle={styles.numberInputStyle}
-            error={inputErrors.number}
-          />
-          <View style={styles.cardContainer}>{cardImage()}</View>
+    <>
+      <View style={styles.parentContainer}>
+        <View style={styles.titleScanRow}>
+          <KomojuText style={styles.label}>CARD_NUMBER</KomojuText>
+          {/* <ScanCardButton onPress={toggleCardScanner} /> */}
         </View>
-        <View style={styles.splitRow}>
-          <View style={styles.itemRow}>
+        <View style={styles.container}>
+          <View
+            style={[
+              styles.cardNumberRow,
+              inputErrors.number && styles.errorContainer,
+            ]}
+          >
             <Input
-              value={cardExpiredDate as string}
+              value={cardNumber ?? ""}
+              testID="cardNumberInput"
               keyboardType="number-pad"
-              testID="cardExpiryInput"
-              placeholder="MM / YY"
+              placeholder="1234 1234 1234 1234"
               onChangeText={(text: string) => {
-                resetError("expiry");
-                if (validateCardExpiry(text)) {
+                resetError("number");
+                if (isCardNumberValid(text)) {
+                  const derivedText = formatCreditCardNumber(text);
                   dispatch({
-                    type: Actions.SET_CARD_EXPIRED_DATE,
-                    payload: formatExpiry(text),
+                    type: Actions.SET_CARD_NUMBER,
+                    payload: derivedText,
                   });
+                  // Determine card type and set it
+                  const type = determineCardType(text);
+                  setCardType(type);
                 }
               }}
-              inputStyle={styles.expiryInputStyle}
-              error={inputErrors.expiry}
+              inputStyle={styles.numberInputStyle}
+              error={inputErrors.number}
             />
+            <View style={styles.cardContainer}>{cardImage()}</View>
           </View>
-          <View style={styles.itemRow}>
-            <Input
-              value={cardCVV as string}
-              testID="cardCVVInput"
-              keyboardType="number-pad"
-              placeholder="CVV"
-              onChangeText={(text: string) => {
-                resetError("cvv");
+          <View style={styles.splitRow}>
+            <View
+              style={[
+                styles.itemRow,
+                inputErrors.expiry && styles.errorContainer,
+              ]}
+            >
+              <Input
+                value={cardExpiredDate as string}
+                keyboardType="number-pad"
+                testID="cardExpiryInput"
+                placeholder="MM / YY"
+                onChangeText={(text: string) => {
+                  resetError("expiry");
+                  if (validateCardExpiry(text)) {
+                    dispatch({
+                      type: Actions.SET_CARD_EXPIRED_DATE,
+                      payload: formatExpiry(text),
+                    });
+                  }
+                }}
+                inputStyle={styles.expiryInputStyle}
+                error={inputErrors.expiry}
+              />
+            </View>
+            <View
+              style={[styles.itemRow, inputErrors.cvv && styles.errorContainer]}
+            >
+              <Input
+                value={cardCVV as string}
+                testID="cardCVVInput"
+                keyboardType="number-pad"
+                placeholder="CVV"
+                onChangeText={(text: string) => {
+                  resetError("cvv");
 
-                if (text?.length < 11)
-                  dispatch({ type: Actions.SET_CARD_CVV, payload: text });
-              }}
-              inputStyle={styles.cvvInputStyle}
-              error={inputErrors.cvv}
-            />
-            <View style={styles.cardContainer}>
-              <Image source={CVC} style={styles.cardIcon} />
+                  if (text?.length < 11)
+                    dispatch({ type: Actions.SET_CARD_CVV, payload: text });
+                }}
+                inputStyle={[
+                  styles.cvvInputStyle,
+                  inputErrors.cvv &&
+                    !inputErrors.expiry &&
+                    styles.cvvInputErrorStyle,
+                ]}
+                error={inputErrors.cvv}
+              />
+              <View style={styles.cardContainer}>
+                <Image source={CVC} style={styles.cardIcon} />
+              </View>
             </View>
           </View>
         </View>
       </View>
-    </View>
+      <RenderCardError />
+    </>
   );
 };
 
@@ -232,6 +267,9 @@ const getStyles = (theme: ThemeSchemeType) => {
       marginBottom: -responsiveScale(1),
       height: responsiveScale(60),
     },
+    errorContainer: {
+      zIndex: 5,
+    },
     splitRow: {
       flex: 1,
       flexDirection: "row",
@@ -253,7 +291,10 @@ const getStyles = (theme: ThemeSchemeType) => {
       borderTopLeftRadius: 0,
       borderTopRightRadius: 0,
       borderBottomLeftRadius: 0,
-      marginLeft: -responsiveScale(1),
+      borderLeftWidth: 0,
+    },
+    cvvInputErrorStyle: {
+      borderLeftWidth: 1,
     },
     titleScanRow: {
       flexDirection: "row",
@@ -283,6 +324,13 @@ const getStyles = (theme: ThemeSchemeType) => {
       width: responsiveScale(25),
       height: responsiveScale(17),
       marginRight: responsiveScale(2),
+      resizeMode: "contain",
+    },
+    errorText: {
+      color: theme.ERROR,
+      fontSize: resizeFonts(14),
+      marginLeft: responsiveScale(16),
+      top: -responsiveScale(20),
     },
   });
 };

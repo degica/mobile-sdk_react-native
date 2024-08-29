@@ -1,46 +1,44 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 import {KomojuSDK, LanguageTypes} from '@komoju/komoju-react-native';
 
 import PaymentScreen from './PaymentScreen';
-import SettingsModal, {SettingsIcon} from './components/settingsComponent';
 import LanguageSelectComponent from './components/languageSelectComponet';
+import getPublishableKey from './services/keyService';
+import Loader from './components/Loader';
 
 /**
- * You can get your public key and secret keys from https://komoju.com/en/sign_in
+ * You can get your Publishable key and Secret keys from https://komoju.com/en/sign_in
  * Your publishable key is required in order for Fields to access the KOMOJU API.
  * Your secret key is required in order to create a session. This should be done in your backend on a real world application
  */
-const PUBLIC_KEY = 'pk_test_bx0nb2z4jcczon39pm4m68l7';
-const SECRET_KEY = 'sk_test_61qdasmogfjxtaco2zocdaaw';
 
 function App(): React.JSX.Element {
-  const [komojuKeys, setKomojuKeys] = useState({
-    PUBLIC_KEY: PUBLIC_KEY,
-    SECRET_KEY: SECRET_KEY,
-  });
-  const [modalVisible, setModalVisible] = useState(false);
+  const [publishableKey, setPublishableKey] = useState('');
+  const [loading, setLoading] = useState(true);
   const [language, setLanguage] = useState(LanguageTypes.ENGLISH);
+
+  useEffect(() => {
+    const keyService = async () => {
+      const key = await getPublishableKey();
+      setPublishableKey(key);
+      setLoading(false);
+    };
+
+    keyService();
+  }, []);
 
   return (
     <SafeAreaView style={styles.mainContainer}>
-      <SettingsIcon setModalVisible={setModalVisible} />
       <LanguageSelectComponent language={language} setLanguage={setLanguage} />
 
       <KomojuSDK.KomojuProvider
-        publicKey={komojuKeys.PUBLIC_KEY}
+        publishableKey={publishableKey}
         language={language}>
-        <PaymentScreen secretKey={komojuKeys.SECRET_KEY} />
+        <PaymentScreen language={language} setLoading={setLoading} />
       </KomojuSDK.KomojuProvider>
 
-      {modalVisible ? (
-        <SettingsModal
-          komojuKeys={komojuKeys}
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-          setKomojuKeys={setKomojuKeys}
-        />
-      ) : null}
+      {loading ? <Loader /> : null}
     </SafeAreaView>
   );
 }

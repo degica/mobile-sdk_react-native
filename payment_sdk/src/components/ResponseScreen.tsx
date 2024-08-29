@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo } from "react";
 
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View, ImageSourcePropType } from "react-native";
 
-import { ResponseScreenStatuses, ThemeSchemeType } from "@util/types";
+import { PaymentType, ResponseScreenStatuses, ThemeSchemeType } from "@util/types";
 
 import { resizeFonts, responsiveScale } from "@theme/scalling";
 import { useCurrentTheme } from "@theme/useCurrentTheme";
@@ -10,43 +10,78 @@ import { useCurrentTheme } from "@theme/useCurrentTheme";
 import KomojuText from "./KomojuText";
 import SubmitButton from "./SubmitButton";
 
+type StatusConfig = {
+  title: string;
+  defaultMessage: string;
+  image: ImageSourcePropType;
+};
+
+// Configuration object for all statuses
+const statusConfigs: Partial<Record<ResponseScreenStatuses, StatusConfig>> = {
+  [ResponseScreenStatuses.SUCCESS]: {
+    title: "PAYMENT_SUCCESS",
+    defaultMessage: "ORDER_THANK_YOU_NOTE",
+    image: require("../assets/images/success.png"),
+  },
+  [ResponseScreenStatuses.FAILED]: {
+    title: "PAYMENT_FAILED",
+    defaultMessage: "PAYMENT_RE_TRY_MSG",
+    image: require("../assets/images/error.png"),
+  },
+  [ResponseScreenStatuses.CANCELLED]: {
+    title: "PAYMENT_CANCELLED",
+    defaultMessage: "PAYMENT_CANCELLED_MSG",
+    image: require("../assets/images/error.png"),
+  },
+  [ResponseScreenStatuses.COMPLETE]: {
+    title: "PAYMENT_WAITING",
+    defaultMessage: "PAYMENT_WAITING_MSG",
+    image: require("../assets/images/awaitingPayment.png"),
+  },
+  [ResponseScreenStatuses.EXPIRED]: {
+    title: "SESSION_EXPIRED",
+    defaultMessage: "SESSION_EXPIRED_MSG",
+    image: require("../assets/images/error.png"),
+  },
+};
+
 type Props = {
-  status: ResponseScreenStatuses.SUCCESS | ResponseScreenStatuses.FAILED;
+  status: ResponseScreenStatuses;
   message?: string;
   onPressLabel: string;
   onPress: () => void;
+  paymentType: PaymentType
 };
 
-const ResponseScreen = ({ status, message, onPress, onPressLabel }: Props) => {
+const ResponseScreen = ({ status, message, onPress, onPressLabel, paymentType }: Props) => {
   const theme = useCurrentTheme();
   const styles = getStyles(theme);
 
-  const renderMessageContent = useMemo(() => {
-    const title =
-      status === ResponseScreenStatuses.SUCCESS
-        ? "PAYMENT_SUCCESS"
-        : "PAYMENT_FAILED";
-    const defaultMessage =
-      status === ResponseScreenStatuses.SUCCESS
-        ? "ORDER_THANK_YOU_NOTE"
-        : "PAYMENT_RE_TRY_MSG";
-    const msg = message || defaultMessage;
+  const statusConfig = statusConfigs[status];
 
+  const renderMessageContent = useMemo(() => {
+    let msg: string = (message || statusConfig?.defaultMessage) as string;
+    if (status === ResponseScreenStatuses.FAILED) {
+      switch (paymentType) {
+        case PaymentType.CREDIT:
+          msg = (message || statusConfig?.defaultMessage) as string;
+          break;
+        default:
+          msg = `${message || statusConfig?.defaultMessage + "_OTHERS"}`;
+          break;
+      }
+    }
     return (
       <View style={styles.container}>
-        <KomojuText style={styles.title}>{title}</KomojuText>
+        <KomojuText style={styles.title}>{statusConfig?.title}</KomojuText>
         <KomojuText style={styles.message}>{msg}</KomojuText>
       </View>
     );
-  }, [status, message]);
+  }, [status, message, statusConfig]);
 
   const renderIcon = useMemo(() => {
-    const source =
-      status === ResponseScreenStatuses.SUCCESS
-        ? require("../assets/images/success.png")
-        : require("../assets/images/error.png");
-    return <Image source={source} style={styles.icon} />;
-  }, [status]);
+    return <Image source={statusConfig?.image} style={styles.icon} />;
+  }, [statusConfig]);
 
   const memoizedOnPress = useCallback(onPress, [onPress]);
 
@@ -91,6 +126,7 @@ const getStyles = (theme: ThemeSchemeType) => {
       marginBottom: responsiveScale(16),
       textAlign: "center",
       paddingHorizontal: responsiveScale(32),
+      color: theme.TEXT_COLOR,
     },
     bottomButton: {
       position: "absolute",

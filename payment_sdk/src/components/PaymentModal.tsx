@@ -43,7 +43,7 @@ const PaymentModal = ({
   setModalVisible,
   onDismiss,
 }: PaymentModalProps) => {
-  const { paymentState } = useContext(StateContext);
+  const { paymentState, paymentType } = useContext(StateContext);
   const dispatch = useContext(DispatchContext);
 
   const theme = useCurrentTheme();
@@ -79,6 +79,9 @@ const PaymentModal = ({
   const getCtaText = () => {
     switch (paymentState) {
       case ResponseScreenStatuses.SUCCESS:
+      case ResponseScreenStatuses.COMPLETE:
+      case ResponseScreenStatuses.CANCELLED:
+      case ResponseScreenStatuses.EXPIRED:
         return paymentSuccessCtaText;
       case ResponseScreenStatuses.FAILED:
         return paymentFailedCtaText;
@@ -90,6 +93,10 @@ const PaymentModal = ({
   const ctaOnPress = () => {
     switch (paymentState) {
       case ResponseScreenStatuses.SUCCESS:
+      case ResponseScreenStatuses.COMPLETE:
+      case ResponseScreenStatuses.CANCELLED:
+        return closeSheet(false);
+      case ResponseScreenStatuses.EXPIRED:
         return closeSheet(false);
       case ResponseScreenStatuses.FAILED:
         return dispatch({
@@ -105,9 +112,9 @@ const PaymentModal = ({
     closeSheet(
       !(
         paymentState === ResponseScreenStatuses.SUCCESS ||
-        // TODO: Fix this type error
-        // @ts-expect-error - Property 'COMPLETE' does not exist on type 'ResponseScreenStatuses'.
-        paymentState === ResponseScreenStatuses.COMPLETE
+        paymentState === ResponseScreenStatuses.CANCELLED ||
+        paymentState === ResponseScreenStatuses.COMPLETE ||
+        paymentState === ResponseScreenStatuses.EXPIRED
       )
     );
   };
@@ -123,26 +130,25 @@ const PaymentModal = ({
 
       <View style={styles.bottomSheetContainer}>
         <View style={styles.line}>
-          <KomojuText style={styles.headerLabel}>PAYMENT_OPTIONS</KomojuText>
+          <KomojuText style={styles.headerLabel}>
+            {!paymentState ? "PAYMENT_OPTIONS" : ""}
+          </KomojuText>
           <TouchableOpacity style={styles.crossBtn} onPress={onCloseModal}>
             <Image
               source={mode === ThemeModes.light ? closeIcon : closeDMIcon}
             />
           </TouchableOpacity>
         </View>
-        {
-          // TODO: Fix this type error
-          // @ts-expect-error - Property 'COMPLETE' does not exist on type 'ResponseScreenStatuses'.
-          paymentState && paymentState !== ResponseScreenStatuses.COMPLETE ? (
-            <ResponseScreen
-              status={paymentState}
-              onPress={ctaOnPress}
-              onPressLabel={getCtaText()}
-            />
-          ) : (
-            <SheetContent />
-          )
-        }
+        {paymentState ? (
+          <ResponseScreen
+            status={paymentState}
+            onPress={ctaOnPress}
+            onPressLabel={getCtaText()}
+            paymentType={paymentType}
+          />
+        ) : (
+          <SheetContent />
+        )}
       </View>
     </Modal>
   );

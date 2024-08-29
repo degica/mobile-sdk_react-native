@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
 
 const Loader = () => {
   return (
@@ -15,8 +15,7 @@ export default Loader;
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

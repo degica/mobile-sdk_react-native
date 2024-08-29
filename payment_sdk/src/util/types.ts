@@ -1,8 +1,8 @@
 import { Dispatch, ReactNode, SetStateAction } from "react";
 
 export type InitPrams = {
-  publicKey: string;
-  payment_methods?: Array<PaymentType>;
+  publishableKey: string;
+  paymentMethods?: Array<PaymentType>;
   language?: LanguageTypes;
   useBottomSheet?: boolean;
 };
@@ -74,6 +74,8 @@ export enum PaymentStatuses {
   ERROR = "error",
   SUCCESS = "completed",
   PENDING = "pending",
+  CANCELLED = "cancelled",
+  EXPIRED = "expired",
 }
 
 export enum TokenResponseStatuses {
@@ -90,6 +92,10 @@ export enum ResponseScreenStatuses {
   FAILED = "failed",
   /** For displaying payment instruction screens and disabling the cancel payment popup */
   COMPLETE = "complete",
+  /** For displaying payment instruction screens for cancelled by the user */
+  CANCELLED = "cancelled",
+  /** For displaying payment instruction screens for expired user session */
+  EXPIRED = "expired",
 }
 
 export enum CurrencySign {
@@ -103,7 +109,7 @@ export enum CurrencyTypes {
 }
 
 export type payForSessionProps = {
-  publicKey: string;
+  publishableKey: string;
   sessionId: string;
   paymentType: PaymentType;
   paymentDetails?: CardDetailsType &
@@ -151,6 +157,7 @@ export type SessionPayResponseType = {
   status: string;
   payment: {
     payment_details: { instructions_url: string };
+    status?: string;
   };
 };
 
@@ -180,6 +187,7 @@ export type SessionShowResponseType = {
     payment_details: {
       instructions_url?: string;
     };
+    status?: string;
   };
 };
 
@@ -238,7 +246,10 @@ export type State = CardDetailsType &
      */
     paymentState:
       | ResponseScreenStatuses.SUCCESS
+      | ResponseScreenStatuses.COMPLETE
       | ResponseScreenStatuses.FAILED
+      | ResponseScreenStatuses.CANCELLED
+      | ResponseScreenStatuses.EXPIRED
       | "";
     /**
      * States of the Bank transfer and Pay Easy fields.

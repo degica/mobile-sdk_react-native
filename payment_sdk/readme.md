@@ -33,7 +33,7 @@ import { KomojuSDK } from "@komoju/komoju-react-native";
 
 function App() {
   return (
-    <KomojuSDK.KomojuProvider publicKey={PUBLIC_KEY}>
+    <KomojuSDK.KomojuProvider publishableKey={PUBLISHABLE_KEY}>
       <PaymentScreen />
     </KomojuSDK.KomojuProvider>
   );
@@ -68,14 +68,17 @@ You can [visit our docs](https://doc.komoju.com/reference/createsession) to see 
 
 Many payment method types require a return URL, so if you fail to provide it, we can’t present those payment methods to your user, even if you’ve enabled them.
 When a customer exits your app, for example to authenticate in Safari or their banking app, provide a way for them to automatically return to your app afterward.
-#### 1. Use `return_url` parameter when creating a session 
+
+#### 1. Use `return_url` parameter when creating a session
+
 #### 2. [Configure the custom URL scheme](https://reactnative.dev/docs/linking) in your AndroidManifest.xml and Info.plist files
+
 > Note:
 > If you’re using Expo, [set your scheme](https://docs.expo.dev/guides/linking/#in-a-standalone-app) in the app.json file.
 
 To initialize Komoju in your React Native app, use the `KomojuSDK.KomojuProvider` component in the root component of your application.
 
-`KomojuProvider` can accept `publicKey`, `payment_methods` and `language` as props. Only `publicKey` is required.
+`KomojuProvider` can accept `publishableKey`, `paymentMethods` and `language` as props. Only `publishableKey` is required.
 
 ```tsx
 import {
@@ -85,21 +88,21 @@ import {
 } from "@komoju/komoju-react-native";
 
 function App() {
-  const [publicKey, setPublicKey] = useState("");
+  const [publishableKey, setpublishableKey] = useState("");
 
-  const fetchPublicKey = async () => {
+  const fetchpublishableKey = async () => {
     const key = await fetchKey(); // fetch key from your server here
-    setPublicKey(key);
+    setpublishableKey(key);
   };
 
   useEffect(() => {
-    fetchPublicKey();
+    fetchpublishableKey();
   }, []);
 
   return (
     <KomojuSDK.KomojuProvider
-      publicKey={publicKey}
-      payment_methods={[PaymentTypes.KONBINI]} // explicitly set the payment method(s) for purchase
+      publishableKey={publishableKey}
+      paymentMethods={[PaymentTypes.KONBINI]} // explicitly set the payment method(s) for purchase
       language={LanguageTypes.JAPANESE} // explicitly set the language, if not set language will be picked from your session Id
     >
       // Your app code here
@@ -110,8 +113,8 @@ function App() {
 
 ### Properties
 
-| property            | type                     | description                                                                                                   |
-| ------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------- |
-| **publicKey**       | `string`                 | Your publishable key from the KOMOJU [merchant settings page](https://komoju.com/sign_in/) (this is mandtory) |
-| **payment_methods** | `Array <PaymentTypes>`   | explicitly set the payment method(s) for purchase. (optional)                                                 |
-| **language**        | `string (LanguageTypes)` | explicitly set the language, if not set language will be picked from your session Id (optional)               |
+| property           | type                     | description                                                                                                   |
+| ------------------ | ------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| **publishableKey** | `string`                 | Your publishable key from the KOMOJU [merchant settings page](https://komoju.com/sign_in/) (this is mandtory) |
+| **paymentMethods** | `Array <PaymentTypes>`   | explicitly set the payment method(s) for purchase. (optional)                                                 |
+| **language**       | `string (LanguageTypes)` | explicitly set the language, if not set language will be picked from your session Id (optional)               |

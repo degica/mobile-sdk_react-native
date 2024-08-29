@@ -8,6 +8,7 @@ import {
   ViewStyle,
   KeyboardTypeOptions,
   TextInputProps,
+  StyleProp,
 } from "react-native";
 
 import { useTranslation } from "react-i18next";
@@ -22,9 +23,10 @@ interface InputProps extends TextInputProps {
   onChangeText: (text: string) => void;
   label?: string;
   placeholder?: string;
-  inputStyle?: ViewStyle;
+  inputStyle?: StyleProp<ViewStyle>;
   testID?: string;
   error?: boolean;
+  errorText?: string;
   keyboardType?: KeyboardTypeOptions;
 }
 
@@ -36,6 +38,7 @@ const Input: React.FC<InputProps> = ({
   placeholder,
   testID,
   error = false,
+  errorText = "",
   keyboardType,
   ...rest
 }: InputProps) => {
@@ -61,6 +64,9 @@ const Input: React.FC<InputProps> = ({
         testID={testID}
         {...rest}
       />
+      {error && errorText && (
+        <Text style={styles.errorMsg}>{t(errorText)}</Text>
+      )}
     </View>
   );
 };
@@ -72,6 +78,11 @@ const getStyles = (theme: ThemeSchemeType) => {
       marginBottom: responsiveScale(8),
       color: theme.TEXT_COLOR,
     },
+    errorMsg: {
+      fontSize: resizeFonts(14),
+      color: theme.ERROR,
+      marginTop: responsiveScale(5),
+    },
     input: {
       height: "100%",
       paddingLeft: responsiveScale(16),
@@ -81,12 +92,15 @@ const getStyles = (theme: ThemeSchemeType) => {
       borderRadius: responsiveScale(8),
       backgroundColor: theme.INPUT_BACKGROUND,
       color: theme.INPUT_TEXT,
+      zIndex: 1,
     },
     withErrorBorder: {
       borderColor: theme.ERROR,
+      color: theme.ERROR,
+      zIndex: 2,
     },
     withBorder: {},
   });
-}
+};
 
 export default Input;

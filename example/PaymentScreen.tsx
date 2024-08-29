@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {Dispatch, SetStateAction, useState} from 'react';
 import {
   useColorScheme,
   View,
@@ -9,7 +9,7 @@ import {
   Pressable,
   Alert,
 } from 'react-native';
-import {KomojuSDK} from '@komoju/komoju-react-native';
+import {KomojuSDK, SessionShowResponseType} from '@komoju/komoju-react-native';
 import createSession from './services/sessionService';
 
 export enum CurrencyTypes {
@@ -17,7 +17,13 @@ export enum CurrencyTypes {
   USD = 'USD',
 }
 
-const PaymentScreen = ({secretKey}: {secretKey: string}) => {
+const PaymentScreen = ({
+  language,
+  setLoading,
+}: {
+  language: string;
+  setLoading: Dispatch<SetStateAction<boolean>>;
+}) => {
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState(CurrencyTypes.JPY);
   const colorScheme = useColorScheme(); // Detects the color scheme of the device
@@ -26,13 +32,15 @@ const PaymentScreen = ({secretKey}: {secretKey: string}) => {
   const {createPayment} = KomojuSDK.useKomoju();
 
   const handleSessionPay = async () => {
+    setLoading(true);
     if (!amount) {
       Alert.alert('Error', 'Please enter an amount to checkout');
       return;
     }
 
     // fetch a session Id to initiate payment
-    const sessionId = await createSession({amount, currency, secretKey});
+    const sessionId = await createSession({amount, currency, language});
+    setLoading(false);
 
     // invoke createPayment method with sessionId as parameters to open the payment portal
     createPayment({
@@ -43,7 +51,7 @@ const PaymentScreen = ({secretKey}: {secretKey: string}) => {
   };
 
   // when the payment is complete pass a callback to get the final results of response
-  const onPaymentComplete = (response: any) => {
+  const onPaymentComplete = (response: SessionShowResponseType) => {
     console.log(`Transaction Status: ${response?.status}`);
     setAmount('');
   };
