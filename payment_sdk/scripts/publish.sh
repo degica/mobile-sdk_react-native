@@ -139,12 +139,12 @@ echo "Publishing release to npm"
 npm publish --access=public
 
 echo "Pushing git commit and tag"
-git add package.json ../example/package.json
-git commit -m "Update package.json and example package.json to version $NEW_VERSION"
+# git add package.json ../example/package.json
+# git commit -m "Update package.json and example package.json to version $NEW_VERSION"
 git push --follow-tags
 
 echo "Updating the main branch"
-git push origin main
+# git push origin main
 
 echo "Publish successful!"
 echo ""
