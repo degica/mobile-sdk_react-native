@@ -15,7 +15,7 @@ EOF
 }
 
 percentEncodeString() {
-  node -p "encodeURIComponent('$1')"
+  jq -rn --arg x "$1" '$x|@uri'
 }
 
 create_github_release() {
@@ -128,22 +128,15 @@ npm run build
 echo "Bumping package.json $RELEASE_TYPE version and tagging commit"
 npm version $RELEASE_TYPE
 
-# Extract the new version from package.json
-NEW_VERSION=$(node -p "require('./package.json').version")
-
-# Update the version in ../example/package.json
-echo "Updating version in ../example/package.json to $NEW_VERSION"
-node -p "const fs = require('fs'); const path = '../example/package.json'; const pkg = JSON.parse(fs.readFileSync(path, 'utf8')); pkg.version = '$NEW_VERSION'; fs.writeFileSync(path, JSON.stringify(pkg, null, 2))"
-
 echo "Publishing release to npm"
 npm publish --access=public
 
 echo "Pushing git commit and tag"
-# git add package.json ../example/package.json
-# git commit -m "Update package.json and example package.json to version $NEW_VERSION"
 git push --follow-tags
 
-echo "Updating the main branch"
+# echo "Pushing git changes to main brach"
+# git add package.json
+# git commit -m  "package.json"
 # git push origin main
 
 echo "Publish successful!"
