@@ -33,7 +33,7 @@ import { KomojuSDK } from "@komoju/komoju-react-native";
 
 function App() {
   return (
-    <KomojuSDK.KomojuProvider publishable={PUBLISHABLE_KEY}>
+    <KomojuSDK.KomojuProvider publishableKey={PUBLISHABLE_KEY}>
       <PaymentScreen />
     </KomojuSDK.KomojuProvider>
   );
