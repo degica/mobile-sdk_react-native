@@ -15,5 +15,6 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     alignItems: "center",
     justifyContent: "center",
+    zIndex: 6,
   },
 });

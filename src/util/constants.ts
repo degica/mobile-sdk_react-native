@@ -7,13 +7,14 @@ export const API_HEADER = (publishableKey: string) => ({
   accept: "application/json",
   "content-type": "application/json",
   "KOMOJU-VIA": "mobile_react",
+  "X-KOMOJU-API-VERSION": "2024-07-15",
   Authorization: `Basic ${btoa(publishableKey + ":")}`,
 });
 
 export const paymentSuccessCtaText = "BACK_TO_STORE";
 export const paymentFailedCtaText = "UPDATE_PAYMENT_METHOD";
 
-export const emailRegex = /^[a-zA-Z0–9._-]+@[a-zA-Z0–9.-]+\.[a-zA-Z]{2,4}$/;
+export const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 export const cardTypeRegex = {
   amex: /^3[47]\d{0,13}/,
   diner: /^3(?:0([0-5]|9)|[689]\d?)\d{0,11}/,

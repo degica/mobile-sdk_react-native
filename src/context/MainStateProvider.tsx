@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 
-import { Alert, Linking } from 'react-native';
+import { Alert, AppState, AppStateStatus, Linking } from 'react-native';
 
 import i18next from 'i18next';
 
@@ -26,6 +26,7 @@ import {
   PaymentStatuses,
   ResponseScreenStatuses,
   sessionPayProps,
+  TokenResponseStatuses
 } from '../util/types';
 import { validateSessionResponse } from '../util/validator';
 
@@ -51,10 +52,64 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
       handleDeepLinkStateChange
     );
 
+    // Add event listener for deep links
+    const windowChangeListener = AppState.addEventListener(
+      "change",
+      handleBackgroundStateChange
+    );
+
     return () => {
       subscription.remove();
+      windowChangeListener.remove();
     };
   }, [props]);
+
+  // This callback method is used to check the background state
+  const handleBackgroundStateChange = async (status: AppStateStatus) => {
+    startLoading();
+
+    if (status === "active") {
+      // if this is a session flow, check until session response changes from 'pending' to 'completed' or 'error'
+      const sessionShowPayload = {
+        publishableKey: props.publishableKey,
+        sessionId: sessionIdRef.current,
+      };
+
+      // fetch session status to check if the payment is completed
+      const sessionResponse = await sessionShow(sessionShowPayload);
+
+      // if payment success showing success screen or if failed showing error screen
+      if (sessionResponse?.status === PaymentStatuses.SUCCESS) {
+        if (
+          sessionResponse?.payment?.status === TokenResponseStatuses.CAPTURED
+        ) {
+          onPaymentSuccess();
+        } else {
+          onPaymentAwaiting();
+        } // calling user passed onComplete method with session response data
+        onCompleteCallback.current &&
+          // TODO: Fix this type error
+          // @ts-expect-error - Argument of type 'PaymentSessionResponse' is not assignable to parameter of type 'string'.
+          onCompleteCallback.current(sessionResponse);
+      } else if (
+        sessionResponse?.payment?.status === PaymentStatuses.CANCELLED
+      ) {
+        onPaymentCancelled();
+      } else if (sessionResponse?.expired) {
+        onSessionExpired();
+      } else if (
+        sessionResponse?.status === PaymentStatuses.ERROR ||
+        sessionResponse?.payment?.status === PaymentStatuses.ERROR ||
+        sessionResponse?.secure_token?.verification_status ===
+          TokenResponseStatuses.ERROR
+      ) {
+        onPaymentFailed();
+      }
+    }
+
+    // after all api calls are done stopping the loading indicator
+    stopLoading();
+  };
 
   const openPaymentSheet = () => {
     if (props?.useBottomSheet) {
@@ -71,12 +126,15 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
     setModalVisible(false);
   };
 
-  // when payment is success global state is rest and invoking the success screen
-  const onPaymentSuccess = () => {
+  const resetGlobalStates = () =>
     dispatch({
       type: Actions.RESET_STATES,
       payload: initialState,
     });
+
+  // when payment is success global state is rest and invoking the success screen
+  const onPaymentSuccess = () => {
+    resetGlobalStates();
     dispatch({
       type: Actions.SET_PAYMENT_STATE,
       payload: ResponseScreenStatuses.SUCCESS,
@@ -92,15 +150,28 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
 
   // when payment is cancelled by the user
   const onPaymentCancelled = () => {
-    dispatch({
-      type: Actions.RESET_STATES,
-      payload: initialState,
-    });
+    resetGlobalStates();
     dispatch({
       type: Actions.SET_PAYMENT_STATE,
       payload: ResponseScreenStatuses.CANCELLED,
     });
-  }
+  };
+
+  // when payment is completed but awaiting payment
+  const onPaymentAwaiting = () => {
+    resetGlobalStates();
+    dispatch({
+      type: Actions.SET_PAYMENT_STATE,
+      payload: ResponseScreenStatuses.COMPLETE,
+    });
+  };
+
+  // when payment is failed invoking the error screen
+  const onSessionExpired = () =>
+    dispatch({
+      type: Actions.SET_PAYMENT_STATE,
+      payload: ResponseScreenStatuses.EXPIRED,
+    });
 
   const onUserCancel = async () => {
     if (onDismissCallback.current) {
@@ -200,16 +271,22 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
     let sessionResponse = await sessionShow(sessionShowPayload);
 
     // Polling until session verification status changes
-    while (sessionResponse?.status === PaymentStatuses.PENDING && sessionResponse?.payment?.status !== PaymentStatuses.CANCELLED) {
+    while (
+      sessionResponse?.status === PaymentStatuses.PENDING &&
+      sessionResponse?.payment?.status !== PaymentStatuses.CANCELLED &&
+      sessionResponse?.secure_token?.verification_status !==
+        TokenResponseStatuses.ERROR
+    ) {
       sessionResponse = await sessionShow(sessionShowPayload);
     }
 
     // if payment success showing success screen or if failed showing error screen
     if (sessionResponse?.status === PaymentStatuses.SUCCESS) {
-      if (sessionResponse?.payment?.payment_details?.instructions_url) {
-        openURL(sessionResponse?.payment?.payment_details?.instructions_url);
+      if (sessionResponse?.payment?.status === TokenResponseStatuses.CAPTURED) {
+        onPaymentSuccess();
+      } else {
+        onPaymentAwaiting();
       }
-      onPaymentSuccess();
       // calling user passed onComplete method with session response data
       onCompleteCallback.current &&
         // TODO: Fix this type error
@@ -243,14 +320,13 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
 
       if (response?.status === PaymentStatuses.PENDING) {
         openURL(response.redirect_url);
-      } else if (
-        response?.status === PaymentStatuses.SUCCESS &&
-        response?.payment?.payment_details?.instructions_url
-      ) {
-        openURL(response?.payment?.payment_details?.instructions_url);
-        onPaymentSuccess();
       } else if (response?.status === PaymentStatuses.SUCCESS) {
-        onPaymentSuccess();
+        if (response?.payment?.status === TokenResponseStatuses.CAPTURED) {
+          onPaymentSuccess();
+        } else if (response?.payment?.payment_details?.instructions_url) {
+          openURL(response?.payment?.payment_details?.instructions_url);
+          onPaymentAwaiting();
+        }
       } else {
         onPaymentFailed();
       }
@@ -259,10 +335,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
 
   const createPayment = useCallback(
     ({ sessionId, onComplete, onDismiss }: CreatePaymentFuncType) => {
-      dispatch({
-        type: Actions.RESET_STATES,
-        payload: initialState,
-      });
+      resetGlobalStates();
 
       // setting client provided onComplete callback into a ref
       // TODO: Fix this type error

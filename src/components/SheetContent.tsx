@@ -102,6 +102,7 @@ const SheetContent = () => {
           </>
         }
         ListFooterComponentStyle={styles.footerContent}
+        keyboardShouldPersistTaps="handled"
       />
     </View>
   );

@@ -67,7 +67,7 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
   const translateYState = useRef(0);
   const contextState = useRef(0);
 
-  const { paymentState } = useContext(StateContext);
+  const { paymentState, paymentType } = useContext(StateContext);
   const dispatch = useContext(DispatchContext);
   const theme = useCurrentTheme();
   const styles = getStyles(theme);
@@ -168,11 +168,11 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
   const getCtaText = () => {
     switch (paymentState) {
       case ResponseScreenStatuses.SUCCESS:
+      case ResponseScreenStatuses.COMPLETE:
+      case ResponseScreenStatuses.CANCELLED:
         return paymentSuccessCtaText;
       case ResponseScreenStatuses.FAILED:
         return paymentFailedCtaText;
-      case ResponseScreenStatuses.CANCELLED:
-        return paymentSuccessCtaText;
       default:
         return "";
     }
@@ -181,14 +181,14 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
   const ctaOnPress = () => {
     switch (paymentState) {
       case ResponseScreenStatuses.SUCCESS:
+      case ResponseScreenStatuses.COMPLETE:
+      case ResponseScreenStatuses.CANCELLED:
         return closeSheet(false);
       case ResponseScreenStatuses.FAILED:
         return dispatch({
           type: Actions.SET_PAYMENT_STATE,
           payload: "",
         });
-      case ResponseScreenStatuses.CANCELLED:
-        return closeSheet(false);
       default:
         return "";
     }
@@ -218,8 +218,6 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
                 !(
                   paymentState === ResponseScreenStatuses.SUCCESS ||
                   paymentState === ResponseScreenStatuses.CANCELLED ||
-                  // TODO: Fix this type error
-                  // @ts-expect-error - Property 'COMPLETE' does not exist on type 'ResponseScreenStatuses'.
                   paymentState === ResponseScreenStatuses.COMPLETE
                 )
               )
@@ -230,18 +228,16 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
             />
           </TouchableOpacity>
         </RNAnimated.View>
-        {
-          // TODO: Fix this type error
-          paymentState ? (
-            <ResponseScreen
-              status={paymentState}
-              onPress={ctaOnPress}
-              onPressLabel={getCtaText()}
-            />
-          ) : (
-            <SheetContent />
-          )
-        }
+        {paymentState ? (
+          <ResponseScreen
+            status={paymentState}
+            onPress={ctaOnPress}
+            onPressLabel={getCtaText()}
+            paymentType={paymentType}
+          />
+        ) : (
+          <SheetContent />
+        )}
       </RNAnimated.View>
     </>
   );

@@ -9,7 +9,7 @@ import {
   Pressable,
   Alert,
 } from 'react-native';
-import { KomojuSDK } from '@komoju/komoju-react-native';
+import { KomojuSDK, SessionShowResponseType } from '@komoju/komoju-react-native';
 import createSession from '../services/sessionService';
 
 export enum CurrencyTypes {
@@ -51,7 +51,7 @@ const PaymentScreen = ({
   };
 
   // when the payment is complete pass a callback to get the final results of response
-  const onPaymentComplete = (response: any) => {
+  const onPaymentComplete = (response: SessionShowResponseType) => {
     console.log(`Transaction Status: ${response?.status}`);
     setAmount('');
   };

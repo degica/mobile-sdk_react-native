@@ -66,8 +66,7 @@ You can [visit our docs](https://doc.komoju.com/reference/createsession) to see 
 
 ### Setup a return URL.
 
-Many payment method types require a return URL, so if you fail to provide it, we can’t present those payment methods to your user, even if you’ve enabled them.
-When a customer exits your app, for example to authenticate in Safari or their banking app, provide a way for them to automatically return to your app afterward.
+Several payment methods require a `return_url`. If this is not provided, we won't be able to display these payment options to your users, even if they are enabled. When a customer exits your app, ensure there is a way for them to automatically return to your app afterward.
 
 #### 1. Use `return_url` parameter when creating a session
 
