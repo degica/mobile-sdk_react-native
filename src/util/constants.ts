@@ -4,11 +4,11 @@ export const noop = () => {};
 export const BASE_URL = "https://komoju.com";
 export const BASE_URL_API = `${BASE_URL}/api/v1`;
 export const API_HEADER = (publishableKey: string) => ({
-  accept: "application/json",
+  "accept": "application/json",
   "content-type": "application/json",
   "KOMOJU-VIA": "mobile_react",
   "X-KOMOJU-API-VERSION": "2024-07-15",
-  Authorization: `Basic ${btoa(publishableKey + ":")}`,
+  "Authorization": `Basic ${btoa(publishableKey + ":")}`,
 });
 
 export const paymentSuccessCtaText = "BACK_TO_STORE";

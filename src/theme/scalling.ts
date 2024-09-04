@@ -1,9 +1,9 @@
-import { Dimensions, PixelRatio, Platform } from 'react-native';
+import { Dimensions, PixelRatio, Platform } from "react-native";
 
 const figmaScreenWidth = 390;
 const figmaScreenHeight = 844;
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 const screenWidth = Math.min(width, height);
 const screenHeight = Math.max(width, height);
 
@@ -20,7 +20,7 @@ export const responsiveScale = (size: number): number => {
 };
 
 export const resizeFonts = (size: number): number => {
-  const fontScale = Platform.OS === 'ios' ? 1 : PixelRatio.getFontScale();
+  const fontScale = Platform.OS === "ios" ? 1 : PixelRatio.getFontScale();
   const spFontSize = size * fontScale;
   return spFontSize;
 };
