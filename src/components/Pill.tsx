@@ -1,18 +1,18 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode } from "react";
 
 import {
   StyleSheet,
   TouchableOpacity,
   Image,
   ImageSourcePropType,
-} from 'react-native';
+} from "react-native";
 
-import { ThemeSchemeType } from '../util/types';
+import { ThemeSchemeType } from "../util/types";
 
-import { resizeFonts, responsiveScale, WINDOW_WIDTH } from '../theme/scalling';
-import { useCurrentTheme } from '../theme/useCurrentTheme';
+import { resizeFonts, responsiveScale, WINDOW_WIDTH } from "../theme/scalling";
+import { useCurrentTheme } from "../theme/useCurrentTheme";
 
-import KomojuText from './KomojuText';
+import KomojuText from "./KomojuText";
 
 interface PillProps {
   label: string;
@@ -47,9 +47,9 @@ const Pill: React.FC<PillProps> = ({
 const getStyles = (theme: ThemeSchemeType) => {
   return StyleSheet.create({
     container: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
       padding: responsiveScale(16),
     },
     pill: {
@@ -62,19 +62,19 @@ const getStyles = (theme: ThemeSchemeType) => {
       borderWidth: 1,
       width: (WINDOW_WIDTH - responsiveScale(32)) / 3,
       marginRight: responsiveScale(8),
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-evenly',
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-evenly",
     },
     icon: {
       marginRight: responsiveScale(8),
       flex: 1,
     },
     label: {
-      width: '90%',
+      width: "90%",
       fontSize: resizeFonts(14),
       color: theme.TEXT_COLOR,
-      fontWeight: '500',
+      fontWeight: "500",
     },
     activeDeco: {
       borderColor: theme.TEXT_COLOR,

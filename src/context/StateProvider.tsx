@@ -1,8 +1,8 @@
-import { ReactNode, useReducer } from 'react';
+import { ReactNode, useReducer } from "react";
 
-import { DispatchContext, StateContext, reducer } from './state';
+import { DispatchContext, StateContext, reducer } from "./state";
 
-import { initialState } from '../util/types';
+import { initialState } from "../util/types";
 
 /**
  * StateProvider component to provide state and dispatch contexts to its children.

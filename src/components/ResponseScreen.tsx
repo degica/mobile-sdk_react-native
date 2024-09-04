@@ -2,13 +2,21 @@ import { useCallback, useMemo } from "react";
 
 import { Image, StyleSheet, View, ImageSourcePropType } from "react-native";
 
-import { ResponseScreenStatuses, ThemeSchemeType, PaymentType } from "../util/types";
+import {
+  ResponseScreenStatuses,
+  ThemeSchemeType,
+  PaymentType,
+} from "../util/types";
 
 import { resizeFonts, responsiveScale } from "../theme/scalling";
 import { useCurrentTheme } from "../theme/useCurrentTheme";
 
 import KomojuText from "./KomojuText";
 import SubmitButton from "./SubmitButton";
+
+import successIcon from "../assets/images/success.png";
+import errorIcon from "../assets/images/error.png";
+import awaitingPaymentIcon from "../assets/images/awaitingPayment.png";
 
 type StatusConfig = {
   title: string;
@@ -21,27 +29,27 @@ const statusConfigs: Partial<Record<ResponseScreenStatuses, StatusConfig>> = {
   [ResponseScreenStatuses.SUCCESS]: {
     title: "PAYMENT_SUCCESS",
     defaultMessage: "ORDER_THANK_YOU_NOTE",
-    image: require("../assets/images/success.png"),
+    image: successIcon,
   },
   [ResponseScreenStatuses.FAILED]: {
     title: "PAYMENT_FAILED",
     defaultMessage: "PAYMENT_RE_TRY_MSG",
-    image: require("../assets/images/error.png"),
+    image: errorIcon,
   },
   [ResponseScreenStatuses.CANCELLED]: {
     title: "PAYMENT_CANCELLED",
     defaultMessage: "PAYMENT_CANCELLED_MSG",
-    image: require("../assets/images/error.png"),
+    image: errorIcon,
   },
   [ResponseScreenStatuses.COMPLETE]: {
     title: "PAYMENT_WAITING",
     defaultMessage: "PAYMENT_WAITING_MSG",
-    image: require("../assets/images/awaitingPayment.png"),
+    image: awaitingPaymentIcon,
   },
   [ResponseScreenStatuses.EXPIRED]: {
     title: "SESSION_EXPIRED",
     defaultMessage: "SESSION_EXPIRED_MSG",
-    image: require("../assets/images/error.png"),
+    image: errorIcon,
   },
 };
 
@@ -50,10 +58,16 @@ type Props = {
   message?: string;
   onPressLabel: string;
   onPress: () => void;
-  paymentType: PaymentType
+  paymentType: PaymentType;
 };
 
-const ResponseScreen = ({ status, message, onPress, onPressLabel, paymentType }: Props) => {
+const ResponseScreen = ({
+  status,
+  message,
+  onPress,
+  onPressLabel,
+  paymentType,
+}: Props) => {
   const theme = useCurrentTheme();
   const styles = getStyles(theme);
 

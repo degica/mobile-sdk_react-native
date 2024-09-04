@@ -1,16 +1,16 @@
-import { useContext } from 'react';
+import { useContext } from "react";
 
-import { StyleSheet, View, Image, FlatList } from 'react-native';
+import { StyleSheet, View, Image, FlatList } from "react-native";
 
-import { StateContext } from '../context/state';
+import { StateContext } from "../context/state";
 
-import { PaymentType, sessionShowPaymentMethodType } from '../util/types';
+import { PaymentType, sessionShowPaymentMethodType } from "../util/types";
 
-import PaymentMethodImages from '../assets/images/paymentMethodImages';
+import PaymentMethodImages from "../assets/images/paymentMethodImages";
 
-import { responsiveScale } from '../theme/scalling';
+import { responsiveScale } from "../theme/scalling";
 
-import Pill from './Pill';
+import Pill from "./Pill";
 
 type Props = {
   onSelect: (type: PaymentType) => void;

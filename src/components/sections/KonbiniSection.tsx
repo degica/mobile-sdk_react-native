@@ -1,25 +1,25 @@
-import { useContext, useState, useCallback } from 'react';
+import { useContext, useState, useCallback } from "react";
 
-import { FlatList, StyleSheet, Image, View } from 'react-native';
+import { FlatList, StyleSheet, Image, View } from "react-native";
 
-import { Actions, DispatchContext, StateContext } from '../../context/state';
+import { Actions, DispatchContext, StateContext } from "../../context/state";
 
-import { formatCurrency, parseBrands } from '../../util/helpers';
+import { formatCurrency, parseBrands } from "../../util/helpers";
 import {
   brandType,
   KonbiniType,
   PaymentType,
   sessionShowPaymentMethodType,
-} from '../../util/types';
-import { validateKonbiniFormFields } from '../../util/validator';
+} from "../../util/types";
+import { validateKonbiniFormFields } from "../../util/validator";
 
-import KonbiniImages from '../../assets/images/konbiniImages';
+import KonbiniImages from "../../assets/images/konbiniImages";
 
-import { responsiveScale } from '../../theme/scalling';
+import { responsiveScale } from "../../theme/scalling";
 
-import Input from '../Input';
-import Pill from '../Pill';
-import SubmitButton from '../SubmitButton';
+import Input from "../Input";
+import Pill from "../Pill";
+import SubmitButton from "../SubmitButton";
 
 const initialErrors = {
   name: false,
@@ -75,13 +75,7 @@ const KonbiniSection = (): JSX.Element => {
 
   const shopImage = useCallback(
     (icon: KonbiniType) => {
-      return (
-        <Image
-          source={KonbiniImages[icon]}
-          style={styles.iconStyle}
-          resizeMode="contain"
-        />
-      );
+      return <Image source={KonbiniImages[icon]} style={styles.image} />;
     },
     [konbiniBrands]
   );
@@ -105,11 +99,11 @@ const KonbiniSection = (): JSX.Element => {
     <View style={styles.mainContainer}>
       <View style={styles.inputContainer}>
         <Input
-          value={name ?? ''}
+          value={name ?? ""}
           label="NAME_SHOWN_ON_RECEIPT"
           placeholder="FULL_NAME_ON_RECEIPT"
           onChangeText={(text: string) => {
-            resetError('name');
+            resetError("name");
             dispatch({ type: Actions.SET_NAME, payload: text });
           }}
           inputStyle={styles.inputStyle}
@@ -119,12 +113,12 @@ const KonbiniSection = (): JSX.Element => {
       </View>
       <View style={styles.inputContainer}>
         <Input
-          value={email ?? ''}
+          value={email ?? ""}
           label="EMAIL"
           placeholder="EXAMPLE_EMAIL"
           autoCapitalize="none"
           onChangeText={(text: string) => {
-            resetError('email');
+            resetError("email");
             dispatch({ type: Actions.SET_EMAIL, payload: text });
           }}
           inputStyle={styles.inputStyle}
@@ -157,7 +151,7 @@ export default KonbiniSection;
 
 const styles = StyleSheet.create({
   mainContainer: {
-    position: 'relative',
+    position: "relative",
     flex: 1,
   },
   inputContainer: {
@@ -181,5 +175,10 @@ const styles = StyleSheet.create({
   btn: {
     height: responsiveScale(60),
     marginBottom: responsiveScale(24),
+  },
+  image: {
+    width: responsiveScale(38),
+    height: responsiveScale(24),
+    resizeMode: "contain",
   },
 });

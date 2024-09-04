@@ -1,4 +1,4 @@
-import { Dispatch, ReactNode, SetStateAction } from 'react';
+import { Dispatch, ReactNode, SetStateAction } from "react";
 
 export type InitPrams = {
   publishableKey: string;
@@ -31,43 +31,43 @@ export type KomojuContext = {
 };
 
 export enum LanguageTypes {
-  ENGLISH = 'en',
-  JAPANESE = 'ja',
+  ENGLISH = "en",
+  JAPANESE = "ja",
 }
 
 export enum PaymentType {
-  KONBINI = 'konbini',
-  CREDIT = 'credit_card',
-  PAY_PAY = 'paypay',
-  LINE_PAY = 'linepay',
-  MER_PAY = 'merpay',
-  BANK_TRANSFER = 'bank_transfer',
-  PAY_EASY = 'pay_easy',
-  WEB_MONEY = 'web_money',
-  BIT_CASH = 'bit_cash',
-  NET_CASH = 'net_cash',
-  PAIDY = 'paidy',
-  RAKUTEN = 'rakutenpay',
-  AU_PAY = 'aupay',
-  ALI_PAY = 'alipay',
+  KONBINI = "konbini",
+  CREDIT = "credit_card",
+  PAY_PAY = "paypay",
+  LINE_PAY = "linepay",
+  MER_PAY = "merpay",
+  BANK_TRANSFER = "bank_transfer",
+  PAY_EASY = "pay_easy",
+  WEB_MONEY = "web_money",
+  BIT_CASH = "bit_cash",
+  NET_CASH = "net_cash",
+  PAIDY = "paidy",
+  RAKUTEN = "rakutenpay",
+  AU_PAY = "aupay",
+  ALI_PAY = "alipay",
 }
 
 export enum KonbiniType {
-  SEVEN_ELEVEN = 'seven-eleven',
-  LAWSON = 'lawson',
-  FAMILY_MART = 'family-mart',
-  MINI_stop = 'ministop',
-  DAILY_YAMAZAKI = 'daily-yamazaki',
-  SEICOMART = 'seicomart',
+  SEVEN_ELEVEN = "seven-eleven",
+  LAWSON = "lawson",
+  FAMILY_MART = "family-mart",
+  MINI_stop = "ministop",
+  DAILY_YAMAZAKI = "daily-yamazaki",
+  SEICOMART = "seicomart",
 }
 
 export enum CardTypes {
-  VISA = 'visa',
-  AMEX = 'american_express',
-  MASTER = 'master',
-  JCB = 'jcb',
-  DINERS_CLUB = 'diners_club',
-  DISCOVER = 'discover',
+  VISA = "visa",
+  AMEX = "american_express",
+  MASTER = "master",
+  JCB = "jcb",
+  DINERS_CLUB = "diners_club",
+  DISCOVER = "discover",
 }
 
 export enum PaymentStatuses {
@@ -79,17 +79,17 @@ export enum PaymentStatuses {
 }
 
 export enum TokenResponseStatuses {
-  SUCCESS = 'OK',
-  CAPTURED = 'captured',
-  PENDING = 'NEEDS_VERIFY',
-  ERROR = 'ERRORED',
+  SUCCESS = "OK",
+  CAPTURED = "captured",
+  PENDING = "NEEDS_VERIFY",
+  ERROR = "ERRORED",
 }
 
 export enum ResponseScreenStatuses {
   /** When a payment is fully complete Displaying success screen immediately and disabling the cancel payment popup */
-  SUCCESS = 'success',
+  SUCCESS = "success",
   /** Displaying failed screen immediately */
-  FAILED = 'failed',
+  FAILED = "failed",
   /** For displaying payment instruction screens and disabling the cancel payment popup */
   COMPLETE = "complete",
   /** For displaying payment instruction screens for cancelled by the user */
@@ -99,13 +99,13 @@ export enum ResponseScreenStatuses {
 }
 
 export enum CurrencySign {
-  JPY = '¥',
-  USD = '$',
+  JPY = "¥",
+  USD = "$",
 }
 
 export enum CurrencyTypes {
-  JPY = 'JPY',
-  USD = 'USD',
+  JPY = "JPY",
+  USD = "USD",
 }
 
 export type payForSessionProps = {
@@ -268,39 +268,39 @@ export const initialState: State = {
   loading: false,
 
   /** credit card payment related states start */
-  cardholderName: '',
-  cardCVV: '',
-  cardNumber: '',
-  cardExpiredDate: '',
+  cardholderName: "",
+  cardCVV: "",
+  cardNumber: "",
+  cardExpiredDate: "",
   /** credit card payment related states end */
 
   /** konbini pay related states start */
   /** konbini pay default selected to 7-eleven store */
-  selectedStore: 'seven-eleven',
-  name: '',
-  email: '',
+  selectedStore: "seven-eleven",
+  name: "",
+  email: "",
   /** konbini pay related states start */
 
   /** Bank transfer and Pay Easy related states start */
   transferFormFields: {
-    lastName: '',
-    firstName: '',
-    lastNamePhonetic: '',
-    firstNamePhonetic: '',
-    email: '',
-    phone: '',
+    lastName: "",
+    firstName: "",
+    lastNamePhonetic: "",
+    firstNamePhonetic: "",
+    email: "",
+    phone: "",
   },
   /** Bank transfer and Pay Easy related states end */
 
   sessionPay: () => {},
-  amount: '',
+  amount: "",
   currency: CurrencyTypes.JPY,
-  paymentState: '',
+  paymentState: "",
   paymentMethods: [],
 };
 // TODO: Fix this type error
 
-export type ActionType = { type: string; payload: any };
+export type ActionType = { type: string; payload: State[keyof State] };
 
 export interface ThemeSchemeType {
   PRIMARY_COLOR: string;
