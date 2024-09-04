@@ -5,19 +5,19 @@ import {
   useMemo,
   useRef,
   useState,
-} from 'react';
+} from "react";
 
-import { Alert, AppState, AppStateStatus, Linking } from 'react-native';
+import { Alert, AppState, AppStateStatus, Linking } from "react-native";
 
-import i18next from 'i18next';
+import i18next from "i18next";
 
-import PaymentModal from '../components/PaymentModal';
-import Sheet, { SheetRefProps } from '../components/Sheet';
+import PaymentModal from "../components/PaymentModal";
+import Sheet, { SheetRefProps } from "../components/Sheet";
 
-import payForSession from '../services/payForSessionService';
-import sessionShow from '../services/sessionShow';
+import payForSession from "../services/payForSessionService";
+import sessionShow from "../services/sessionShow";
 
-import { parsePaymentMethods } from '../util/helpers';
+import { parsePaymentMethods } from "../util/helpers";
 import {
   CreatePaymentFuncType,
   initialState,
@@ -26,12 +26,12 @@ import {
   PaymentStatuses,
   ResponseScreenStatuses,
   sessionPayProps,
-  TokenResponseStatuses
-} from '../util/types';
-import { validateSessionResponse } from '../util/validator';
+  TokenResponseStatuses,
+} from "../util/types";
+import { validateSessionResponse } from "../util/validator";
 
-import '../assets/languages/i18n';
-import { Actions, DispatchContext, KomojuContext } from './state';
+import "../assets/languages/i18n";
+import { Actions, DispatchContext, KomojuContext } from "./state";
 
 export const MainStateProvider = (props: KomojuProviderIprops) => {
   const dispatch = useContext(DispatchContext);
@@ -43,12 +43,12 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
   // ref to hold client provided onDismiss callback
   const onDismissCallback = useRef(null);
   // ref to hold client provided session Id
-  const sessionIdRef = useRef('');
+  const sessionIdRef = useRef("");
 
   useEffect(() => {
     // Add event listener for deep links
     const subscription = Linking.addEventListener(
-      'url',
+      "url",
       handleDeepLinkStateChange
     );
 
@@ -207,7 +207,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
     try {
       await Linking.openURL(url);
     } catch (err) {
-      Alert.alert('Redirection not working. Please contact support!');
+      Alert.alert("Redirection not working. Please contact support!");
     }
   };
 
@@ -224,7 +224,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
     // validating the session data and closing the payment gateway if data is not valid
     if (validateSessionResponse(sessionData)) {
       closePaymentSheet();
-      Alert.alert('Error', 'Invalid Session');
+      Alert.alert("Error", "Invalid Session");
     } else {
       // if explicitly language is not set. set to the localization from session
       if (props?.language) {
@@ -234,7 +234,10 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
       }
 
       // if session is valid setting amount, currency type at global store for future use
-      dispatch({ type: Actions.SET_AMOUNT, payload: sessionData?.amount });
+      dispatch({
+        type: Actions.SET_AMOUNT,
+        payload: sessionData?.amount.toString(),
+      });
       dispatch({ type: Actions.SET_CURRENCY, payload: sessionData?.currency });
 
       // if user provided explicitly payments methods via props, will give priority to that over session payment methods
@@ -251,7 +254,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
       // setting the current selected payment method as the first payment method on the list
       dispatch({
         type: Actions.SET_PAYMENT_OPTION,
-        payload: paymentMethods ? paymentMethods[0]?.type : '',
+        payload: paymentMethods ? paymentMethods[0]?.type : "",
       });
     }
     stopLoading();

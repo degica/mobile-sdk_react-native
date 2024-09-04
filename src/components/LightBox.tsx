@@ -4,11 +4,10 @@ import { useTranslation } from "react-i18next";
 
 import { ThemeSchemeType } from "../util/types";
 
-import Thunder from "../assets/images/thunder.png"
+import Thunder from "../assets/images/thunder.png";
 
 import { resizeFonts, responsiveScale } from "../theme/scalling";
 import { useCurrentTheme } from "../theme/useCurrentTheme";
-
 
 type Props = {
   content: string;
@@ -52,14 +51,13 @@ const getStyles = (theme: ThemeSchemeType) => {
       backgroundColor: theme.BACKGROUND_COLOR,
       width: responsiveScale(38),
       height: responsiveScale(38),
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
     },
     icon: {
       width: responsiveScale(18),
       height: responsiveScale(18),
-    }
+    },
   });
-
-}
+};

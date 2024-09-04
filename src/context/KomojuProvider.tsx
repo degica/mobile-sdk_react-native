@@ -1,9 +1,9 @@
-import { KomojuProviderIprops } from '../util/types';
+import { KomojuProviderIprops } from "../util/types";
 
-import '../assets/languages/i18n';
-import { MainStateProvider } from './MainStateProvider';
-import StateProvider from './StateProvider';
-import { ThemeProvider } from './ThemeContext';
+import "../assets/languages/i18n";
+import { MainStateProvider } from "./MainStateProvider";
+import StateProvider from "./StateProvider";
+import { ThemeProvider } from "./ThemeContext";
 
 export const KomojuProvider = (props: KomojuProviderIprops) => {
   return (
