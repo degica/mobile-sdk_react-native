@@ -1,21 +1,24 @@
-import React, { MutableRefObject, useEffect } from 'react'
-import { View, Text, AppState, AppStateStatus } from 'react-native'
-import { KomojuProviderIprops, PaymentStatuses, TokenResponseStatuses } from '../util/types';
-import sessionShow from '../services/sessionShow';
-
+import { MutableRefObject, useEffect } from "react";
+import { AppState, AppStateStatus } from "react-native";
+import {
+  KomojuProviderIprops,
+  PaymentStatuses,
+  TokenResponseStatuses,
+} from "../util/types";
+import sessionShow from "../services/sessionShow";
 
 type Props = {
-  props: KomojuProviderIprops,
-  startLoading: () => void
-  stopLoading: () => void
-  sessionIdRef: MutableRefObject<string>
-  onCompleteCallback: MutableRefObject<null>
-  onPaymentSuccess: () => void
-  onPaymentAwaiting: () => void
-  onPaymentCancelled: () => void
-  onSessionExpired: () => void
-  onPaymentFailed: () => void
-}
+  props: KomojuProviderIprops;
+  startLoading: () => void;
+  stopLoading: () => void;
+  sessionIdRef: MutableRefObject<string>;
+  onCompleteCallback: MutableRefObject<null>;
+  onPaymentSuccess: () => void;
+  onPaymentAwaiting: () => void;
+  onPaymentCancelled: () => void;
+  onSessionExpired: () => void;
+  onPaymentFailed: () => void;
+};
 
 const useBackgroundHandler = ({
   props,
@@ -27,9 +30,8 @@ const useBackgroundHandler = ({
   onPaymentCancelled,
   onPaymentFailed,
   onSessionExpired,
-  onPaymentSuccess
+  onPaymentSuccess,
 }: Props) => {
-
   useEffect(() => {
     // Add event listener for deep links
     const windowChangeListener = AppState.addEventListener(
@@ -78,7 +80,7 @@ const useBackgroundHandler = ({
         sessionResponse?.status === PaymentStatuses.ERROR ||
         sessionResponse?.payment?.status === PaymentStatuses.ERROR ||
         sessionResponse?.secure_token?.verification_status ===
-        TokenResponseStatuses.ERROR
+          TokenResponseStatuses.ERROR
       ) {
         onPaymentFailed();
       }
@@ -89,6 +91,6 @@ const useBackgroundHandler = ({
   };
 
   return undefined;
-}
+};
 
-export default useBackgroundHandler
+export default useBackgroundHandler;
