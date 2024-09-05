@@ -1,9 +1,9 @@
 // ThemeContext.tsx
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from "react";
 
-import { Appearance } from 'react-native';
+import { Appearance } from "react-native";
 
-import { ThemeModes } from '../util/constants';
+import { ThemeModes } from "../util/constants";
 
 interface ThemeContextType {
   mode: ThemeModes;
@@ -17,12 +17,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [mode, setMode] = useState<ThemeModes>(() => {
     const colorScheme = Appearance.getColorScheme();
-    return colorScheme === 'dark' ? ThemeModes.dark : ThemeModes.light;
+    return colorScheme === "dark" ? ThemeModes.dark : ThemeModes.light;
   });
 
   useEffect(() => {
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
-      setMode(colorScheme === 'dark' ? ThemeModes.dark : ThemeModes.light);
+      setMode(colorScheme === "dark" ? ThemeModes.dark : ThemeModes.light);
     });
 
     return () => subscription.remove();
@@ -44,7 +44,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
 export const useTheme = (): ThemeContextType => {
   const context = useContext(ThemeContext);
   if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    throw new Error("useTheme must be used within a ThemeProvider");
   }
   return context;
 };

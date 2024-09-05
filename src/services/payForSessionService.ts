@@ -1,10 +1,10 @@
-import { BASE_URL_API, API_HEADER } from '../util/constants';
-import { getMonthYearFromExpiry, printLog } from '../util/helpers';
+import { BASE_URL_API, API_HEADER } from "../util/constants";
+import { getMonthYearFromExpiry, printLog } from "../util/helpers";
 import {
   payForSessionProps,
   PaymentType,
   SessionPayResponseType,
-} from '../util/types';
+} from "../util/types";
 
 /**
  * Processes a payment for a given session.
@@ -42,12 +42,12 @@ const payForSession = async ({
         // TODO: Fix this type error
 
         const { month, year } = getMonthYearFromExpiry(
-          paymentDetails?.cardExpiredDate || ''
+          paymentDetails?.cardExpiredDate || ""
         );
         // refactoring number to remove all unsavory empty spaces from credit card number
         // TODO: Fix this type error
 
-        const number = paymentDetails?.cardNumber?.replaceAll(' ', '');
+        const number = paymentDetails?.cardNumber?.replaceAll(" ", "");
 
         // credit card payment_details mandatory parameters type, number, month, year
         payment_details = {
@@ -117,7 +117,7 @@ const payForSession = async ({
       method: "POST",
       headers: API_HEADER(publishableKey),
       body: JSON.stringify({
-        capture: 'auto',
+        capture: "auto",
         payment_details,
       }),
     };
@@ -130,8 +130,8 @@ const payForSession = async ({
   } catch (e) {
     // logging out any exceptions for debugging
     printLog({
-      logName: 'Error:',
-      message: 'Unable to Process Payment',
+      logName: "Error:",
+      message: "Unable to Process Payment",
     });
     return null;
   }

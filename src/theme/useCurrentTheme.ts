@@ -1,8 +1,8 @@
-import { useColorScheme } from 'react-native';
+import { useColorScheme } from "react-native";
 
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from "../context/ThemeContext";
 
-import { appTheme } from './defaultColorTheme';
+import { appTheme } from "./defaultColorTheme";
 
 export const useCurrentTheme = () => {
   const { mode } = useTheme();

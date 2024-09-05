@@ -1,6 +1,6 @@
-import { Dimensions, Platform } from 'react-native';
+import { Dimensions, Platform } from "react-native";
 
-import { cardTypeRegex } from './constants';
+import { cardTypeRegex } from "./constants";
 import {
   brandsType,
   CardTypes,
@@ -9,7 +9,7 @@ import {
   KonbiniType,
   PaymentType,
   sessionShowPaymentMethodType,
-} from './types';
+} from "./types";
 
 export const isDevApp = __DEV__;
 
@@ -24,51 +24,52 @@ export const printLog = ({
 };
 
 export const formatExpiry = (expiry: string) => {
-  const prevExpiry = expiry.split(' / ').join('/');
+  const prevExpiry = expiry.split(" / ").join("/");
 
   if (!prevExpiry) return null;
   // TODO: Fix this type error
 
-  let expiryDate: any = prevExpiry;
+  let expiryDate: string | string[] = prevExpiry;
   if (/^[2-9]$/.test(expiryDate)) {
     expiryDate = `0${expiryDate}`;
   }
 
   if (prevExpiry.length === 2 && +prevExpiry > 12) {
     const [head, ...tail] = prevExpiry;
-    expiryDate = `0${head}/${tail.join('')}`;
+    expiryDate = `0${head}/${tail.join("")}`;
   }
 
   if (/^1[/-]$/.test(expiryDate)) {
-    return `01 / `;
+    return "01 / ";
   }
 
   expiryDate = expiryDate.match(/(\d{1,2})/g) || [];
   if (expiryDate.length === 1) {
-    if (prevExpiry.includes('/')) {
+    if (prevExpiry.includes("/")) {
       return expiryDate[0];
     }
-    if (/\d{2}/.test(expiryDate)) {
-      return `${expiryDate[0]} / `;
-    }
+    if (typeof expiryDate === "string")
+      if (/\d{2}/.test(expiryDate)) {
+        return `${expiryDate[0]} / `;
+      }
   }
   if (expiryDate.length > 2) {
     const [, month, year] =
-      expiryDate.join('').match(/^(\d{2}).*(\d{2})$/) || [];
-    return [month, year].join(' / ');
+      expiryDate.join("").match(/^(\d{2}).*(\d{2})$/) || [];
+    return [month, year].join(" / ");
   }
-  return expiryDate.join(' / ');
+  return expiryDate.join(" / ");
 };
 
 export const getMonthYearFromExpiry = (expiry: string) => {
-  const splitValues = expiry.split(' / ');
+  const splitValues = expiry.split(" / ");
 
   return { month: splitValues[0], year: splitValues[1] };
 };
 
 export const formatCreditCardNumber = (cardNumber: string) => {
   const formatCardNumberArray = [];
-  const cardNumberArray = cardNumber.replaceAll(' ', '').split('');
+  const cardNumberArray = cardNumber.replaceAll(" ", "").split("");
   let startOffset = 0;
   let loopCounter = 4;
   const totalNumberOfIterations = Math.ceil(cardNumberArray.length / 4) * 4;
@@ -79,11 +80,11 @@ export const formatCreditCardNumber = (cardNumber: string) => {
     startOffset += 4;
     loopCounter += 4;
   }
-  return formatCardNumberArray.map((el) => el.join('')).join(' ');
+  return formatCardNumberArray.map((el) => el.join("")).join(" ");
 };
 
 function thousandSeparator(number: string) {
-  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 export const formatCurrency = ({
@@ -161,7 +162,7 @@ export const parsePaymentMethods = (
 // Determine the card type based on the card number
 export const determineCardType = (
   cardNumber: string
-): CardTypes | 'unknown' | null => {
+): CardTypes | "unknown" | null => {
   if (cardTypeRegex.amex.exec(cardNumber)) {
     return CardTypes.AMEX;
   } else if (cardTypeRegex.diner.exec(cardNumber)) {
@@ -175,10 +176,10 @@ export const determineCardType = (
   } else if (cardTypeRegex.visa.exec(cardNumber)) {
     return CardTypes.VISA;
   } else if (cardNumber.length > 2) {
-    return 'unknown';
+    return "unknown";
   } else return null;
 };
 
-export const isAndroid = () => Platform.OS === 'android';
-export const isIOS = () => Platform.OS === 'ios';
-export const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+export const isAndroid = () => Platform.OS === "android";
+export const isIOS = () => Platform.OS === "ios";
+export const { height: SCREEN_HEIGHT } = Dimensions.get("window");

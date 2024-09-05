@@ -1,26 +1,21 @@
-import {
-  useCallback,
-  useContext,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useContext, useMemo, useRef, useState } from "react";
 
-import PaymentModal from '../components/PaymentModal';
-import Sheet, { SheetRefProps } from '../components/Sheet';
+import PaymentModal from "../components/PaymentModal";
+import Sheet, { SheetRefProps } from "../components/Sheet";
 
 import {
   CreatePaymentFuncType,
   initialState,
   InitPrams,
-  KomojuProviderIprops} from '../util/types';
+  KomojuProviderIprops,
+} from "../util/types";
 
-import '../assets/languages/i18n';
-import { Actions, DispatchContext, KomojuContext } from './state';
-import useBackgroundHandler from '../hooks/useBackgroundHandler';
-import useDeepLinkHandler from '../hooks/useDeepLinkHandler';
-import usePaymentHandler from '../hooks/usePaymentHandler';
-import useMainStateUtils from '../hooks/useMainStateUtils';
+import "../assets/languages/i18n";
+import { Actions, DispatchContext, KomojuContext } from "./state";
+import useBackgroundHandler from "../hooks/useBackgroundHandler";
+import useDeepLinkHandler from "../hooks/useDeepLinkHandler";
+import usePaymentHandler from "../hooks/usePaymentHandler";
+import useMainStateUtils from "../hooks/useMainStateUtils";
 
 export const MainStateProvider = (props: KomojuProviderIprops) => {
   const dispatch = useContext(DispatchContext);
@@ -32,7 +27,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
   // ref to hold client provided onDismiss callback
   const onDismissCallback = useRef(null);
   // ref to hold client provided session Id
-  const sessionIdRef = useRef('');
+  const sessionIdRef = useRef("");
 
   // Get all the util functions that needs to function the Main State
   const {
@@ -46,7 +41,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
     closePaymentSheet,
     onUserCancel,
     openPaymentSheet,
-    resetGlobalStates
+    resetGlobalStates,
   } = useMainStateUtils({
     props: props,
     sheetRef: sheetRef,
@@ -54,7 +49,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
     toggleUIVisibility: (value: boolean) => setModalVisible(value),
     initialState: initialState,
     onDismissCallback: onDismissCallback,
-  })
+  });
 
   // Handle events when module goes foreground
   useBackgroundHandler({
@@ -67,8 +62,8 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
     onPaymentCancelled: onPaymentCancelled,
     onSessionExpired: onSessionExpired,
     onPaymentFailed: onPaymentFailed,
-    onPaymentSuccess: onPaymentSuccess
-  })
+    onPaymentSuccess: onPaymentSuccess,
+  });
 
   // Handle deep-links of the module
   useDeepLinkHandler({
@@ -80,8 +75,8 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
     onPaymentAwaiting: onPaymentAwaiting,
     onPaymentCancelled: onPaymentCancelled,
     onPaymentFailed: onPaymentFailed,
-    onPaymentSuccess: onPaymentSuccess
-  })
+    onPaymentSuccess: onPaymentSuccess,
+  });
 
   // Handle validations of the session and pay for session
   const { sessionPay, validateSession } = usePaymentHandler({
@@ -91,8 +86,8 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
     onPaymentAwaiting: onPaymentAwaiting,
     onPaymentFailed: onPaymentFailed,
     onPaymentSuccess: onPaymentSuccess,
-    closePaymentSheet: closePaymentSheet
-  })
+    closePaymentSheet: closePaymentSheet,
+  });
 
   const createPayment = useCallback(
     ({ sessionId, onComplete, onDismiss }: CreatePaymentFuncType) => {
@@ -127,8 +122,8 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
   }, []);
 
   // TODO: Fix this type error
-   
-  const initializeKomoju = useCallback((_params: InitPrams) => { }, []);
+
+  const initializeKomoju = useCallback((_params: InitPrams) => {}, []);
 
   // Conditionally rendering the payment ui
   const renderPaymentUI = useMemo(() => {

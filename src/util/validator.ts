@@ -1,4 +1,4 @@
-import { emailRegex } from './constants';
+import { emailRegex } from "./constants";
 import {
   cardValidationFuncProps,
   konbiniValidationFuncProps,
@@ -6,12 +6,12 @@ import {
   SessionShowResponseType,
   setInputErrorType,
   TransferFormFieldsType,
-} from './types';
+} from "./types";
 
 const MAX_CARD_LENGTH = 19;
 
 export const isCardNumberValid = (cardString: string) => {
-  const text = cardString.replaceAll(' ', '');
+  const text = cardString.replaceAll(" ", "");
   try {
     if (text?.length <= 0) {
       return true;
@@ -37,7 +37,7 @@ export const validateCardExpiry = (expiry: string) => {
     if (expiry?.length <= 0) {
       return true;
     }
-    const derivedExpiry = expiry.replace(' / ', '');
+    const derivedExpiry = expiry.replace(" / ", "");
 
     if (derivedExpiry.length > 4) {
       return false;
