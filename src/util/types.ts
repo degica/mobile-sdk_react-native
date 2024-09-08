@@ -5,6 +5,8 @@ export type InitPrams = {
   paymentMethods?: Array<PaymentType>;
   language?: LanguageTypes;
   useBottomSheet?: boolean;
+  theme?: Partial<ThemeSchemeType>;
+  darkMode?: boolean;
 };
 
 export type CreatePaymentFuncType = {
@@ -113,9 +115,9 @@ export type payForSessionProps = {
   sessionId: string;
   paymentType: PaymentType;
   paymentDetails?: CardDetailsType &
-    KonbiniDetailsType &
-    TransferFormFieldsType &
-    paymentTypeInputs;
+  KonbiniDetailsType &
+  TransferFormFieldsType &
+  paymentTypeInputs;
 };
 
 type paymentTypeInputs = {
@@ -245,12 +247,12 @@ export type State = CardDetailsType &
      * this state is used to toggle(show hide) the success and failed screens.
      */
     paymentState:
-      | ResponseScreenStatuses.SUCCESS
-      | ResponseScreenStatuses.COMPLETE
-      | ResponseScreenStatuses.FAILED
-      | ResponseScreenStatuses.CANCELLED
-      | ResponseScreenStatuses.EXPIRED
-      | "";
+    | ResponseScreenStatuses.SUCCESS
+    | ResponseScreenStatuses.COMPLETE
+    | ResponseScreenStatuses.FAILED
+    | ResponseScreenStatuses.CANCELLED
+    | ResponseScreenStatuses.EXPIRED
+    | "";
     /**
      * States of the Bank transfer and Pay Easy fields.
      */
