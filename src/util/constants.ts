@@ -1,4 +1,4 @@
-import { PaymentType } from "./types";
+import { PaymentType, ThemeSchemeType, UserFriendlyTheme } from "./types";
 
 export const noop = () => {};
 export const BASE_URL = "https://komoju.com";
@@ -53,4 +53,21 @@ export const LangKeys: { [key in PaymentType]: string } = {
   [PaymentType.RAKUTEN]: "RAKUTEN",
   [PaymentType.WEB_MONEY]: "WEB_MONEY",
   [PaymentType.NET_CASH]: "NET_CASH",
+};
+
+export const themeMapping: Record<keyof UserFriendlyTheme, keyof ThemeSchemeType> = {
+  primaryColor: "PRIMARY_COLOR",
+  backgroundColor: "BACKGROUND_COLOR",
+  errorColor: "ERROR",
+  textColor: "TEXT_COLOR",
+  inputBackground: "INPUT_BACKGROUND",
+  inputText: "INPUT_TEXT",
+  inputPlaceholder: "INPUT_PLACEHOLDER",
+  invertedContent: "INVERTED_CONTENT",
+  transparentWhite: "WHITE50",
+  cardBackground: "CARD_BACKGROUND",
+  cardBorder: "CARD_BORDER",
+  lightBox: "LIGHT_BOX",
+  cardShadowIOS: "CARD_SHADOW_IOS_COLOR",
+  cardShadowAndroid: "CARD_SHADOW_ANDROID_COLOR",
 };

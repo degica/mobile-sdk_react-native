@@ -1,6 +1,6 @@
 import { Dimensions, Platform } from "react-native";
 
-import { cardTypeRegex } from "./constants";
+import { cardTypeRegex, themeMapping } from "./constants";
 import {
   brandsType,
   CardTypes,
@@ -9,6 +9,8 @@ import {
   KonbiniType,
   PaymentType,
   sessionShowPaymentMethodType,
+  ThemeSchemeType,
+  UserFriendlyTheme,
 } from "./types";
 
 export const isDevApp = __DEV__;
@@ -183,3 +185,15 @@ export const determineCardType = (
 export const isAndroid = () => Platform.OS === "android";
 export const isIOS = () => Platform.OS === "ios";
 export const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+
+
+// Function to convert UserFriendlyTheme to ThemeSchemeType
+export function fromUserFriendlyTheme(userTheme: Partial<UserFriendlyTheme>): Partial<ThemeSchemeType> {
+  return Object.entries(userTheme).reduce((acc, [userKey, value]) => {
+    const internalKey = themeMapping[userKey as keyof UserFriendlyTheme];
+    if (internalKey) {
+      acc[internalKey] = value;
+    }
+    return acc;
+  }, {} as Partial<ThemeSchemeType>);
+}

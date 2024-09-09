@@ -5,6 +5,7 @@ export type InitPrams = {
   paymentMethods?: Array<PaymentType>;
   language?: LanguageTypes;
   useBottomSheet?: boolean;
+  theme?: Partial<UserFriendlyTheme>;
 };
 
 export type CreatePaymentFuncType = {
@@ -113,9 +114,9 @@ export type payForSessionProps = {
   sessionId: string;
   paymentType: PaymentType;
   paymentDetails?: CardDetailsType &
-    KonbiniDetailsType &
-    TransferFormFieldsType &
-    paymentTypeInputs;
+  KonbiniDetailsType &
+  TransferFormFieldsType &
+  paymentTypeInputs;
 };
 
 type paymentTypeInputs = {
@@ -245,12 +246,12 @@ export type State = CardDetailsType &
      * this state is used to toggle(show hide) the success and failed screens.
      */
     paymentState:
-      | ResponseScreenStatuses.SUCCESS
-      | ResponseScreenStatuses.COMPLETE
-      | ResponseScreenStatuses.FAILED
-      | ResponseScreenStatuses.CANCELLED
-      | ResponseScreenStatuses.EXPIRED
-      | "";
+    | ResponseScreenStatuses.SUCCESS
+    | ResponseScreenStatuses.COMPLETE
+    | ResponseScreenStatuses.FAILED
+    | ResponseScreenStatuses.CANCELLED
+    | ResponseScreenStatuses.EXPIRED
+    | "";
     /**
      * States of the Bank transfer and Pay Easy fields.
      */
@@ -317,6 +318,24 @@ export interface ThemeSchemeType {
   LIGHT_BOX: string;
   CARD_SHADOW_IOS_COLOR: string;
   CARD_SHADOW_ANDROID_COLOR: string;
+}
+
+// Define a user-friendly theme interface
+export interface UserFriendlyTheme {
+  primaryColor: string;
+  backgroundColor: string;
+  errorColor: string;
+  textColor: string;
+  inputBackground: string;
+  inputText: string;
+  inputPlaceholder: string;
+  invertedContent: string;
+  transparentWhite: string;
+  cardBackground: string;
+  cardBorder: string;
+  lightBox: string;
+  cardShadowIOS: string;
+  cardShadowAndroid: string;
 }
 
 export type KomojuProviderIprops = {
