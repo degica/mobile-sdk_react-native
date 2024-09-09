@@ -5,8 +5,7 @@ export type InitPrams = {
   paymentMethods?: Array<PaymentType>;
   language?: LanguageTypes;
   useBottomSheet?: boolean;
-  theme?: Partial<ThemeSchemeType>;
-  darkMode?: boolean;
+  theme?: Partial<UserFriendlyTheme>;
 };
 
 export type CreatePaymentFuncType = {
@@ -319,6 +318,24 @@ export interface ThemeSchemeType {
   LIGHT_BOX: string;
   CARD_SHADOW_IOS_COLOR: string;
   CARD_SHADOW_ANDROID_COLOR: string;
+}
+
+// Define a user-friendly theme interface
+export interface UserFriendlyTheme {
+  primaryColor: string;
+  backgroundColor: string;
+  errorColor: string;
+  textColor: string;
+  inputBackground: string;
+  inputText: string;
+  inputPlaceholder: string;
+  invertedContent: string;
+  transparentWhite: string;
+  cardBackground: string;
+  cardBorder: string;
+  lightBox: string;
+  cardShadowIOS: string;
+  cardShadowAndroid: string;
 }
 
 export type KomojuProviderIprops = {

@@ -13,17 +13,14 @@ import {
 import { t } from "i18next";
 
 import { Actions, DispatchContext, StateContext } from "../context/state";
-import { useTheme } from "../context/ThemeContext";
 
 import {
   paymentFailedCtaText,
   paymentSuccessCtaText,
-  ThemeModes,
 } from "../util/constants";
 import { ResponseScreenStatuses, ThemeSchemeType } from "../util/types";
 
 import closeIcon from "../assets/images/close.png";
-import closeDMIcon from "../assets/images/close_dm.png";
 
 import { resizeFonts, responsiveScale, WINDOW_HEIGHT } from "../theme/scalling";
 import { useCurrentTheme } from "../theme/useCurrentTheme";
@@ -48,7 +45,6 @@ const PaymentModal = ({
 
   const theme = useCurrentTheme();
   const styles = getStyles(theme);
-  const { mode } = useTheme();
 
   const closeSheet = (showAlert = true) => {
     Keyboard.dismiss();
@@ -135,7 +131,7 @@ const PaymentModal = ({
           </KomojuText>
           <TouchableOpacity style={styles.crossBtn} onPress={onCloseModal}>
             <Image
-              source={mode === ThemeModes.light ? closeIcon : closeDMIcon}
+              source={closeIcon}
             />
           </TouchableOpacity>
         </View>

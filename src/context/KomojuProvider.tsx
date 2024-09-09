@@ -8,7 +8,7 @@ import { ThemeProvider } from "./ThemeContext";
 export const KomojuProvider = (props: KomojuProviderIprops) => {
   return (
     <StateProvider>
-      <ThemeProvider theme={props?.theme} darkMode={props?.darkMode}>
+      <ThemeProvider theme={props?.theme}>
         <MainStateProvider
           publishableKey={props.publishableKey}
           paymentMethods={props?.paymentMethods}

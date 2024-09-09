@@ -1,25 +1,19 @@
-import { useColorScheme } from "react-native";
 import { useTheme } from "../context/ThemeContext";
 import { appTheme } from "./defaultColorTheme";
 import { ThemeSchemeType } from "../util/types";
+import { fromUserFriendlyTheme } from "../util/helpers";
 
 export const useCurrentTheme = (): ThemeSchemeType => {
-  const { mode, theme } = useTheme();
-  const systemColorScheme = useColorScheme();
-  const effectiveMode = systemColorScheme || mode;
+  const { theme } = useTheme();
+  // const systemColorScheme = useColorScheme();
+  const effectiveMode = "light";
 
   // Get the base theme
   const baseTheme = appTheme[effectiveMode as keyof typeof appTheme];
 
   // If there's no custom theme, return the base theme
-  if (!theme) {
-    return baseTheme;
-  }
+  const mergedTheme = theme ? { ...baseTheme, ...fromUserFriendlyTheme(theme) } : baseTheme;
 
   // Merge the base theme with the custom theme
-  return Object.keys(baseTheme).reduce((acc, key) => {
-    const themeKey = key as keyof ThemeSchemeType;
-    acc[themeKey] = theme[themeKey] !== undefined ? theme[themeKey]! : baseTheme[themeKey];
-    return acc;
-  }, {} as ThemeSchemeType);
+  return mergedTheme
 };

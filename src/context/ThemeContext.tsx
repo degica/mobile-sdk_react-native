@@ -1,53 +1,26 @@
 // ThemeContext.tsx
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext } from "react";
 
-// import { Appearance } from "react-native";
-
-import { ThemeModes } from "../util/constants";
-import { ThemeSchemeType } from "../util/types";
+import { UserFriendlyTheme } from "../util/types";
 
 interface ThemeContextType {
-  mode: ThemeModes;
-  theme?: Partial<ThemeSchemeType>;
-  // toggleMode: () => void;
+  theme?: Partial<UserFriendlyTheme>;
 }
 
 interface ThemeContextProps {
   children: React.ReactNode;
-  theme?: Partial<ThemeSchemeType>;
-  darkMode?: boolean;
+  theme?: Partial<UserFriendlyTheme>;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<ThemeContextProps> = ({
   children,
-  darkMode,
   theme
 }) => {
-  // const [mode, setMode] = useState<ThemeModes>(() => {
-  //   // const colorScheme = Appearance.getColorScheme();
-  //   return darkMode ? ThemeModes.dark : ThemeModes.light;
-  // });
-
-  const mode = darkMode ? ThemeModes.dark : ThemeModes.light;
-
-  // useEffect(() => {
-  //   const subscription = Appearance.addChangeListener(({ colorScheme }) => {
-  //     setMode(colorScheme === "dark" ? ThemeModes.dark : ThemeModes.light);
-  //   });
-
-  //   return () => subscription.remove();
-  // }, []);
-
-  // const toggleMode = () => {
-  //   setMode((prevMode) =>
-  //     prevMode === ThemeModes.light ? ThemeModes.dark : ThemeModes.light
-  //   );
-  // };
 
   return (
-    <ThemeContext.Provider value={{ mode, theme }}>
+    <ThemeContext.Provider value={{ theme }}>
       {children}
     </ThemeContext.Provider>
   );

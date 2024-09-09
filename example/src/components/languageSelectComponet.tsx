@@ -1,6 +1,6 @@
-import {Dispatch, SetStateAction} from 'react';
-import {View, Pressable, StyleSheet, Text, useColorScheme} from 'react-native';
-import {LanguageTypes} from '@komoju/komoju-react-native';
+import {Dispatch, SetStateAction} from "react";
+import {View, Pressable, StyleSheet, Text} from "react-native";
+import {LanguageTypes} from "@komoju/komoju-react-native";
 
 const LanguageSelectComponent = ({
   language,
@@ -9,19 +9,9 @@ const LanguageSelectComponent = ({
   language: LanguageTypes;
   setLanguage: Dispatch<SetStateAction<LanguageTypes>>;
 }) => {
-  const colorScheme = useColorScheme(); // Detects the color scheme of the device
-
-  const dynamicStyles = StyleSheet.create({
-    container: {
-      backgroundColor: colorScheme === 'dark' ? '#333' : '#FFF',
-    },
-    text: {
-      color: colorScheme === 'dark' ? '#FFF' : '#000',
-    },
-  });
 
   return (
-    <View style={[styles.container, dynamicStyles.container]}>
+    <View style={[styles.container]}>
       {(Object.keys(LanguageTypes) as Array<keyof typeof LanguageTypes>).map(
         key => (
           <Pressable
@@ -34,7 +24,6 @@ const LanguageSelectComponent = ({
             ]}>
             <Text
               style={[
-                dynamicStyles.text,
                 LanguageTypes[key] === language && styles.languageSelectedText,
               ]}>
               {key}
@@ -48,25 +37,25 @@ const LanguageSelectComponent = ({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: 16,
   },
   title: {
     fontSize: 24,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 20,
   },
   input: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderRadius: 8,
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 8,
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     zIndex: -100,
     height: 40,
   },
@@ -76,10 +65,10 @@ const styles = StyleSheet.create({
   languageSelectedTextContainer: {
     borderWidth: 1,
     borderRadius: 5,
-    borderColor: 'coral',
+    borderColor: "coral",
   },
   languageSelectedText: {
-    color: 'coral',
+    color: "coral",
   },
 });
 
