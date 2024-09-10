@@ -20,6 +20,7 @@ interface PillProps {
   image?: ReactNode;
   onPress: () => void;
   isSelected?: boolean;
+  autoWidth?: boolean;
 }
 
 const Pill: React.FC<PillProps> = ({
@@ -28,13 +29,16 @@ const Pill: React.FC<PillProps> = ({
   image,
   onPress,
   isSelected,
+  autoWidth
 }) => {
   const theme = useCurrentTheme();
   const styles = getStyles(theme);
 
   return (
     <TouchableOpacity
-      style={[styles.pill, isSelected && styles.activeDeco]}
+      style={[styles.pill, isSelected && styles.activeDeco, !autoWidth && {
+        width: (WINDOW_WIDTH - responsiveScale(32)) / 3,
+      }]}
       onPress={onPress}
     >
       {image ? image : <Image style={styles.icon} source={icon} />}
@@ -60,7 +64,7 @@ const getStyles = (theme: ThemeSchemeType) => {
       backgroundColor: theme.CARD_BACKGROUND,
       borderColor: theme.CARD_BORDER,
       borderWidth: 1,
-      width: (WINDOW_WIDTH - responsiveScale(32)) / 3,
+      minWidth:(WINDOW_WIDTH - responsiveScale(32)) / 3,
       marginRight: responsiveScale(8),
       display: "flex",
       flexDirection: "column",
@@ -71,7 +75,6 @@ const getStyles = (theme: ThemeSchemeType) => {
       flex: 1,
     },
     label: {
-      width: "90%",
       fontSize: resizeFonts(14),
       color: theme.TEXT_COLOR,
       fontWeight: "500",
