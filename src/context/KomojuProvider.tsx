@@ -6,17 +6,12 @@ import StateProvider from "./StateProvider";
 import { ThemeProvider } from "./ThemeContext";
 
 export const KomojuProvider = (props: KomojuProviderIprops) => {
+  const { theme, children, ...restProps } = props;
+
   return (
     <StateProvider>
       <ThemeProvider theme={props?.theme}>
-        <MainStateProvider
-          publishableKey={props.publishableKey}
-          paymentMethods={props?.paymentMethods}
-          language={props?.language}
-          useBottomSheet={props?.useBottomSheet}
-        >
-          {props.children}
-        </MainStateProvider>
+        <MainStateProvider {...restProps}>{props.children}</MainStateProvider>
       </ThemeProvider>
     </StateProvider>
   );

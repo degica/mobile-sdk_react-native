@@ -38,26 +38,28 @@ const payForSession = async ({
     switch (paymentType) {
       // credit card payment type payment type
       case PaymentType.CREDIT:
-        // refactoring input data from user to separate month and year
-        // TODO: Fix this type error
+        if (paymentDetails?.tokenId) {
+          payment_details = paymentDetails?.tokenId;
+        } else {
+          // refactoring input data from user to separate month and year
+          const { month, year } = getMonthYearFromExpiry(
+            paymentDetails?.cardExpiredDate || ""
+          );
 
-        const { month, year } = getMonthYearFromExpiry(
-          paymentDetails?.cardExpiredDate || ""
-        );
-        // refactoring number to remove all unsavory empty spaces from credit card number
-        // TODO: Fix this type error
+          // refactoring number to remove all unnecessary empty spaces from credit card number
+          const number = paymentDetails?.cardNumber?.replaceAll(" ", "");
 
-        const number = paymentDetails?.cardNumber?.replaceAll(" ", "");
+          // credit card payment_details mandatory parameters type, number, month, year
+          payment_details = {
+            type: PaymentType.CREDIT,
+            name: paymentDetails?.cardholderName,
+            number,
+            month,
+            year,
+            verification_value: paymentDetails?.cardCVV,
+          };
+        }
 
-        // credit card payment_details mandatory parameters type, number, month, year
-        payment_details = {
-          type: PaymentType.CREDIT,
-          name: paymentDetails?.cardholderName,
-          number,
-          month,
-          year,
-          verification_value: paymentDetails?.cardCVV,
-        };
         break;
       // paypay payment type payment type
       case PaymentType.PAY_PAY:

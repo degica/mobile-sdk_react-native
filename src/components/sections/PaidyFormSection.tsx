@@ -1,8 +1,8 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 
 import { StyleSheet, View } from "react-native";
 
-import { StateContext } from "../../context/state";
+import useSessionPayHandler from "../../hooks/useSessionPayHandler";
 
 import Input from "../../components/Input";
 
@@ -22,7 +22,7 @@ const PaidyFormSection = ({ type }: PaidyFormSectionProps) => {
   const [inputValues, setInputValues] = useState({ name: "", phone: "" });
   const [inputErrors, setInputErrors] = useState({ name: false, phone: false });
 
-  const { sessionPay } = useContext(StateContext);
+  const { sessionPay } = useSessionPayHandler();
 
   const onPay = () => {
     const isValid = validatePaidyFormFields({

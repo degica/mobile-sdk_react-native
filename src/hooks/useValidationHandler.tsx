@@ -1,37 +1,24 @@
 import { useContext } from "react";
-import { Alert, Linking } from "react-native";
+import { Alert } from "react-native";
 import i18next from "i18next";
 
-import {
-  CreatePaymentFuncType,
-  KomojuProviderIprops,
-  PaymentStatuses,
-  sessionPayProps,
-  TokenResponseStatuses,
-} from "../util/types";
+import { KomojuProviderIprops } from "../util/types";
 import sessionShow from "../services/sessionShow";
 import { validateSessionResponse } from "../util/validator";
 import { Actions, DispatchContext } from "../context/state";
 import { parsePaymentMethods } from "../util/helpers";
-import payForSession from "../services/payForSessionService";
 
 type Props = {
   props: KomojuProviderIprops;
   startLoading: () => void;
   stopLoading: () => void;
-  onPaymentSuccess: () => void;
-  onPaymentAwaiting: () => void;
-  onPaymentFailed: () => void;
   closePaymentSheet: () => void;
 };
 
-const usePaymentHandler = ({
+const useValidationHandler = ({
   props,
   startLoading,
   stopLoading,
-  onPaymentAwaiting,
-  onPaymentFailed,
-  onPaymentSuccess,
   closePaymentSheet,
 }: Props) => {
   const dispatch = useContext(DispatchContext);
@@ -59,7 +46,11 @@ const usePaymentHandler = ({
       }
 
       // if session is valid setting amount, currency type at global store for future use
-      dispatch({ type: Actions.SET_AMOUNT, payload: sessionData?.amount });
+      dispatch({
+        type: Actions.SET_AMOUNT,
+        payload: String(sessionData?.amount),
+      });
+
       dispatch({ type: Actions.SET_CURRENCY, payload: sessionData?.currency });
 
       // if user provided explicitly payments methods via props, will give priority to that over session payment methods
@@ -82,49 +73,9 @@ const usePaymentHandler = ({
     stopLoading();
   };
 
-  // Session pay callback. this method handles all the payment logic and APIs
-  const sessionPay = ({ sessionId }: CreatePaymentFuncType) => {
-    return async ({ paymentType, paymentDetails }: sessionPayProps) => {
-      // Start of the payment handling method
-      startLoading();
-
-      // initiate payment for the session ID with payment details
-      const response = await payForSession({
-        paymentType,
-        sessionId,
-        publishableKey: props.publishableKey,
-        paymentDetails,
-      });
-
-      stopLoading();
-
-      if (response?.status === PaymentStatuses.PENDING) {
-        openURL(response.redirect_url);
-      } else if (response?.status === PaymentStatuses.SUCCESS) {
-        if (response?.payment?.status === TokenResponseStatuses.CAPTURED) {
-          onPaymentSuccess();
-        } else if (response?.payment?.payment_details?.instructions_url) {
-          openURL(response?.payment?.payment_details?.instructions_url);
-          onPaymentAwaiting();
-        }
-      } else {
-        onPaymentFailed();
-      }
-    };
-  };
-
-  const openURL = async (url: string) => {
-    try {
-      await Linking.openURL(url);
-    } catch (err) {
-      Alert.alert("Redirection not working. Please contact support!");
-    }
-  };
-
   return {
-    sessionPay,
     validateSession,
   };
 };
 
-export default usePaymentHandler;
+export default useValidationHandler;

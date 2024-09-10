@@ -13,6 +13,7 @@ import { PaymentType } from "../../util/types";
 import { responsiveScale } from "../../theme/scalling";
 
 import SubmitButton from "../SubmitButton";
+import useSessionPayHandler from "../../hooks/useSessionPayHandler";
 
 type SingleInputFormSectionProps = {
   type: PaymentType;
@@ -21,7 +22,8 @@ type SingleInputFormSectionProps = {
 const SingleInputFormSection = ({ type }: SingleInputFormSectionProps) => {
   const [inputText, setInputText] = useState("");
   const [inputError, setInputError] = useState(false);
-  const { sessionPay, amount, currency } = useContext(StateContext);
+  const { amount, currency } = useContext(StateContext);
+  const { sessionPay } = useSessionPayHandler();
 
   const onPay = () => {
     if (!inputText) {

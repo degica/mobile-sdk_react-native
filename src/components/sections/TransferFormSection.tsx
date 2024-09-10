@@ -13,6 +13,7 @@ import { validateTransferFormFields } from "../../util/validator";
 import { responsiveScale } from "../../theme/scalling";
 
 import SubmitButton from "../SubmitButton";
+import useSessionPayHandler from "../../hooks/useSessionPayHandler";
 
 type TransferFormSectionProps = {
   type: PaymentType;
@@ -32,8 +33,8 @@ const TransferFormSection = ({ type }: TransferFormSectionProps) => {
   const [inputErrors, setInputErrors] =
     useState<typeof initialErrors>(initialErrors);
 
-  const { sessionPay, amount, currency, transferFormFields } =
-    useContext(StateContext);
+  const { amount, currency, transferFormFields } = useContext(StateContext);
+  const { sessionPay } = useSessionPayHandler();
 
   const onPay = () => {
     const isValid = validateTransferFormFields({
