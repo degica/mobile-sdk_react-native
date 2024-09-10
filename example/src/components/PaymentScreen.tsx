@@ -8,7 +8,10 @@ import {
   Pressable,
   Alert,
 } from "react-native";
-import { KomojuSDK, SessionShowResponseType } from "@komoju/komoju-react-native";
+import {
+  KomojuSDK,
+  SessionShowResponseType,
+} from "@komoju/komoju-react-native";
 import createSession from "../services/sessionService";
 
 export enum CurrencyTypes {
@@ -37,7 +40,7 @@ const PaymentScreen = ({
     }
 
     // fetch a session Id to initiate payment
-    const sessionId = await createSession({amount, currency, language});
+    const sessionId = await createSession({ amount, currency, language });
     setLoading(false);
 
     // invoke createPayment method with sessionId as parameters to open the payment portal
@@ -62,27 +65,23 @@ const PaymentScreen = ({
     <View style={[styles.container]}>
       <View style={styles.currencyRow}>
         {(Object.keys(CurrencyTypes) as Array<keyof typeof CurrencyTypes>).map(
-          key => (
+          (key) => (
             <Pressable
               key={key}
               onPress={() => changeCurrencyType(CurrencyTypes[key])}
               style={[
                 styles.currencyTextContainer,
                 key === currency && styles.currencySelectedTextContainer,
-              ]}>
-              <Text
-                style={[
-                  key === currency && styles.currencySelectedText,
-                ]}>
+              ]}
+            >
+              <Text style={[key === currency && styles.currencySelectedText]}>
                 {key}
               </Text>
             </Pressable>
-          ),
+          )
         )}
       </View>
-      <Text style={[styles.title]}>
-        Enter Amount to Pay with Komoju
-      </Text>
+      <Text style={[styles.title]}>Enter Amount to Pay with Komoju</Text>
       <TextInput
         style={[styles.input]}
         placeholder="Enter amount"
@@ -92,11 +91,7 @@ const PaymentScreen = ({
         onChangeText={setAmount}
       />
       <View style={styles.buttonContainer}>
-        <Button
-          title="Checkout"
-          onPress={handleSessionPay}
-          color={"#007AFF"}
-        />
+        <Button title="Checkout" onPress={handleSessionPay} color={"#007AFF"} />
       </View>
     </View>
   );

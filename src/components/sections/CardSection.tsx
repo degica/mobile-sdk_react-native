@@ -5,7 +5,6 @@ import { StyleSheet, View } from "react-native";
 import { Actions, DispatchContext, StateContext } from "../../context/state";
 
 import { formatCurrency } from "../../util/helpers";
-import { PaymentType } from "../../util/types";
 import { validateCardFormFields } from "../../util/validator";
 
 import { responsiveScale } from "../../theme/scalling";
@@ -13,6 +12,7 @@ import { responsiveScale } from "../../theme/scalling";
 import CardInputGroup from "../CardInputGroup";
 import Input from "../Input";
 import SubmitButton from "../SubmitButton";
+import useThreeDSecureHandler from "../../hooks/useThreeDSecureHandler";
 
 const initialErrors = {
   name: false,
@@ -29,9 +29,8 @@ const initialErrors = {
 
 const CardSection = (): JSX.Element => {
   const [inputErrors, setInputErrors] = useState(initialErrors);
-
+  const { threeDSecurePayment } = useThreeDSecureHandler();
   const {
-    sessionPay,
     cardholderName,
     cardCVV,
     cardNumber,
@@ -59,14 +58,11 @@ const CardSection = (): JSX.Element => {
     });
 
     if (isValid) {
-      sessionPay({
-        paymentType: PaymentType.CREDIT,
-        paymentDetails: {
-          cardholderName,
-          cardCVV,
-          cardNumber,
-          cardExpiredDate,
-        },
+      threeDSecurePayment({
+        cardholderName,
+        cardCVV,
+        cardNumber,
+        cardExpiredDate,
       });
     }
   };

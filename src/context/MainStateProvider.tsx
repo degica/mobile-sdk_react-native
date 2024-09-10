@@ -1,11 +1,17 @@
-import { useCallback, useContext, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import PaymentModal from "../components/PaymentModal";
 import Sheet, { SheetRefProps } from "../components/Sheet";
 
 import {
   CreatePaymentFuncType,
-  initialState,
   InitPrams,
   KomojuProviderIprops,
 } from "../util/types";
@@ -14,78 +20,52 @@ import "../assets/languages/i18n";
 import { Actions, DispatchContext, KomojuContext } from "./state";
 import useBackgroundHandler from "../hooks/useBackgroundHandler";
 import useDeepLinkHandler from "../hooks/useDeepLinkHandler";
-import usePaymentHandler from "../hooks/usePaymentHandler";
 import useMainStateUtils from "../hooks/useMainStateUtils";
+import usePaymentSheetToggle from "../hooks/usePaymentSheetToggle";
+import useValidationHandler from "../hooks/useValidationHandler";
 
 export const MainStateProvider = (props: KomojuProviderIprops) => {
   const dispatch = useContext(DispatchContext);
   const [modalVisible, setModalVisible] = useState(false);
+  const [isDeepLinkOpened, setIsDeepLinkOpened] = useState(false);
 
   const sheetRef = useRef<SheetRefProps>(null);
-  // ref to hold client provided onComplete callback
-  const onCompleteCallback = useRef(null);
-  // ref to hold client provided onDismiss callback
-  const onDismissCallback = useRef(null);
-  // ref to hold client provided session Id
-  const sessionIdRef = useRef("");
+
+  // setting all props data on providerPropsData state
+  useEffect(() => {
+    dispatch({
+      type: Actions.SET_PROVIDER_PROPS_DATA,
+      payload: {
+        publishableKey: props.publishableKey,
+        paymentMethods: props?.paymentMethods,
+        language: props?.language,
+        useBottomSheet: props?.useBottomSheet,
+        urlScheme: props?.urlScheme,
+      },
+    });
+  }, [props]);
+
+  // Show & Hide payment screen
+  const { openPaymentSheet, closePaymentSheet } = usePaymentSheetToggle({
+    toggleUIVisibility: (value: boolean) => setModalVisible(value),
+    sheetRef: sheetRef,
+  });
 
   // Get all the util functions that needs to function the Main State
-  const {
-    startLoading,
-    stopLoading,
-    onPaymentAwaiting,
-    onPaymentCancelled,
-    onSessionExpired,
-    onPaymentFailed,
-    onPaymentSuccess,
-    closePaymentSheet,
-    onUserCancel,
-    openPaymentSheet,
-    resetGlobalStates,
-  } = useMainStateUtils({
-    props: props,
-    sheetRef: sheetRef,
-    sessionIdRef: sessionIdRef,
-    toggleUIVisibility: (value: boolean) => setModalVisible(value),
-    initialState: initialState,
-    onDismissCallback: onDismissCallback,
-  });
-
-  // Handle events when module goes foreground
-  useBackgroundHandler({
-    props: props,
-    startLoading: startLoading,
-    stopLoading: stopLoading,
-    sessionIdRef: sessionIdRef,
-    onCompleteCallback: onCompleteCallback,
-    onPaymentAwaiting: onPaymentAwaiting,
-    onPaymentCancelled: onPaymentCancelled,
-    onSessionExpired: onSessionExpired,
-    onPaymentFailed: onPaymentFailed,
-    onPaymentSuccess: onPaymentSuccess,
-  });
+  const { startLoading, stopLoading, onUserCancel, resetGlobalStates } =
+    useMainStateUtils();
 
   // Handle deep-links of the module
-  useDeepLinkHandler({
-    props: props,
-    startLoading: startLoading,
-    stopLoading: stopLoading,
-    sessionIdRef: sessionIdRef,
-    onCompleteCallback: onCompleteCallback,
-    onPaymentAwaiting: onPaymentAwaiting,
-    onPaymentCancelled: onPaymentCancelled,
-    onPaymentFailed: onPaymentFailed,
-    onPaymentSuccess: onPaymentSuccess,
-  });
+  useDeepLinkHandler(setIsDeepLinkOpened);
 
-  // Handle validations of the session and pay for session
-  const { sessionPay, validateSession } = usePaymentHandler({
+  // Handle events when module goes foreground
+  useBackgroundHandler(isDeepLinkOpened, setIsDeepLinkOpened);
+
+  // Handle validations of the session
+  const { validateSession } = useValidationHandler({
     props: props,
     startLoading: startLoading,
     stopLoading: stopLoading,
-    onPaymentAwaiting: onPaymentAwaiting,
-    onPaymentFailed: onPaymentFailed,
-    onPaymentSuccess: onPaymentSuccess,
     closePaymentSheet: closePaymentSheet,
   });
 
@@ -93,24 +73,15 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
     ({ sessionId, onComplete, onDismiss }: CreatePaymentFuncType) => {
       resetGlobalStates();
 
-      // setting client provided onComplete callback into a ref
-      // TODO: Fix this type error
-      // @ts-expect-error - Argument of type 'PaymentSessionResponse' is not assignable to parameter of type 'string'.
-      onCompleteCallback.current = onComplete;
-      // setting client provided onDismiss callback into a ref
-      // TODO: Fix this type error
-      // @ts-expect-error - Argument of type 'PaymentSessionResponse' is not assignable to parameter of type 'string'.
-      onDismissCallback.current = onDismiss;
-      // setting client provided session Id and into a ref
-      sessionIdRef.current = sessionId;
-
       validateSession(sessionId);
 
       dispatch({
-        type: Actions.SESSION_PAY,
-        payload: sessionPay({
-          sessionId,
-        }),
+        type: Actions.SET_SESSION_DATA,
+        payload: {
+          sessionId: sessionId,
+          onComplete: onComplete,
+          onDismiss: onDismiss,
+        },
       });
       openPaymentSheet();
     },

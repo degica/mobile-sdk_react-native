@@ -27,13 +27,18 @@ react-i18next
 
 ## Usage example
 
+For a complete example, [visit our docs](https://doc.komoju.com/docs/react-native).
+
 ```tsx
 // App.ts
 import { KomojuSDK } from "@komoju/komoju-react-native";
 
 function App() {
   return (
-    <KomojuSDK.KomojuProvider publishableKey={PUBLISHABLE_KEY}>
+    <KomojuSDK.KomojuProvider
+      publishableKey={PUBLISHABLE_KEY}
+      urlScheme="your-url-scheme"
+    >
       <PaymentScreen />
     </KomojuSDK.KomojuProvider>
   );
@@ -101,6 +106,7 @@ function App() {
   return (
     <KomojuSDK.KomojuProvider
       publishableKey={publishableKey}
+      urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
       paymentMethods={[PaymentTypes.KONBINI]} // explicitly set the payment method(s) for purchase
       language={LanguageTypes.JAPANESE} // explicitly set the language, if not set language will be picked from your session Id
     >
@@ -115,5 +121,6 @@ function App() {
 | property           | type                     | description                                                                                                   |
 | ------------------ | ------------------------ | ------------------------------------------------------------------------------------------------------------- |
 | **publishableKey** | `string`                 | Your publishable key from the KOMOJU [merchant settings page](https://komoju.com/sign_in/) (this is mandtory) |
+| **urlScheme**      | `string`                 | Your return url for customers to return to the app after completing browser authentications                   |
 | **paymentMethods** | `Array <PaymentTypes>`   | explicitly set the payment method(s) for purchase. (optional)                                                 |
 | **language**       | `string (LanguageTypes)` | explicitly set the language, if not set language will be picked from your session Id (optional)               |

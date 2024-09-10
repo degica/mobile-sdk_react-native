@@ -1,4 +1,4 @@
-import { Dimensions, Platform } from "react-native";
+import { Alert, Dimensions, Linking, Platform } from "react-native";
 
 import { cardTypeRegex, themeMapping } from "./constants";
 import {
@@ -180,6 +180,31 @@ export const determineCardType = (
   } else if (cardNumber.length > 2) {
     return "unknown";
   } else return null;
+};
+
+export const extractParameterFromUrl = (
+  url: string,
+  parameter: string
+): string => {
+  const queryString = url.split("?")[1]; // Get the part after '?'
+  const paramsArray = queryString?.split("&") ?? []; // Split each parameter
+
+  for (const param of paramsArray) {
+    const [key, value] = param.split("=");
+    if (key === parameter) {
+      return value ?? "";
+    }
+  }
+
+  return "";
+};
+
+export const openURL = async (url: string) => {
+  try {
+    await Linking.openURL(url);
+  } catch (err) {
+    Alert.alert("Redirection not working. Please contact support!");
+  }
 };
 
 export const isAndroid = () => Platform.OS === "android";

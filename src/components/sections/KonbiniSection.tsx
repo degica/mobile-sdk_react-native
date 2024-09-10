@@ -20,6 +20,7 @@ import { responsiveScale } from "../../theme/scalling";
 import Input from "../Input";
 import Pill from "../Pill";
 import SubmitButton from "../SubmitButton";
+import useSessionPayHandler from "../../hooks/useSessionPayHandler";
 
 const initialErrors = {
   name: false,
@@ -29,15 +30,9 @@ const initialErrors = {
 const KonbiniSection = (): JSX.Element => {
   const [inputErrors, setInputErrors] = useState(initialErrors);
 
-  const {
-    sessionPay,
-    name,
-    email,
-    amount,
-    currency,
-    paymentMethods,
-    selectedStore,
-  } = useContext(StateContext);
+  const { sessionPay } = useSessionPayHandler();
+  const { name, email, amount, currency, paymentMethods, selectedStore } =
+    useContext(StateContext);
   const dispatch = useContext(DispatchContext);
 
   const konbiniPaymentMethodData = paymentMethods?.find(

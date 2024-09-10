@@ -31,7 +31,9 @@ export const Actions = {
   SET_SELECTED_STORE: "SET_SELECTED_STORE",
   SET_PAYMENT_STATE: "SET_PAYMENT_STATE",
   SET_PAYMENT_METHODS: "SET_PAYMENT_METHODS",
-  SESSION_PAY: "SESSION_PAY",
+  SET_SESSION_DATA: "SET_SESSION_DATA",
+  SET_PROVIDER_PROPS_DATA: "SET_PROVIDER_PROPS_DATA",
+  SET_TOKEN_ID: "SET_TOKEN_ID",
 };
 
 /**
@@ -51,7 +53,7 @@ export function reducer(state: State, action: ActionType) {
     case Actions.RESET_STATES:
       return {
         ...state,
-        ...action.payload,
+        ...(action.payload as object),
       };
     case Actions.SET_LOADING:
       return {
@@ -93,10 +95,15 @@ export function reducer(state: State, action: ActionType) {
         ...state,
         transferFormFields: action.payload,
       };
-    case Actions.SESSION_PAY:
+    case Actions.SET_SESSION_DATA:
       return {
         ...state,
-        sessionPay: action.payload,
+        sessionData: { ...state.sessionData, ...(action.payload as object) },
+      };
+    case Actions.SET_PROVIDER_PROPS_DATA:
+      return {
+        ...state,
+        providerPropsData: action.payload,
       };
     case Actions.SET_AMOUNT:
       return {
@@ -122,6 +129,11 @@ export function reducer(state: State, action: ActionType) {
       return {
         ...state,
         paymentMethods: action.payload,
+      };
+    case Actions.SET_TOKEN_ID:
+      return {
+        ...state,
+        tokenId: action.payload,
       };
     default:
       throw new Error();

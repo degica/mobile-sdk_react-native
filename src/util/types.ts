@@ -6,6 +6,7 @@ export type InitPrams = {
   language?: LanguageTypes;
   useBottomSheet?: boolean;
   theme?: Partial<UserFriendlyTheme>;
+  urlScheme?: string;
 };
 
 export type CreatePaymentFuncType = {
@@ -83,6 +84,7 @@ export enum TokenResponseStatuses {
   SUCCESS = "OK",
   CAPTURED = "captured",
   PENDING = "NEEDS_VERIFY",
+  SKIPPED = "SKIPPED",
   ERROR = "ERRORED",
 }
 
@@ -114,20 +116,21 @@ export type payForSessionProps = {
   sessionId: string;
   paymentType: PaymentType;
   paymentDetails?: CardDetailsType &
-  KonbiniDetailsType &
-  TransferFormFieldsType &
-  paymentTypeInputs;
+    KonbiniDetailsType &
+    TransferFormFieldsType &
+    paymentTypeInputs;
 };
 
 type paymentTypeInputs = {
   singleInput?: string;
 };
 
-type CardDetailsType = {
+export type CardDetailsType = {
   cardholderName?: string;
   cardNumber?: string;
   cardExpiredDate?: string;
   cardCVV?: string;
+  tokenId?: string;
 };
 
 type KonbiniDetailsType = {
@@ -192,6 +195,16 @@ export type SessionShowResponseType = {
   };
 };
 
+export type TokenResponseType = {
+  id: string;
+  verification_status: TokenResponseStatuses;
+  authentication_url: string;
+};
+
+export type paymentsResponseType = {
+  status: string;
+};
+
 export type setInputErrorType = {
   setInputErrors: Dispatch<SetStateAction<{ [key: string]: boolean }>>;
 };
@@ -224,11 +237,13 @@ export type State = CardDetailsType &
      */
     loading: boolean;
     /**
-     * Callback function to call relevant api for each payment type.
+     * All user provided current payment session related data
      */
-    // TODO: Fix this type error
-
-    sessionPay: Function;
+    sessionData: CreatePaymentFuncType;
+    /**
+     * All user provided props under KomojuProvider
+     */
+    providerPropsData: InitPrams;
     /**
      * Amount for the payment
      */
@@ -246,21 +261,28 @@ export type State = CardDetailsType &
      * this state is used to toggle(show hide) the success and failed screens.
      */
     paymentState:
-    | ResponseScreenStatuses.SUCCESS
-    | ResponseScreenStatuses.COMPLETE
-    | ResponseScreenStatuses.FAILED
-    | ResponseScreenStatuses.CANCELLED
-    | ResponseScreenStatuses.EXPIRED
-    | "";
+      | ResponseScreenStatuses.SUCCESS
+      | ResponseScreenStatuses.COMPLETE
+      | ResponseScreenStatuses.FAILED
+      | ResponseScreenStatuses.CANCELLED
+      | ResponseScreenStatuses.EXPIRED
+      | "";
     /**
      * States of the Bank transfer and Pay Easy fields.
      */
     transferFormFields?: TransferFormFieldsType;
+    /**
+     * Secure token id for 3ds payment
+     */
+    tokenId: string;
   };
 
 export type sessionPayProps = {
   paymentType: PaymentType;
-  paymentDetails?: CardDetailsType;
+  paymentDetails?: CardDetailsType &
+    KonbiniDetailsType &
+    TransferFormFieldsType &
+    paymentTypeInputs;
 };
 
 // Define the initial state
@@ -293,11 +315,17 @@ export const initialState: State = {
   },
   /** Bank transfer and Pay Easy related states end */
 
-  sessionPay: () => {},
   amount: "",
   currency: CurrencyTypes.JPY,
   paymentState: "",
   paymentMethods: [],
+  tokenId: "",
+  sessionData: {
+    sessionId: "",
+  },
+  providerPropsData: {
+    publishableKey: "",
+  },
 };
 // TODO: Fix this type error
 

@@ -1,35 +1,30 @@
 import { Linking } from "react-native";
-import { MutableRefObject, useEffect } from "react";
+import { Dispatch, SetStateAction, useContext, useEffect } from "react";
 import {
-  KomojuProviderIprops,
   PaymentStatuses,
+  PaymentType,
   TokenResponseStatuses,
 } from "../util/types";
 import sessionShow from "../services/sessionShow";
+import { StateContext } from "../context/state";
+import { getTokenResult } from "../services/secureTokenService";
+import { extractParameterFromUrl } from "../util/helpers";
+import payForSession from "../services/payForSessionService";
+import useMainStateUtils from "./useMainStateUtils";
 
-type Props = {
-  props: KomojuProviderIprops;
-  startLoading: () => void;
-  stopLoading: () => void;
-  sessionIdRef: MutableRefObject<string>;
-  onCompleteCallback: MutableRefObject<null>;
-  onPaymentSuccess: () => void;
-  onPaymentAwaiting: () => void;
-  onPaymentCancelled: () => void;
-  onPaymentFailed: () => void;
-};
+const useDeepLinkHandler = (setIsDeepLinkOpened: Dispatch<SetStateAction<boolean>>) => {
+  const { paymentType, providerPropsData, sessionData } =
+    useContext(StateContext);
 
-const useDeepLinkHandler = ({
-  props,
-  startLoading,
-  stopLoading,
-  sessionIdRef,
-  onCompleteCallback,
-  onPaymentAwaiting,
-  onPaymentCancelled,
-  onPaymentFailed,
-  onPaymentSuccess,
-}: Props) => {
+  const {
+    startLoading,
+    stopLoading,
+    onPaymentAwaiting,
+    onPaymentCancelled,
+    onPaymentFailed,
+    onPaymentSuccess,
+  } = useMainStateUtils();
+
   useEffect(() => {
     // Add event listener for deep links
     const subscription = Linking.addEventListener(
@@ -40,15 +35,15 @@ const useDeepLinkHandler = ({
     return () => {
       subscription.remove();
     };
-  }, [props]);
+  }, [paymentType, providerPropsData, sessionData]);
 
-  const handleDeepLinkStateChange = async () => {
+  const handleSessionPaymentResponse = async () => {
     startLoading();
 
     // if this is a session flow, check until session response changes from 'pending' to 'completed' or 'error'
     const sessionShowPayload = {
-      publishableKey: props.publishableKey,
-      sessionId: sessionIdRef.current,
+      publishableKey: providerPropsData.publishableKey,
+      sessionId: sessionData.sessionId,
     };
 
     // fetch session status to check if the payment is completed
@@ -72,10 +67,7 @@ const useDeepLinkHandler = ({
         onPaymentAwaiting();
       }
       // calling user passed onComplete method with session response data
-      onCompleteCallback.current &&
-        // TODO: Fix this type error
-        // @ts-expect-error - Argument of type 'PaymentSessionResponse' is not assignable to parameter of type 'string'.
-        onCompleteCallback.current(sessionResponse);
+      sessionData.onComplete && sessionData.onComplete(sessionResponse);
     } else if (sessionResponse?.payment?.status === PaymentStatuses.CANCELLED) {
       onPaymentCancelled();
     } else {
@@ -84,6 +76,48 @@ const useDeepLinkHandler = ({
 
     // after all api calls are done stopping the loading indicator
     stopLoading();
+  };
+
+  const handleSecureTokenPaymentResponse = async (token: string) => {
+    startLoading();
+
+    const tokenResponse = await getTokenResult({
+      publishableKey: providerPropsData.publishableKey,
+      tokenId: token,
+    });
+
+    if (
+      tokenResponse?.verification_status === TokenResponseStatuses.SUCCESS ||
+      tokenResponse?.verification_status === TokenResponseStatuses.SKIPPED
+    ) {
+      const paymentResponse = await payForSession({
+        paymentType: PaymentType.CREDIT,
+        sessionId: sessionData.sessionId,
+        publishableKey: providerPropsData.publishableKey,
+        paymentDetails: { tokenId: token },
+      });
+
+      if (paymentResponse?.status === PaymentStatuses.SUCCESS) {
+        onPaymentSuccess();
+      } else {
+        onPaymentFailed();
+      }
+
+      stopLoading();
+    } else {
+      onPaymentFailed();
+      stopLoading();
+    }
+  };
+
+  const handleDeepLinkStateChange = async ({ url }: { url: string }) => {
+    setIsDeepLinkOpened(true);
+    if (paymentType === PaymentType.CREDIT) {
+      const token = extractParameterFromUrl(url, "secure_token_id");
+      handleSecureTokenPaymentResponse(token);
+    } else {
+      handleSessionPaymentResponse();
+    }
   };
 
   return undefined;

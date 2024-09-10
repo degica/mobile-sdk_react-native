@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react";
-import {SafeAreaView, StyleSheet} from "react-native";
-import {KomojuSDK, LanguageTypes} from "@komoju/komoju-react-native";
+import React, { useEffect, useState } from "react";
+import { SafeAreaView, StyleSheet } from "react-native";
+import { KomojuSDK, LanguageTypes } from "@komoju/komoju-react-native";
 
 import PaymentScreen from "./components/PaymentScreen";
 import LanguageSelectComponent from "./components/languageSelectComponet";
@@ -35,7 +35,9 @@ function App(): React.JSX.Element {
       <KomojuSDK.KomojuProvider
         publishableKey={publishableKey}
         // theme={theme}
-        language={language}>
+        language={language}
+        urlScheme="komapp://"
+      >
         <PaymentScreen language={language} setLoading={setLoading} />
       </KomojuSDK.KomojuProvider>
 

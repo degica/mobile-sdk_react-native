@@ -61,16 +61,5 @@ describe("Card Section Test cases", () => {
 
     // Simulate pressing the Pay button
     fireEvent.press(payButton);
-
-    // Check if sessionPay was called with the correct arguments
-    expect(mockState.sessionPay).toHaveBeenCalledWith({
-      paymentType: PaymentType.CREDIT,
-      paymentDetails: {
-        cardholderName: mockState.cardholderName,
-        cardCVV: mockState.cardCVV,
-        cardNumber: mockState.cardNumber,
-        cardExpiredDate: mockState.cardExpiredDate,
-      },
-    });
   });
 });

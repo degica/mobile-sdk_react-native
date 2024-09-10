@@ -1,46 +1,12 @@
-import { MutableRefObject, RefObject, useContext } from "react";
+import { useContext } from "react";
 
-import { Actions, DispatchContext } from "../context/state";
-import { SheetRefProps } from "../components/Sheet";
-import {
-  KomojuProviderIprops,
-  ResponseScreenStatuses,
-  State,
-} from "../util/types";
+import { Actions, DispatchContext, StateContext } from "../context/state";
+import { initialState, ResponseScreenStatuses } from "../util/types";
 import sessionShow from "../services/sessionShow";
 
-type Props = {
-  props: KomojuProviderIprops;
-  sheetRef: RefObject<SheetRefProps>;
-  sessionIdRef: MutableRefObject<string>;
-  toggleUIVisibility: (value: boolean) => void;
-  initialState: State;
-  onDismissCallback: MutableRefObject<null>;
-};
-
-const useMainStateUtils = ({
-  props,
-  sheetRef,
-  sessionIdRef,
-  toggleUIVisibility,
-  initialState,
-  onDismissCallback,
-}: Props) => {
+const useMainStateUtils = () => {
   const dispatch = useContext(DispatchContext);
-  const openPaymentSheet = () => {
-    if (props?.useBottomSheet) {
-      sheetRef?.current?.open();
-    } else {
-      toggleUIVisibility(true);
-    }
-  };
-
-  const closePaymentSheet = () => {
-    // TODO: Fix this type error
-    // @ts-expect-error - Object is possibly 'null'.
-    sheetRef?.current?.close(false);
-    toggleUIVisibility(false);
-  };
+  const { providerPropsData, sessionData } = useContext(StateContext);
 
   const resetGlobalStates = () =>
     dispatch({
@@ -90,10 +56,10 @@ const useMainStateUtils = ({
     });
 
   const onUserCancel = async () => {
-    if (onDismissCallback.current) {
+    if (sessionData?.onDismiss) {
       const sessionShowPayload = {
-        publishableKey: props?.publishableKey,
-        sessionId: sessionIdRef.current,
+        publishableKey: providerPropsData?.publishableKey,
+        sessionId: sessionData.sessionId,
       };
 
       // fetch session status to check if the payment is completed
@@ -101,7 +67,7 @@ const useMainStateUtils = ({
       // invoking client provided onDismiss callback
       // TODO: Fix this type error
       // @ts-expect-error - Argument of type 'PaymentSessionResponse' is not assignable to parameter of type 'string'.
-      onDismissCallback.current(sessionResponse);
+      sessionData?.onDismiss(sessionResponse);
     }
   };
 
@@ -120,8 +86,6 @@ const useMainStateUtils = ({
     });
 
   return {
-    openPaymentSheet,
-    closePaymentSheet,
     onPaymentSuccess,
     onPaymentFailed,
     onPaymentCancelled,
