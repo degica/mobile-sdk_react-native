@@ -4,7 +4,11 @@ import { StyleSheet, View, Image, FlatList } from "react-native";
 
 import { StateContext } from "../context/state";
 
-import { PaymentType, sessionShowPaymentMethodType } from "../util/types";
+import {
+  PaymentType,
+  sessionDataType,
+  sessionShowPaymentMethodType,
+} from "../util/types";
 
 import PaymentMethodImages from "../assets/images/paymentMethodImages";
 
@@ -24,7 +28,9 @@ const squareSizeImages = [
 ];
 
 const PillContainer = ({ onSelect, selectedItem }: Props) => {
-  const { paymentMethods } = useContext(StateContext);
+  const { sessionData } = useContext(StateContext) as {
+    sessionData: sessionDataType;
+  };
 
   const getIcon = (slug: PaymentType) => {
     return (
@@ -53,7 +59,7 @@ const PillContainer = ({ onSelect, selectedItem }: Props) => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={paymentMethods}
+        data={sessionData.paymentMethods}
         renderItem={renderItem}
         horizontal
         showsHorizontalScrollIndicator={false}

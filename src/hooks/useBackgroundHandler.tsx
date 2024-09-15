@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, useContext, useEffect } from "react";
 import { AppState, AppStateStatus } from "react-native";
 import {
+  CreatePaymentFuncType,
   PaymentStatuses,
   PaymentType,
   TokenResponseStatuses,
@@ -17,6 +18,8 @@ const useBackgroundHandler = (
 ) => {
   const { paymentType, tokenId, providerPropsData, sessionData } =
     useContext(StateContext);
+
+  const SessionData = sessionData as CreatePaymentFuncType;
 
   const {
     startLoading,
@@ -38,13 +41,13 @@ const useBackgroundHandler = (
     return () => {
       windowChangeListener.remove();
     };
-  }, [providerPropsData, paymentType, tokenId, sessionData, isDeepLinkOpened]);
+  }, [providerPropsData, paymentType, tokenId, SessionData, isDeepLinkOpened]);
 
   const handleSessionPaymentResponse = async () => {
     // if this is a session flow, check until session response changes from 'pending' to 'completed' or 'error'
     const sessionShowPayload = {
       publishableKey: providerPropsData.publishableKey,
-      sessionId: sessionData.sessionId,
+      sessionId: SessionData.sessionId,
     };
 
     // fetch session status to check if the payment is completed
@@ -57,7 +60,7 @@ const useBackgroundHandler = (
       } else {
         onPaymentAwaiting();
       } // calling user passed onComplete method with session response data
-      sessionData.onComplete && sessionData.onComplete(sessionResponse);
+      SessionData.onComplete && SessionData.onComplete(sessionResponse);
     } else if (sessionResponse?.payment?.status === PaymentStatuses.CANCELLED) {
       onPaymentCancelled();
     } else if (sessionResponse?.expired) {
@@ -84,7 +87,7 @@ const useBackgroundHandler = (
     ) {
       const paymentResponse = await payForSession({
         paymentType: PaymentType.CREDIT,
-        sessionId: sessionData.sessionId,
+        sessionId: SessionData.sessionId,
         publishableKey: providerPropsData.publishableKey,
         paymentDetails: { tokenId: tokenId },
       });

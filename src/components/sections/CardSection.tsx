@@ -13,6 +13,8 @@ import CardInputGroup from "../CardInputGroup";
 import Input from "../Input";
 import SubmitButton from "../SubmitButton";
 import useThreeDSecureHandler from "../../hooks/useThreeDSecureHandler";
+import { PaymentMode, PaymentType, sessionDataType } from "../../util/types";
+import useSessionPayHandler from "../../hooks/useSessionPayHandler";
 
 const initialErrors = {
   name: false,
@@ -30,15 +32,11 @@ const initialErrors = {
 const CardSection = (): JSX.Element => {
   const [inputErrors, setInputErrors] = useState(initialErrors);
   const { threeDSecurePayment } = useThreeDSecureHandler();
-  const {
-    cardholderName,
-    cardCVV,
-    cardNumber,
-    cardExpiredDate,
-    amount,
-    currency,
-  } = useContext(StateContext);
+  const { sessionPay } = useSessionPayHandler();
+  const { cardholderName, cardCVV, cardNumber, cardExpiredDate, sessionData } =
+    useContext(StateContext);
   const dispatch = useContext(DispatchContext);
+  const SessionData = sessionData as sessionDataType;
 
   const resetError = (type: string) => {
     // TODO: Fix this type error
@@ -58,12 +56,24 @@ const CardSection = (): JSX.Element => {
     });
 
     if (isValid) {
-      threeDSecurePayment({
-        cardholderName,
-        cardCVV,
-        cardNumber,
-        cardExpiredDate,
-      });
+      if (SessionData.mode === PaymentMode.Customer) {
+        sessionPay({
+          paymentType: PaymentType.CREDIT,
+          paymentDetails: {
+            cardholderName,
+            cardCVV,
+            cardNumber,
+            cardExpiredDate,
+          },
+        });
+      } else {
+        threeDSecurePayment({
+          cardholderName,
+          cardCVV,
+          cardNumber,
+          cardExpiredDate,
+        });
+      }
     }
   };
 
@@ -87,8 +97,15 @@ const CardSection = (): JSX.Element => {
       <CardInputGroup inputErrors={inputErrors} resetError={resetError} />
       <View style={styles.btn}>
         <SubmitButton
-          label="PAY"
-          labelSuffix={formatCurrency({ amount, currency })}
+          label={SessionData?.mode === PaymentMode.Customer ? "SAVE" : "PAY"}
+          labelSuffix={
+            SessionData?.mode === PaymentMode.Customer
+              ? ""
+              : formatCurrency({
+                  amount: SessionData.amount,
+                  currency: SessionData.currency,
+                })
+          }
           onPress={onPay}
           testID="PayCTA"
         />

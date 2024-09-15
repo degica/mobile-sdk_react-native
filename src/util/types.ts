@@ -111,6 +111,12 @@ export enum CurrencyTypes {
   USD = "USD",
 }
 
+export enum PaymentMode {
+  Payment = "payment",
+  Customer = "customer",
+  CustomerPayment = "customer_payment",
+}
+
 export type payForSessionProps = {
   publishableKey: string;
   sessionId: string;
@@ -163,6 +169,9 @@ export type SessionPayResponseType = {
     payment_details: { instructions_url: string };
     status?: string;
   };
+  customer?: {
+    resource: PaymentMode;
+  };
 };
 
 export type sessionShowPaymentMethodType = {
@@ -177,8 +186,8 @@ export type SessionShowResponseType = {
   expired: boolean;
   secure_token?: { verification_status?: string };
   amount: number;
-  mode: string;
-  currency: string;
+  mode: PaymentMode;
+  currency: CurrencyTypes;
   session_url?: string;
   return_url?: string;
   payment_methods: Array<sessionShowPaymentMethodType>;
@@ -226,6 +235,25 @@ export type brandType = {
   icon: string;
 };
 
+export type sessionDataType = {
+  /**
+   * Amount for the payment
+   */
+  amount: string;
+  /**
+   * Currency type for the payment
+   */
+  currency: CurrencyTypes;
+  /**
+   * All payment methods which are accepting
+   */
+  paymentMethods: Array<sessionShowPaymentMethodType>;
+  /**
+   * session mode of payment
+   */
+  mode: PaymentMode;
+};
+
 export type State = CardDetailsType &
   KonbiniDetailsType & {
     /**
@@ -239,23 +267,14 @@ export type State = CardDetailsType &
     /**
      * All user provided current payment session related data
      */
-    sessionData: CreatePaymentFuncType;
+    sessionData:
+      | CreatePaymentFuncType
+      | sessionDataType
+      | (CreatePaymentFuncType & sessionDataType);
     /**
      * All user provided props under KomojuProvider
      */
     providerPropsData: InitPrams;
-    /**
-     * Amount for the payment
-     */
-    amount: string;
-    /**
-     * Currency type for the payment
-     */
-    currency: CurrencyTypes;
-    /**
-     * All payment methods which are accepting
-     */
-    paymentMethods: Array<sessionShowPaymentMethodType>;
     /**
      * State of the current payment.
      * this state is used to toggle(show hide) the success and failed screens.
@@ -315,13 +334,13 @@ export const initialState: State = {
   },
   /** Bank transfer and Pay Easy related states end */
 
-  amount: "",
-  currency: CurrencyTypes.JPY,
   paymentState: "",
-  paymentMethods: [],
   tokenId: "",
   sessionData: {
     sessionId: "",
+    amount: "",
+    currency: CurrencyTypes.JPY,
+    paymentMethods: [],
   },
   providerPropsData: {
     publishableKey: "",

@@ -27,6 +27,7 @@
     "CARD_NUMBER": "Card Number",
     "SCAN_CARD": "Scan Card",
     "PAY": "Pay",
+    "SAVE": "Save",
     "NAME_SHOWN_ON_RECEIPT": "Name (shown on receipt)",
     "FULL_NAME_ON_RECEIPT": "Full name on receipt",
     "EMAIL": "Email",

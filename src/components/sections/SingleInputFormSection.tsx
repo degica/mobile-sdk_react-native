@@ -8,7 +8,7 @@ import Input from "../../components/Input";
 
 import { LangKeys } from "../../util/constants";
 import { formatCurrency } from "../../util/helpers";
-import { PaymentType } from "../../util/types";
+import { PaymentType, sessionDataType } from "../../util/types";
 
 import { responsiveScale } from "../../theme/scalling";
 
@@ -22,7 +22,9 @@ type SingleInputFormSectionProps = {
 const SingleInputFormSection = ({ type }: SingleInputFormSectionProps) => {
   const [inputText, setInputText] = useState("");
   const [inputError, setInputError] = useState(false);
-  const { amount, currency } = useContext(StateContext);
+  const { sessionData } = useContext(StateContext) as {
+    sessionData: sessionDataType;
+  };
   const { sessionPay } = useSessionPayHandler();
 
   const onPay = () => {
@@ -58,7 +60,10 @@ const SingleInputFormSection = ({ type }: SingleInputFormSectionProps) => {
       <View style={styles.btn}>
         <SubmitButton
           label="PAY"
-          labelSuffix={formatCurrency({ amount, currency })}
+          labelSuffix={formatCurrency({
+            amount: sessionData.amount,
+            currency: sessionData.currency,
+          })}
           onPress={onPay}
           testID="PayCTA"
         />

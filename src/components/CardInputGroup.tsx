@@ -1,10 +1,4 @@
-import {
-  memo,
-  useContext,
-  useEffect,
-  useState,
-  useCallback,
-} from "react";
+import { memo, useContext, useEffect, useState, useCallback } from "react";
 
 import { StyleSheet, View, Image, Dimensions } from "react-native";
 
@@ -18,6 +12,7 @@ import {
 import {
   CardTypes,
   PaymentType,
+  sessionDataType,
   sessionShowPaymentMethodType,
   ThemeSchemeType,
 } from "../util/types";
@@ -50,8 +45,9 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
   // const [toggleScanCard, setToggleScanCard] = useState<boolean>(false);
   const theme = useCurrentTheme();
   const styles = getStyles(theme);
-  const { cardCVV, cardNumber, cardExpiredDate, paymentMethods } =
+  const { cardCVV, cardNumber, cardExpiredDate, sessionData } =
     useContext(StateContext);
+  const SessionData = sessionData as sessionDataType;
 
   useEffect(() => {
     // Determine card type and set it on first render if cardNumber is not empty
@@ -83,7 +79,7 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
   // Create card image list
   const cardImage = useCallback(() => {
     // Select credit card payment method data from session response payment methods
-    const cardPaymentMethodData = paymentMethods?.find(
+    const cardPaymentMethodData = SessionData.paymentMethods?.find(
       (method: sessionShowPaymentMethodType) =>
         method?.type === PaymentType.CREDIT
     );
@@ -116,7 +112,7 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
     } else {
       return;
     }
-  }, [cardType, paymentMethods]);
+  }, [cardType, SessionData.paymentMethods]);
 
   // const onCardScanned = useCallback(
   //   (cardDetails: { cardNumber?: string; expirationDate?: string }) => {

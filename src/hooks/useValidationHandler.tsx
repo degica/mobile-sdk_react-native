@@ -2,7 +2,11 @@ import { useContext } from "react";
 import { Alert } from "react-native";
 import i18next from "i18next";
 
-import { KomojuProviderIprops } from "../util/types";
+import {
+  CurrencyTypes,
+  KomojuProviderIprops,
+  PaymentMode,
+} from "../util/types";
 import sessionShow from "../services/sessionShow";
 import { validateSessionResponse } from "../util/validator";
 import { Actions, DispatchContext } from "../context/state";
@@ -45,25 +49,22 @@ const useValidationHandler = ({
         i18next.changeLanguage(sessionData?.default_locale);
       }
 
-      // if session is valid setting amount, currency type at global store for future use
-      dispatch({
-        type: Actions.SET_AMOUNT,
-        payload: String(sessionData?.amount),
-      });
-
-      dispatch({ type: Actions.SET_CURRENCY, payload: sessionData?.currency });
-
       // if user provided explicitly payments methods via props, will give priority to that over session payment methods
       const paymentMethods = parsePaymentMethods(
         props?.paymentMethods,
-        sessionData?.payment_methods
+        sessionData?.payment_methods ?? []
       );
 
-      // setting the payment methods in global state
       dispatch({
-        type: Actions.SET_PAYMENT_METHODS,
-        payload: paymentMethods,
+        type: Actions.SET_SESSION_DATA,
+        payload: {
+          amount: String(sessionData?.amount),
+          currency: sessionData?.currency ?? CurrencyTypes.JPY,
+          paymentMethods: paymentMethods,
+          mode: sessionData?.mode ?? PaymentMode.Payment,
+        },
       });
+
       // setting the current selected payment method as the first payment method on the list
       dispatch({
         type: Actions.SET_PAYMENT_OPTION,

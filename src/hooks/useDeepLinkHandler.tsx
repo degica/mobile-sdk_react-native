@@ -1,6 +1,7 @@
 import { Linking } from "react-native";
 import { Dispatch, SetStateAction, useContext, useEffect } from "react";
 import {
+  CreatePaymentFuncType,
   PaymentStatuses,
   PaymentType,
   TokenResponseStatuses,
@@ -12,9 +13,12 @@ import { extractParameterFromUrl } from "../util/helpers";
 import payForSession from "../services/payForSessionService";
 import useMainStateUtils from "./useMainStateUtils";
 
-const useDeepLinkHandler = (setIsDeepLinkOpened: Dispatch<SetStateAction<boolean>>) => {
+const useDeepLinkHandler = (
+  setIsDeepLinkOpened: Dispatch<SetStateAction<boolean>>
+) => {
   const { paymentType, providerPropsData, sessionData } =
     useContext(StateContext);
+  const SessionData = sessionData as CreatePaymentFuncType;
 
   const {
     startLoading,
@@ -43,7 +47,7 @@ const useDeepLinkHandler = (setIsDeepLinkOpened: Dispatch<SetStateAction<boolean
     // if this is a session flow, check until session response changes from 'pending' to 'completed' or 'error'
     const sessionShowPayload = {
       publishableKey: providerPropsData.publishableKey,
-      sessionId: sessionData.sessionId,
+      sessionId: SessionData.sessionId,
     };
 
     // fetch session status to check if the payment is completed
@@ -67,7 +71,7 @@ const useDeepLinkHandler = (setIsDeepLinkOpened: Dispatch<SetStateAction<boolean
         onPaymentAwaiting();
       }
       // calling user passed onComplete method with session response data
-      sessionData.onComplete && sessionData.onComplete(sessionResponse);
+      SessionData.onComplete && SessionData.onComplete(sessionResponse);
     } else if (sessionResponse?.payment?.status === PaymentStatuses.CANCELLED) {
       onPaymentCancelled();
     } else {
@@ -92,7 +96,7 @@ const useDeepLinkHandler = (setIsDeepLinkOpened: Dispatch<SetStateAction<boolean
     ) {
       const paymentResponse = await payForSession({
         paymentType: PaymentType.CREDIT,
-        sessionId: sessionData.sessionId,
+        sessionId: SessionData.sessionId,
         publishableKey: providerPropsData.publishableKey,
         paymentDetails: { tokenId: token },
       });

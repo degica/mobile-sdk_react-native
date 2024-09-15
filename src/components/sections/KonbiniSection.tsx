@@ -9,6 +9,7 @@ import {
   brandType,
   KonbiniType,
   PaymentType,
+  sessionDataType,
   sessionShowPaymentMethodType,
 } from "../../util/types";
 import { validateKonbiniFormFields } from "../../util/validator";
@@ -31,11 +32,11 @@ const KonbiniSection = (): JSX.Element => {
   const [inputErrors, setInputErrors] = useState(initialErrors);
 
   const { sessionPay } = useSessionPayHandler();
-  const { name, email, amount, currency, paymentMethods, selectedStore } =
-    useContext(StateContext);
+  const { name, email, sessionData, selectedStore } = useContext(StateContext);
   const dispatch = useContext(DispatchContext);
+  const SessionData = sessionData as sessionDataType;
 
-  const konbiniPaymentMethodData = paymentMethods?.find(
+  const konbiniPaymentMethodData = SessionData.paymentMethods?.find(
     (method: sessionShowPaymentMethodType) =>
       method?.type === PaymentType.KONBINI
   );
@@ -134,7 +135,10 @@ const KonbiniSection = (): JSX.Element => {
       <View style={styles.btn}>
         <SubmitButton
           label="PAY"
-          labelSuffix={formatCurrency({ amount, currency })}
+          labelSuffix={formatCurrency({
+            amount: SessionData.amount,
+            currency: SessionData.currency,
+          })}
           onPress={onPay}
         />
       </View>

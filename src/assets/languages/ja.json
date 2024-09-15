@@ -27,6 +27,7 @@
       "CARD_NUMBER": "カード番号",
       "SCAN_CARD": "カードをスキャン",
       "PAY": "支払い",
+      "SAVE": "保存",
       "NAME_SHOWN_ON_RECEIPT": "氏名",
       "FULL_NAME_ON_RECEIPT": "氏名を入力（レシートで表示されます）",
       "EMAIL": "メールアドレス",

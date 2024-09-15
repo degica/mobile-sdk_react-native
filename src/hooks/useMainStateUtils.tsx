@@ -1,12 +1,17 @@
 import { useContext } from "react";
 
 import { Actions, DispatchContext, StateContext } from "../context/state";
-import { initialState, ResponseScreenStatuses } from "../util/types";
+import {
+  initialState,
+  ResponseScreenStatuses,
+  CreatePaymentFuncType,
+} from "../util/types";
 import sessionShow from "../services/sessionShow";
 
 const useMainStateUtils = () => {
   const dispatch = useContext(DispatchContext);
   const { providerPropsData, sessionData } = useContext(StateContext);
+  const SessionData = sessionData as CreatePaymentFuncType;
 
   const resetGlobalStates = () =>
     dispatch({
@@ -56,10 +61,10 @@ const useMainStateUtils = () => {
     });
 
   const onUserCancel = async () => {
-    if (sessionData?.onDismiss) {
+    if (SessionData?.onDismiss) {
       const sessionShowPayload = {
         publishableKey: providerPropsData?.publishableKey,
-        sessionId: sessionData.sessionId,
+        sessionId: SessionData.sessionId,
       };
 
       // fetch session status to check if the payment is completed
@@ -67,7 +72,7 @@ const useMainStateUtils = () => {
       // invoking client provided onDismiss callback
       // TODO: Fix this type error
       // @ts-expect-error - Argument of type 'PaymentSessionResponse' is not assignable to parameter of type 'string'.
-      sessionData?.onDismiss(sessionResponse);
+      SessionData?.onDismiss(sessionResponse);
     }
   };
 
