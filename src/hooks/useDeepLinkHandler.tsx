@@ -2,6 +2,7 @@ import { Linking } from "react-native";
 import { Dispatch, SetStateAction, useContext, useEffect } from "react";
 import {
   CreatePaymentFuncType,
+  PaymentMode,
   PaymentStatuses,
   PaymentType,
   TokenResponseStatuses,
@@ -47,7 +48,7 @@ const useDeepLinkHandler = (
     // if this is a session flow, check until session response changes from 'pending' to 'completed' or 'error'
     const sessionShowPayload = {
       publishableKey: providerPropsData.publishableKey,
-      sessionId: SessionData.sessionId,
+      sessionId: SessionData?.sessionId,
     };
 
     // fetch session status to check if the payment is completed
@@ -65,13 +66,16 @@ const useDeepLinkHandler = (
 
     // if payment success showing success screen or if failed showing error screen
     if (sessionResponse?.status === PaymentStatuses.SUCCESS) {
-      if (sessionResponse?.payment?.status === TokenResponseStatuses.CAPTURED) {
+      if (
+        sessionResponse?.payment?.status === TokenResponseStatuses.CAPTURED ||
+        sessionResponse.mode === PaymentMode.Customer
+      ) {
         onPaymentSuccess();
       } else {
         onPaymentAwaiting();
       }
       // calling user passed onComplete method with session response data
-      SessionData.onComplete && SessionData.onComplete(sessionResponse);
+      SessionData?.onComplete && SessionData?.onComplete(sessionResponse);
     } else if (sessionResponse?.payment?.status === PaymentStatuses.CANCELLED) {
       onPaymentCancelled();
     } else {
@@ -96,7 +100,7 @@ const useDeepLinkHandler = (
     ) {
       const paymentResponse = await payForSession({
         paymentType: PaymentType.CREDIT,
-        sessionId: SessionData.sessionId,
+        sessionId: SessionData?.sessionId,
         publishableKey: providerPropsData.publishableKey,
         paymentDetails: { tokenId: token },
       });

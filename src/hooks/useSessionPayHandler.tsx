@@ -35,7 +35,7 @@ const useSessionPayHandler = () => {
     // initiate payment for the session ID with payment details
     const response = await payForSession({
       paymentType,
-      sessionId: SessionData.sessionId,
+      sessionId: SessionData?.sessionId,
       publishableKey: providerPropsData.publishableKey,
       paymentDetails,
     });

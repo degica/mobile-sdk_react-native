@@ -64,7 +64,7 @@ const useMainStateUtils = () => {
     if (SessionData?.onDismiss) {
       const sessionShowPayload = {
         publishableKey: providerPropsData?.publishableKey,
-        sessionId: SessionData.sessionId,
+        sessionId: SessionData?.sessionId,
       };
 
       // fetch session status to check if the payment is completed

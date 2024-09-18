@@ -13,10 +13,16 @@ import CardInputGroup from "../CardInputGroup";
 import Input from "../Input";
 import SubmitButton from "../SubmitButton";
 import useThreeDSecureHandler from "../../hooks/useThreeDSecureHandler";
-import { PaymentMode, PaymentType, sessionDataType } from "../../util/types";
+import {
+  CardDetailsType,
+  PaymentMode,
+  PaymentType,
+  sessionDataType,
+} from "../../util/types";
 import useSessionPayHandler from "../../hooks/useSessionPayHandler";
 
 const initialErrors = {
+  email: false,
   name: false,
   number: false,
   expiry: false,
@@ -33,8 +39,7 @@ const CardSection = (): JSX.Element => {
   const [inputErrors, setInputErrors] = useState(initialErrors);
   const { threeDSecurePayment } = useThreeDSecureHandler();
   const { sessionPay } = useSessionPayHandler();
-  const { cardholderName, cardCVV, cardNumber, cardExpiredDate, sessionData } =
-    useContext(StateContext);
+  const { cardData, sessionData } = useContext(StateContext);
   const dispatch = useContext(DispatchContext);
   const SessionData = sessionData as sessionDataType;
 
@@ -46,47 +51,69 @@ const CardSection = (): JSX.Element => {
 
   const onPay = () => {
     const isValid = validateCardFormFields({
-      cardholderName,
-      cardCVV,
-      cardNumber,
-      cardExpiredDate,
+      cardData,
+      withEmail: SessionData?.mode === PaymentMode.Customer,
       // TODO: Fix this type error
       // @ts-expect-error - Type 'object' is not assignable to type 'SetStateAction<object>'.
       setInputErrors,
     });
 
     if (isValid) {
-      if (SessionData.mode === PaymentMode.Customer) {
+      const cardDataObj: CardDetailsType = {
+        cardholderName: cardData?.cardNumber,
+        cardCVV: cardData?.cardCVV,
+        cardNumber: cardData?.cardNumber,
+        cardExpiredDate: cardData?.cardExpiredDate,
+      };
+      if (cardData?.cardholderEmail) {
+        cardDataObj.cardholderEmail = cardData?.cardholderEmail;
+      }
+
+      if (SessionData?.mode === PaymentMode.Customer) {
         sessionPay({
           paymentType: PaymentType.CREDIT,
-          paymentDetails: {
-            cardholderName,
-            cardCVV,
-            cardNumber,
-            cardExpiredDate,
-          },
+          paymentDetails: cardDataObj,
         });
       } else {
-        threeDSecurePayment({
-          cardholderName,
-          cardCVV,
-          cardNumber,
-          cardExpiredDate,
-        });
+        threeDSecurePayment(cardDataObj);
       }
     }
   };
 
   return (
     <View style={styles.cardContainer}>
+      {SessionData?.mode === PaymentMode.Customer ? (
+        <View style={styles.cardNameContainer}>
+          <Input
+            value={cardData?.cardholderEmail ?? ""}
+            label="EMAIL"
+            placeholder="EXAMPLE_EMAIL"
+            onChangeText={(text: string) => {
+              resetError("email");
+              dispatch({
+                type: Actions.SET_CARD_DATA,
+                payload: { cardholderEmail: text },
+              });
+            }}
+            inputStyle={styles.inputStyle}
+            error={inputErrors.email}
+            errorText="EMAIL_ERROR"
+            autoCapitalize="none"
+            inputMode="email"
+          />
+        </View>
+      ) : null}
       <View style={styles.cardNameContainer}>
         <Input
-          value={cardholderName ?? ""}
+          value={cardData?.cardholderName ?? ""}
           label="CARD_HOLDER_NAME"
           placeholder="FULL_NAME_ON_CARD"
           onChangeText={(text: string) => {
             resetError("name");
-            dispatch({ type: Actions.SET_CARDHOLDER_NAME, payload: text });
+            dispatch({
+              type: Actions.SET_CARD_DATA,
+              payload: { cardholderName: text },
+            });
           }}
           inputStyle={styles.inputStyle}
           error={inputErrors.name}
@@ -102,8 +129,8 @@ const CardSection = (): JSX.Element => {
             SessionData?.mode === PaymentMode.Customer
               ? ""
               : formatCurrency({
-                  amount: SessionData.amount,
-                  currency: SessionData.currency,
+                  amount: SessionData?.amount,
+                  currency: SessionData?.currency,
                 })
           }
           onPress={onPay}

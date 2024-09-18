@@ -16,11 +16,8 @@ import {
 
 export const Actions = {
   RESET_STATES: "RESET_STATES",
-  SET_CARDHOLDER_NAME: "SET_CARDHOLDER_NAME",
-  SET_CARD_NUMBER: "SET_CARD_NUMBER",
+  SET_CARD_DATA: "SET_CARD_DATA",
   SET_PAYMENT_OPTION: "SET_PAYMENT_OPTION",
-  SET_CARD_EXPIRED_DATE: "SET_CARD_EXPIRED_DATE",
-  SET_CARD_CVV: "SET_CARD_CVV",
   SET_NAME: "SET_NAME",
   SET_EMAIL: "SET_EMAIL",
   SET_TRANSFER_FORM_FIELDS: "SET_TRANSFER_FORM_FIELDS",
@@ -60,25 +57,10 @@ export function reducer(state: State, action: ActionType) {
         ...state,
         loading: action.payload,
       };
-    case Actions.SET_CARDHOLDER_NAME:
+    case Actions.SET_CARD_DATA:
       return {
         ...state,
-        cardholderName: action.payload,
-      };
-    case Actions.SET_CARD_NUMBER:
-      return {
-        ...state,
-        cardNumber: action.payload,
-      };
-    case Actions.SET_CARD_EXPIRED_DATE:
-      return {
-        ...state,
-        cardExpiredDate: action.payload,
-      };
-    case Actions.SET_CARD_CVV:
-      return {
-        ...state,
-        cardCVV: action.payload,
+        cardData: { ...state.cardData, ...(action.payload as object) },
       };
     case Actions.SET_NAME:
       return {

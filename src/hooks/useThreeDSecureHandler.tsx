@@ -27,8 +27,8 @@ const useThreeDSecureHandler = () => {
 
     const token = await generateToken({
       publishableKey: providerPropsData?.publishableKey,
-      amount: SessionData.amount,
-      currency: SessionData.currency,
+      amount: SessionData?.amount,
+      currency: SessionData?.currency,
       return_url: providerPropsData?.urlScheme ?? BASE_URL,
       cardNumber: paymentDetails?.cardNumber ?? "",
       month: month ?? "",

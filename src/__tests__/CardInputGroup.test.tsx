@@ -2,7 +2,11 @@
 import React, { ReactNode } from "react";
 import { render, fireEvent } from "@testing-library/react-native";
 
-import { determineCardType, formatCreditCardNumber, formatExpiry } from "../util/helpers";
+import {
+  determineCardType,
+  formatCreditCardNumber,
+  formatExpiry,
+} from "../util/helpers";
 import { Actions, DispatchContext, StateContext } from "../context/state";
 import CardInputGroup from "../components/CardInputGroup";
 import { isCardNumberValid, validateCardExpiry } from "../util/validator";
@@ -25,9 +29,11 @@ jest.mock("../util/validator", () => ({
 
 // Mocked context values
 const mockState = {
-  cardCVV: "",
-  cardNumber: "",
-  cardExpiredDate: "",
+  cardData: {
+    cardCVV: "",
+    cardNumber: "",
+    cardExpiredDate: "",
+  },
 };
 
 const inputGroupMockValues = {
@@ -60,18 +66,20 @@ describe("CardInputGroup Component", () => {
     const { getByTestId } = renderWithContext(
       <CardInputGroup
         inputErrors={inputGroupMockValues}
-        resetError={(data: string) => { }}
+        resetError={(data: string) => {}}
       />
     );
 
     // Check if the inputs render with the initial values from context
     expect(getByTestId("cardNumberInput").props.value).toBe(
-      mockState.cardNumber
+      mockState.cardData.cardNumber
     );
     expect(getByTestId("cardExpiryInput").props.value).toBe(
-      mockState.cardExpiredDate
+      mockState.cardData.cardExpiredDate
     );
-    expect(getByTestId("cardCVVInput").props.value).toBe(mockState.cardCVV);
+    expect(getByTestId("cardCVVInput").props.value).toBe(
+      mockState.cardData.cardCVV
+    );
   });
 
   it("updates card number when valid and dispatches action", () => {
@@ -82,7 +90,7 @@ describe("CardInputGroup Component", () => {
     const { getByTestId } = renderWithContext(
       <CardInputGroup
         inputErrors={inputGroupMockValues}
-        resetError={(data: string) => { }}
+        resetError={(data: string) => {}}
       />
     );
 
@@ -96,8 +104,8 @@ describe("CardInputGroup Component", () => {
 
     // Check if the dispatch was called with the correct action
     expect(mockDispatch).toHaveBeenCalledWith({
-      type: Actions.SET_CARD_NUMBER,
-      payload: "1234 1234 1234 1234",
+      type: Actions.SET_CARD_DATA,
+      payload: { cardNumber: "1234 1234 1234 1234" },
     });
   });
 
@@ -107,7 +115,7 @@ describe("CardInputGroup Component", () => {
     const { getByTestId } = renderWithContext(
       <CardInputGroup
         inputErrors={inputGroupMockValues}
-        resetError={(data: string) => { }}
+        resetError={(data: string) => {}}
       />
     );
 
@@ -130,7 +138,7 @@ describe("CardInputGroup Component", () => {
     const { getByTestId } = renderWithContext(
       <CardInputGroup
         inputErrors={inputGroupMockValues}
-        resetError={(data: string) => { }}
+        resetError={(data: string) => {}}
       />
     );
 
@@ -144,8 +152,8 @@ describe("CardInputGroup Component", () => {
 
     // Check if the dispatch was called with the correct action
     expect(mockDispatch).toHaveBeenCalledWith({
-      type: Actions.SET_CARD_EXPIRED_DATE,
-      payload: "12 / 25",
+      type: Actions.SET_CARD_DATA,
+      payload: { cardExpiredDate: "12 / 25" },
     });
   });
 
@@ -153,7 +161,7 @@ describe("CardInputGroup Component", () => {
     const { getByTestId } = renderWithContext(
       <CardInputGroup
         inputErrors={inputGroupMockValues}
-        resetError={(data: string) => { }}
+        resetError={(data: string) => {}}
       />
     );
 
@@ -164,8 +172,8 @@ describe("CardInputGroup Component", () => {
 
     // Check if the dispatch was called with the correct action
     expect(mockDispatch).toHaveBeenCalledWith({
-      type: Actions.SET_CARD_CVV,
-      payload: "123",
+      type: Actions.SET_CARD_DATA,
+      payload: { cardCVV: "123" },
     });
   });
 });

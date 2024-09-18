@@ -150,8 +150,8 @@ const TransferFormSection = ({ type }: TransferFormSectionProps) => {
         <SubmitButton
           label="PAY"
           labelSuffix={formatCurrency({
-            amount: SessionData.amount,
-            currency: SessionData.currency,
+            amount: SessionData?.amount,
+            currency: SessionData?.currency,
           })}
           onPress={onPay}
           testID="PayCTA"

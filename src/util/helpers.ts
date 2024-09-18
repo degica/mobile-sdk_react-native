@@ -28,8 +28,7 @@ export const printLog = ({
 export const formatExpiry = (expiry: string) => {
   const prevExpiry = expiry.split(" / ").join("/");
 
-  if (!prevExpiry) return null;
-  // TODO: Fix this type error
+  if (!prevExpiry) return undefined;
 
   let expiryDate: string | string[] = prevExpiry;
   if (/^[2-9]$/.test(expiryDate)) {

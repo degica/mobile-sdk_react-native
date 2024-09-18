@@ -124,7 +124,9 @@ export type payForSessionProps = {
   paymentDetails?: CardDetailsType &
     KonbiniDetailsType &
     TransferFormFieldsType &
-    paymentTypeInputs;
+    paymentTypeInputs & {
+      tokenId?: string;
+    };
 };
 
 type paymentTypeInputs = {
@@ -132,11 +134,11 @@ type paymentTypeInputs = {
 };
 
 export type CardDetailsType = {
+  cardholderEmail?: string;
   cardholderName?: string;
   cardNumber?: string;
   cardExpiredDate?: string;
   cardCVV?: string;
-  tokenId?: string;
 };
 
 type KonbiniDetailsType = {
@@ -218,7 +220,10 @@ export type setInputErrorType = {
   setInputErrors: Dispatch<SetStateAction<{ [key: string]: boolean }>>;
 };
 
-export type cardValidationFuncProps = CardDetailsType & setInputErrorType;
+export type cardValidationFuncProps = setInputErrorType & {
+  cardData: CardDetailsType;
+  withEmail?: boolean;
+};
 
 export type konbiniValidationFuncProps = KonbiniDetailsType & setInputErrorType;
 
@@ -254,47 +259,50 @@ export type sessionDataType = {
   mode: PaymentMode;
 };
 
-export type State = CardDetailsType &
-  KonbiniDetailsType & {
-    /**
-     * Current selected payment type.
-     */
-    paymentType: PaymentType;
-    /**
-     * Global loading state. to display loading animation over sdk and disable buttons.
-     */
-    loading: boolean;
-    /**
-     * All user provided current payment session related data
-     */
-    sessionData:
-      | CreatePaymentFuncType
-      | sessionDataType
-      | (CreatePaymentFuncType & sessionDataType);
-    /**
-     * All user provided props under KomojuProvider
-     */
-    providerPropsData: InitPrams;
-    /**
-     * State of the current payment.
-     * this state is used to toggle(show hide) the success and failed screens.
-     */
-    paymentState:
-      | ResponseScreenStatuses.SUCCESS
-      | ResponseScreenStatuses.COMPLETE
-      | ResponseScreenStatuses.FAILED
-      | ResponseScreenStatuses.CANCELLED
-      | ResponseScreenStatuses.EXPIRED
-      | "";
-    /**
-     * States of the Bank transfer and Pay Easy fields.
-     */
-    transferFormFields?: TransferFormFieldsType;
-    /**
-     * Secure token id for 3ds payment
-     */
-    tokenId: string;
-  };
+export type State = KonbiniDetailsType & {
+  /**
+   * Current selected payment type.
+   */
+  paymentType: PaymentType;
+  /**
+   * Global loading state. to display loading animation over sdk and disable buttons.
+   */
+  loading: boolean;
+  /**
+   * All credit card related data
+   */
+  cardData: CardDetailsType;
+  /**
+   * All user provided current payment session related data
+   */
+  sessionData:
+    | CreatePaymentFuncType
+    | sessionDataType
+    | (CreatePaymentFuncType & sessionDataType);
+  /**
+   * All user provided props under KomojuProvider
+   */
+  providerPropsData: InitPrams;
+  /**
+   * State of the current payment.
+   * this state is used to toggle(show hide) the success and failed screens.
+   */
+  paymentState:
+    | ResponseScreenStatuses.SUCCESS
+    | ResponseScreenStatuses.COMPLETE
+    | ResponseScreenStatuses.FAILED
+    | ResponseScreenStatuses.CANCELLED
+    | ResponseScreenStatuses.EXPIRED
+    | "";
+  /**
+   * States of the Bank transfer and Pay Easy fields.
+   */
+  transferFormFields?: TransferFormFieldsType;
+  /**
+   * Secure token id for 3ds payment
+   */
+  tokenId: string;
+};
 
 export type sessionPayProps = {
   paymentType: PaymentType;
@@ -310,10 +318,12 @@ export const initialState: State = {
   loading: false,
 
   /** credit card payment related states start */
-  cardholderName: "",
-  cardCVV: "",
-  cardNumber: "",
-  cardExpiredDate: "",
+  cardData: {
+    cardholderName: "",
+    cardCVV: "",
+    cardNumber: "",
+    cardExpiredDate: "",
+  },
   /** credit card payment related states end */
 
   /** konbini pay related states start */

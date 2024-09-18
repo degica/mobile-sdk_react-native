@@ -36,7 +36,7 @@ const KonbiniSection = (): JSX.Element => {
   const dispatch = useContext(DispatchContext);
   const SessionData = sessionData as sessionDataType;
 
-  const konbiniPaymentMethodData = SessionData.paymentMethods?.find(
+  const konbiniPaymentMethodData = SessionData?.paymentMethods?.find(
     (method: sessionShowPaymentMethodType) =>
       method?.type === PaymentType.KONBINI
   );
@@ -136,8 +136,8 @@ const KonbiniSection = (): JSX.Element => {
         <SubmitButton
           label="PAY"
           labelSuffix={formatCurrency({
-            amount: SessionData.amount,
-            currency: SessionData.currency,
+            amount: SessionData?.amount,
+            currency: SessionData?.currency,
           })}
           onPress={onPay}
         />

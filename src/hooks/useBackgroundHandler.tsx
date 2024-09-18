@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction, useContext, useEffect } from "react";
 import { AppState, AppStateStatus } from "react-native";
 import {
   CreatePaymentFuncType,
+  PaymentMode,
   PaymentStatuses,
   PaymentType,
   TokenResponseStatuses,
@@ -47,7 +48,7 @@ const useBackgroundHandler = (
     // if this is a session flow, check until session response changes from 'pending' to 'completed' or 'error'
     const sessionShowPayload = {
       publishableKey: providerPropsData.publishableKey,
-      sessionId: SessionData.sessionId,
+      sessionId: SessionData?.sessionId,
     };
 
     // fetch session status to check if the payment is completed
@@ -55,12 +56,15 @@ const useBackgroundHandler = (
 
     // if payment success showing success screen or if failed showing error screen
     if (sessionResponse?.status === PaymentStatuses.SUCCESS) {
-      if (sessionResponse?.payment?.status === TokenResponseStatuses.CAPTURED) {
+      if (
+        sessionResponse?.payment?.status === TokenResponseStatuses.CAPTURED ||
+        sessionResponse.mode === PaymentMode.Customer
+      ) {
         onPaymentSuccess();
       } else {
         onPaymentAwaiting();
       } // calling user passed onComplete method with session response data
-      SessionData.onComplete && SessionData.onComplete(sessionResponse);
+      SessionData?.onComplete && SessionData?.onComplete(sessionResponse);
     } else if (sessionResponse?.payment?.status === PaymentStatuses.CANCELLED) {
       onPaymentCancelled();
     } else if (sessionResponse?.expired) {
@@ -87,7 +91,7 @@ const useBackgroundHandler = (
     ) {
       const paymentResponse = await payForSession({
         paymentType: PaymentType.CREDIT,
-        sessionId: SessionData.sessionId,
+        sessionId: SessionData?.sessionId,
         publishableKey: providerPropsData.publishableKey,
         paymentDetails: { tokenId: tokenId },
       });

@@ -45,17 +45,16 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
   // const [toggleScanCard, setToggleScanCard] = useState<boolean>(false);
   const theme = useCurrentTheme();
   const styles = getStyles(theme);
-  const { cardCVV, cardNumber, cardExpiredDate, sessionData } =
-    useContext(StateContext);
+  const { cardData, sessionData } = useContext(StateContext);
   const SessionData = sessionData as sessionDataType;
 
   useEffect(() => {
     // Determine card type and set it on first render if cardNumber is not empty
-    if (cardNumber) {
-      const type = determineCardType(cardNumber);
+    if (cardData?.cardNumber) {
+      const type = determineCardType(cardData?.cardNumber);
       setCardType(type);
     }
-  }, [cardNumber]);
+  }, [cardData?.cardNumber]);
 
   //Toggle card scanner
   // const toggleCardScanner = () => {
@@ -79,7 +78,7 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
   // Create card image list
   const cardImage = useCallback(() => {
     // Select credit card payment method data from session response payment methods
-    const cardPaymentMethodData = SessionData.paymentMethods?.find(
+    const cardPaymentMethodData = SessionData?.paymentMethods?.find(
       (method: sessionShowPaymentMethodType) =>
         method?.type === PaymentType.CREDIT
     );
@@ -112,7 +111,7 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
     } else {
       return;
     }
-  }, [cardType, SessionData.paymentMethods]);
+  }, [cardType, SessionData?.paymentMethods]);
 
   // const onCardScanned = useCallback(
   //   (cardDetails: { cardNumber?: string; expirationDate?: string }) => {
@@ -159,7 +158,7 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
             ]}
           >
             <Input
-              value={cardNumber ?? ""}
+              value={cardData?.cardNumber ?? ""}
               testID="cardNumberInput"
               keyboardType="number-pad"
               placeholder="1234 1234 1234 1234"
@@ -168,8 +167,10 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
                 if (isCardNumberValid(text)) {
                   const derivedText = formatCreditCardNumber(text);
                   dispatch({
-                    type: Actions.SET_CARD_NUMBER,
-                    payload: derivedText,
+                    type: Actions.SET_CARD_DATA,
+                    payload: {
+                      cardNumber: derivedText,
+                    },
                   });
                   // Determine card type and set it
                   const type = determineCardType(text);
@@ -189,7 +190,7 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
               ]}
             >
               <Input
-                value={cardExpiredDate as string}
+                value={cardData?.cardExpiredDate as string}
                 keyboardType="number-pad"
                 testID="cardExpiryInput"
                 placeholder="MM / YY"
@@ -197,8 +198,10 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
                   resetError("expiry");
                   if (validateCardExpiry(text)) {
                     dispatch({
-                      type: Actions.SET_CARD_EXPIRED_DATE,
-                      payload: formatExpiry(text),
+                      type: Actions.SET_CARD_DATA,
+                      payload: {
+                        cardExpiredDate: formatExpiry(text),
+                      },
                     });
                   }
                 }}
@@ -210,7 +213,7 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
               style={[styles.itemRow, inputErrors.cvv && styles.errorContainer]}
             >
               <Input
-                value={cardCVV as string}
+                value={cardData?.cardCVV as string}
                 testID="cardCVVInput"
                 keyboardType="number-pad"
                 placeholder="CVV"
@@ -218,7 +221,10 @@ const CardInputGroup = ({ inputErrors, resetError }: Props) => {
                   resetError("cvv");
 
                   if (text?.length < 11)
-                    dispatch({ type: Actions.SET_CARD_CVV, payload: text });
+                    dispatch({
+                      type: Actions.SET_CARD_DATA,
+                      payload: { cardCVV: text },
+                    });
                 }}
                 inputStyle={[
                   styles.cvvInputStyle,
