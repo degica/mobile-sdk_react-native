@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -19,6 +19,13 @@ export enum CurrencyTypes {
   USD = "USD",
 }
 
+type LanguageContentType = {
+  title: string;
+  placeholder: string;
+  button: string;
+  invalidAmount: string
+}
+
 const PaymentScreen = ({
   language,
   setLoading,
@@ -28,6 +35,18 @@ const PaymentScreen = ({
 }) => {
   const [amount, setAmount] = useState("");
   const [currency, setCurrency] = useState(CurrencyTypes.JPY);
+  const [languageContent, setLanguageContent] = useState({
+    title: "", placeholder: "", button: "", invalidAmount: "",
+  } as LanguageContentType);
+
+  useEffect(() => {
+    setLanguageContent({
+      title: language === "en" ? "Enter Amount to Pay with Komoju" : "KOMOJUで支払う金額を入力してください",
+      placeholder: language === "en" ? "Enter amount" : "金額を入力",
+      button: language === "en" ? "Checkout" : "チェックアウト",
+      invalidAmount: language === "en" ? "Please enter an amount to checkout" : "チェックアウトするには金額を入力してください"
+    });
+  }, [language])
 
   // use createPayment method to invoke the payment screen
   const { createPayment } = KomojuSDK.useKomoju();
@@ -35,7 +54,7 @@ const PaymentScreen = ({
   const handleSessionPay = async () => {
     setLoading(true);
     if (!amount) {
-      Alert.alert("Error", "Please enter an amount to checkout");
+      Alert.alert("Error", languageContent.invalidAmount);
       return;
     }
 
@@ -81,17 +100,17 @@ const PaymentScreen = ({
           )
         )}
       </View>
-      <Text style={[styles.title]}>Enter Amount to Pay with Komoju</Text>
+      <Text style={[styles.title]}>{languageContent.title}</Text>
       <TextInput
         style={[styles.input]}
-        placeholder="Enter amount"
+        placeholder={languageContent.placeholder}
         placeholderTextColor={"#333"}
         keyboardType="numeric"
         value={amount}
         onChangeText={setAmount}
       />
       <View style={styles.buttonContainer}>
-        <Button title="Checkout" onPress={handleSessionPay} color={"#007AFF"} />
+        <Button title={languageContent.button} onPress={handleSessionPay} color={"#007AFF"} />
       </View>
     </View>
   );
