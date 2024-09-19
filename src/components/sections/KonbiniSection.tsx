@@ -87,6 +87,7 @@ const KonbiniSection = (): JSX.Element => {
         onPress={() => {
           handlePillSelect(item.type);
         }}
+        autoWidth
       />
     );
   };
