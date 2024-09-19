@@ -28,8 +28,7 @@ export const printLog = ({
 export const formatExpiry = (expiry: string) => {
   const prevExpiry = expiry.split(" / ").join("/");
 
-  if (!prevExpiry) return null;
-  // TODO: Fix this type error
+  if (!prevExpiry) return undefined;
 
   let expiryDate: string | string[] = prevExpiry;
   if (/^[2-9]$/.test(expiryDate)) {
@@ -138,8 +137,8 @@ export const parseBrands = (
 // Method to filter out payment methods
 export const parsePaymentMethods = (
   userPaymentMethods: PaymentType[] | undefined,
-  sessionPaymentMethods: sessionShowPaymentMethodType[] | undefined
-) => {
+  sessionPaymentMethods: sessionShowPaymentMethodType[]
+): Array<sessionShowPaymentMethodType> => {
   // check if user has provided explicit payment methods
   if (userPaymentMethods && userPaymentMethods?.length > 0) {
     const parsedPayment: sessionShowPaymentMethodType[] = [];
@@ -211,9 +210,10 @@ export const isAndroid = () => Platform.OS === "android";
 export const isIOS = () => Platform.OS === "ios";
 export const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
-
 // Function to convert UserFriendlyTheme to ThemeSchemeType
-export function fromUserFriendlyTheme(userTheme: Partial<UserFriendlyTheme>): Partial<ThemeSchemeType> {
+export function fromUserFriendlyTheme(
+  userTheme: Partial<UserFriendlyTheme>
+): Partial<ThemeSchemeType> {
   return Object.entries(userTheme).reduce((acc, [userKey, value]) => {
     const internalKey = themeMapping[userKey as keyof UserFriendlyTheme];
     if (internalKey) {

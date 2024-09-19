@@ -1,6 +1,8 @@
 import { useContext } from "react";
 
 import {
+  CreatePaymentFuncType,
+  PaymentMode,
   PaymentStatuses,
   sessionPayProps,
   TokenResponseStatuses,
@@ -12,6 +14,7 @@ import useMainStateUtils from "./useMainStateUtils";
 
 const useSessionPayHandler = () => {
   const { sessionData, providerPropsData } = useContext(StateContext);
+  const SessionData = sessionData as CreatePaymentFuncType;
 
   const {
     startLoading,
@@ -32,7 +35,7 @@ const useSessionPayHandler = () => {
     // initiate payment for the session ID with payment details
     const response = await payForSession({
       paymentType,
-      sessionId: sessionData.sessionId,
+      sessionId: SessionData?.sessionId,
       publishableKey: providerPropsData.publishableKey,
       paymentDetails,
     });
@@ -42,7 +45,10 @@ const useSessionPayHandler = () => {
     if (response?.status === PaymentStatuses.PENDING) {
       openURL(response.redirect_url);
     } else if (response?.status === PaymentStatuses.SUCCESS) {
-      if (response?.payment?.status === TokenResponseStatuses.CAPTURED) {
+      if (
+        response?.payment?.status === TokenResponseStatuses.CAPTURED ||
+        response?.customer?.resource === PaymentMode.Customer
+      ) {
         onPaymentSuccess();
       } else if (response?.payment?.payment_details?.instructions_url) {
         openURL(response?.payment?.payment_details?.instructions_url);

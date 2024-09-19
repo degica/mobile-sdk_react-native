@@ -1,6 +1,10 @@
 import { useContext } from "react";
 
-import { CardDetailsType, TokenResponseStatuses } from "../util/types";
+import {
+  CardDetailsType,
+  sessionDataType,
+  TokenResponseStatuses,
+} from "../util/types";
 import { Actions, DispatchContext, StateContext } from "../context/state";
 import { getMonthYearFromExpiry, openURL } from "../util/helpers";
 import { generateToken } from "../services/secureTokenService";
@@ -10,8 +14,9 @@ import useMainStateUtils from "./useMainStateUtils";
 const useThreeDSecureHandler = () => {
   const dispatch = useContext(DispatchContext);
 
-  const { amount, currency, providerPropsData } = useContext(StateContext);
+  const { sessionData, providerPropsData } = useContext(StateContext);
   const { startLoading, stopLoading, onPaymentFailed } = useMainStateUtils();
+  const SessionData = sessionData as sessionDataType;
 
   const threeDSecurePayment = async (paymentDetails: CardDetailsType) => {
     startLoading();
@@ -22,8 +27,8 @@ const useThreeDSecureHandler = () => {
 
     const token = await generateToken({
       publishableKey: providerPropsData?.publishableKey,
-      amount: amount,
-      currency: currency,
+      amount: SessionData?.amount,
+      currency: SessionData?.currency,
       return_url: providerPropsData?.urlScheme ?? BASE_URL,
       cardNumber: paymentDetails?.cardNumber ?? "",
       month: month ?? "",

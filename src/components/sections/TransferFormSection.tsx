@@ -7,7 +7,7 @@ import { Actions, DispatchContext, StateContext } from "../../context/state";
 import Input from "../../components/Input";
 
 import { formatCurrency } from "../../util/helpers";
-import { PaymentType } from "../../util/types";
+import { PaymentType, sessionDataType } from "../../util/types";
 import { validateTransferFormFields } from "../../util/validator";
 
 import { responsiveScale } from "../../theme/scalling";
@@ -33,8 +33,9 @@ const TransferFormSection = ({ type }: TransferFormSectionProps) => {
   const [inputErrors, setInputErrors] =
     useState<typeof initialErrors>(initialErrors);
 
-  const { amount, currency, transferFormFields } = useContext(StateContext);
+  const { sessionData, transferFormFields } = useContext(StateContext);
   const { sessionPay } = useSessionPayHandler();
+  const SessionData = sessionData as sessionDataType;
 
   const onPay = () => {
     const isValid = validateTransferFormFields({
@@ -148,7 +149,10 @@ const TransferFormSection = ({ type }: TransferFormSectionProps) => {
       <View style={styles.btn}>
         <SubmitButton
           label="PAY"
-          labelSuffix={formatCurrency({ amount, currency })}
+          labelSuffix={formatCurrency({
+            amount: SessionData?.amount,
+            currency: SessionData?.currency,
+          })}
           onPress={onPay}
           testID="PayCTA"
         />

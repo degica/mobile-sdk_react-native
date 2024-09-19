@@ -83,31 +83,37 @@ export const validateSessionResponse = (
 };
 
 export const validateCardFormFields = ({
-  cardholderName,
-  cardNumber,
-  cardExpiredDate,
-  cardCVV,
+  cardData,
+  withEmail,
   setInputErrors,
 }: cardValidationFuncProps): boolean => {
   let valid = true;
 
-  if (!cardholderName) {
+  if (
+    withEmail &&
+    (!cardData?.cardholderEmail || !validateEmail(cardData?.cardholderEmail))
+  ) {
+    setInputErrors((pre: object) => ({ ...pre, email: true }));
+    valid = false;
+  }
+
+  if (!cardData?.cardholderName) {
     setInputErrors((pre: object) => ({ ...pre, name: true }));
     valid = false;
   }
-  if (!cardNumber) {
+  if (!cardData?.cardNumber) {
     setInputErrors((pre: object) => ({ ...pre, number: true }));
     valid = false;
   }
-  if (!luhnCheck(cardNumber ?? "")) {
+  if (!luhnCheck(cardData?.cardNumber ?? "")) {
     setInputErrors((pre: object) => ({ ...pre, number: true }));
     valid = false;
   }
-  if (!expiryDateCheck(cardExpiredDate ?? "")) {
+  if (!expiryDateCheck(cardData?.cardExpiredDate ?? "")) {
     setInputErrors((pre: object) => ({ ...pre, expiry: true }));
     valid = false;
   }
-  if (!cardCVV) {
+  if (!cardData?.cardCVV) {
     setInputErrors((pre: object) => ({ ...pre, cvv: true }));
     valid = false;
   }

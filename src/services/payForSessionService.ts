@@ -57,6 +57,9 @@ const payForSession = async ({
             month,
             year,
             verification_value: paymentDetails?.cardCVV,
+            ...(paymentDetails?.cardholderEmail && {
+              email: paymentDetails.cardholderEmail,
+            }),
           };
         }
 
