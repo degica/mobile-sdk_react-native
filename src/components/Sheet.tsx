@@ -20,17 +20,14 @@ import {
 import { useTranslation } from "react-i18next";
 
 import { Actions, DispatchContext, StateContext } from "../context/state";
-import { useTheme } from "../context/ThemeContext";
 
 import {
   paymentFailedCtaText,
   paymentSuccessCtaText,
-  ThemeModes,
 } from "../util/constants";
 import { ResponseScreenStatuses, ThemeSchemeType } from "../util/types";
 
 import closeIcon from "../assets/images/close.png";
-import closeDMIcon from "../assets/images/close_dm.png";
 
 import { resizeFonts, responsiveScale, WINDOW_HEIGHT } from "../theme/scalling";
 import { useCurrentTheme } from "../theme/useCurrentTheme";
@@ -71,7 +68,6 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
   const dispatch = useContext(DispatchContext);
   const theme = useCurrentTheme();
   const styles = getStyles(theme);
-  const { mode } = useTheme();
 
   useEffect(() => {
     const yListener = translateY.addListener(({ value }) => {
@@ -108,7 +104,6 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
     Keyboard.dismiss();
 
     if (showAlert) {
-      // showing an alert when user try to close the SDK modal
       Alert.alert(`${t("CANCEL_PAYMENT")}?`, "", [
         {
           text: t("NO"),
@@ -118,14 +113,12 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
         {
           text: t("YES"),
           onPress: () => {
-            // invoking client provided onDismiss() callback when closing the SDK modal
             onDismiss && onDismiss();
             scrollTo(0);
           },
         },
       ]);
     } else {
-      // invoking client provided callback when closing the SDK modal
       onDismiss && onDismiss();
       scrollTo(0);
     }
@@ -170,6 +163,7 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
       case ResponseScreenStatuses.SUCCESS:
       case ResponseScreenStatuses.COMPLETE:
       case ResponseScreenStatuses.CANCELLED:
+      case ResponseScreenStatuses.EXPIRED:
         return paymentSuccessCtaText;
       case ResponseScreenStatuses.FAILED:
         return paymentFailedCtaText;
@@ -183,6 +177,7 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
       case ResponseScreenStatuses.SUCCESS:
       case ResponseScreenStatuses.COMPLETE:
       case ResponseScreenStatuses.CANCELLED:
+      case ResponseScreenStatuses.EXPIRED:
         return closeSheet(false);
       case ResponseScreenStatuses.FAILED:
         return dispatch({
@@ -210,7 +205,9 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
         ]}
       >
         <RNAnimated.View style={styles.line} {...panResponder.panHandlers}>
-          <KomojuText style={styles.headerLabel}>PAYMENT_OPTIONS</KomojuText>
+          <KomojuText style={styles.headerLabel}>
+            {!paymentState ? t("PAYMENT_OPTIONS") : ""}
+          </KomojuText>
           <TouchableOpacity
             style={styles.crossBtn}
             onPress={() =>
@@ -218,14 +215,13 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
                 !(
                   paymentState === ResponseScreenStatuses.SUCCESS ||
                   paymentState === ResponseScreenStatuses.CANCELLED ||
-                  paymentState === ResponseScreenStatuses.COMPLETE
+                  paymentState === ResponseScreenStatuses.COMPLETE ||
+                  paymentState === ResponseScreenStatuses.EXPIRED
                 )
               )
             }
           >
-            <Image
-              source={mode === ThemeModes.light ? closeIcon : closeDMIcon}
-            />
+            <Image source={closeIcon} />
           </TouchableOpacity>
         </RNAnimated.View>
         {paymentState ? (
