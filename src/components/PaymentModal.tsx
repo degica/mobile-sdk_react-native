@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useContext } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 import {
   TouchableOpacity,
@@ -6,19 +6,9 @@ import {
   View,
   Image,
   StyleSheet,
-  Alert,
-  Keyboard,
 } from "react-native";
 
-import { t } from "i18next";
-
-import { Actions, DispatchContext, StateContext } from "../context/state";
-
-import {
-  paymentFailedCtaText,
-  paymentSuccessCtaText,
-} from "../util/constants";
-import { ResponseScreenStatuses, ThemeSchemeType } from "../util/types";
+import { ThemeSchemeType } from "../util/types";
 
 import closeIcon from "../assets/images/close.png";
 
@@ -28,6 +18,7 @@ import { useCurrentTheme } from "../theme/useCurrentTheme";
 import KomojuText from "./KomojuText";
 import ResponseScreen from "./ResponseScreen";
 import SheetContent from "./SheetContent";
+import { usePaymentUiUtils } from "../hooks/usePaymentUiUtils";
 
 type PaymentModalProps = {
   modalVisible: boolean;
@@ -35,84 +26,25 @@ type PaymentModalProps = {
   onDismiss?: () => void;
 };
 
-const PaymentModal = ({
+const PaymentModal: React.FC<PaymentModalProps> = ({
   modalVisible,
   setModalVisible,
   onDismiss,
-}: PaymentModalProps) => {
-  const { paymentState, paymentType } = useContext(StateContext);
-  const dispatch = useContext(DispatchContext);
+}) => {
+  const {
+    paymentState,
+    paymentType,
+    closeSheet,
+    getCtaText,
+    ctaOnPress,
+    shouldShowAlert,
+  } = usePaymentUiUtils(onDismiss);
 
   const theme = useCurrentTheme();
   const styles = getStyles(theme);
 
-  const closeSheet = (showAlert = true) => {
-    Keyboard.dismiss();
-
-    if (showAlert) {
-      // showing an alert when user try to close the SDK modal
-      Alert.alert(`${t("CANCEL_PAYMENT")}?`, "", [
-        {
-          text: t("NO"),
-          style: "cancel",
-        },
-        {
-          text: t("YES"),
-          onPress: () => {
-            // invoking client provided onDismiss() callback when closing the SDK modal
-            onDismiss && onDismiss();
-            setModalVisible(false);
-          },
-        },
-      ]);
-    } else {
-      // invoking client provided callback when closing the SDK modal
-      onDismiss && onDismiss();
-      setModalVisible(false);
-    }
-  };
-
-  const getCtaText = () => {
-    switch (paymentState) {
-      case ResponseScreenStatuses.SUCCESS:
-      case ResponseScreenStatuses.COMPLETE:
-      case ResponseScreenStatuses.CANCELLED:
-      case ResponseScreenStatuses.EXPIRED:
-        return paymentSuccessCtaText;
-      case ResponseScreenStatuses.FAILED:
-        return paymentFailedCtaText;
-      default:
-        return "";
-    }
-  };
-
-  const ctaOnPress = () => {
-    switch (paymentState) {
-      case ResponseScreenStatuses.SUCCESS:
-      case ResponseScreenStatuses.COMPLETE:
-      case ResponseScreenStatuses.CANCELLED:
-        return closeSheet(false);
-      case ResponseScreenStatuses.EXPIRED:
-        return closeSheet(false);
-      case ResponseScreenStatuses.FAILED:
-        return dispatch({
-          type: Actions.SET_PAYMENT_STATE,
-          payload: "",
-        });
-      default:
-        return "";
-    }
-  };
-
-  const onCloseModal = () => {
-    closeSheet(
-      !(
-        paymentState === ResponseScreenStatuses.SUCCESS ||
-        paymentState === ResponseScreenStatuses.CANCELLED ||
-        paymentState === ResponseScreenStatuses.COMPLETE ||
-        paymentState === ResponseScreenStatuses.EXPIRED
-      )
-    );
+  const handleClose = () => {
+    closeSheet(shouldShowAlert(), () => setModalVisible(false));
   };
 
   return (
@@ -120,25 +52,23 @@ const PaymentModal = ({
       animationType="slide"
       presentationStyle="overFullScreen"
       visible={modalVisible}
-      onRequestClose={onCloseModal}
+      onRequestClose={handleClose}
     >
-      <TouchableOpacity onPress={onCloseModal} style={styles.container} />
+      <TouchableOpacity onPress={handleClose} style={styles.container} />
 
       <View style={styles.bottomSheetContainer}>
         <View style={styles.line}>
           <KomojuText style={styles.headerLabel}>
             {!paymentState ? "PAYMENT_OPTIONS" : ""}
           </KomojuText>
-          <TouchableOpacity style={styles.crossBtn} onPress={onCloseModal}>
-            <Image
-              source={closeIcon}
-            />
+          <TouchableOpacity style={styles.crossBtn} onPress={handleClose}>
+            <Image source={closeIcon} />
           </TouchableOpacity>
         </View>
         {paymentState ? (
           <ResponseScreen
             status={paymentState}
-            onPress={ctaOnPress}
+            onPress={() => ctaOnPress(() => setModalVisible(false))}
             onPressLabel={getCtaText()}
             paymentType={paymentType}
           />
