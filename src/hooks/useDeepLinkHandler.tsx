@@ -14,15 +14,18 @@ import { extractParameterFromUrl } from "../util/helpers";
 import payForSession from "../services/payForSessionService";
 import useMainStateUtils from "./useMainStateUtils";
 
+let timeoutId: NodeJS.Timeout;
+
 const useDeepLinkHandler = (
-  setIsDeepLinkOpened: Dispatch<SetStateAction<boolean>>
+  setIsDeepLinkOpened: Dispatch<SetStateAction<boolean>>,
+  closePaymentSheet: () => void
 ) => {
   const { paymentType, providerPropsData, sessionData } =
     useContext(StateContext);
   const SessionData = sessionData as CreatePaymentFuncType;
 
   const {
-    startLoading,
+    startPaymentLoading,
     stopLoading,
     onPaymentAwaiting,
     onPaymentCancelled,
@@ -42,8 +45,16 @@ const useDeepLinkHandler = (
     };
   }, [paymentType, providerPropsData, sessionData]);
 
+  useEffect(() => {
+    () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, []);
+
   const handleSessionPaymentResponse = async () => {
-    startLoading();
+    startPaymentLoading();
 
     // if this is a session flow, check until session response changes from 'pending' to 'completed' or 'error'
     const sessionShowPayload = {
@@ -71,6 +82,9 @@ const useDeepLinkHandler = (
         sessionResponse.mode === PaymentMode.Customer
       ) {
         onPaymentSuccess();
+        if (sessionResponse.mode === PaymentMode.Customer) {
+          timeoutId = setTimeout(() => closePaymentSheet(), 2000);
+        }
       } else {
         onPaymentAwaiting();
       }
@@ -87,7 +101,7 @@ const useDeepLinkHandler = (
   };
 
   const handleSecureTokenPaymentResponse = async (token: string) => {
-    startLoading();
+    startPaymentLoading();
 
     const tokenResponse = await getTokenResult({
       publishableKey: providerPropsData.publishableKey,

@@ -13,9 +13,12 @@ import { getTokenResult } from "../services/secureTokenService";
 import payForSession from "../services/payForSessionService";
 import useMainStateUtils from "./useMainStateUtils";
 
+let timeoutId: NodeJS.Timeout;
+
 const useBackgroundHandler = (
   isDeepLinkOpened: boolean,
-  setIsDeepLinkOpened: Dispatch<SetStateAction<boolean>>
+  setIsDeepLinkOpened: Dispatch<SetStateAction<boolean>>,
+  closePaymentSheet: () => void
 ) => {
   const { paymentType, tokenId, providerPropsData, sessionData } =
     useContext(StateContext);
@@ -23,7 +26,7 @@ const useBackgroundHandler = (
   const SessionData = sessionData as CreatePaymentFuncType;
 
   const {
-    startLoading,
+    startPaymentLoading,
     stopLoading,
     onPaymentAwaiting,
     onPaymentCancelled,
@@ -44,6 +47,14 @@ const useBackgroundHandler = (
     };
   }, [providerPropsData, paymentType, tokenId, SessionData, isDeepLinkOpened]);
 
+  useEffect(() => {
+    () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, []);
+
   const handleSessionPaymentResponse = async () => {
     // if this is a session flow, check until session response changes from 'pending' to 'completed' or 'error'
     const sessionShowPayload = {
@@ -61,6 +72,9 @@ const useBackgroundHandler = (
         sessionResponse.mode === PaymentMode.Customer
       ) {
         onPaymentSuccess();
+        if (sessionResponse.mode === PaymentMode.Customer) {
+          timeoutId = setTimeout(() => closePaymentSheet(), 2000);
+        }
       } else {
         onPaymentAwaiting();
       } // calling user passed onComplete method with session response data
@@ -110,7 +124,7 @@ const useBackgroundHandler = (
 
   const handleBackgroundStateChange = async (status: AppStateStatus) => {
     if (status === "active" && !isDeepLinkOpened) {
-      startLoading();
+      startPaymentLoading();
 
       if (paymentType === PaymentType.CREDIT) {
         await handleSecureTokenPaymentResponse();

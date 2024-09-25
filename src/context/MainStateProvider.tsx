@@ -56,10 +56,14 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
     useMainStateUtils();
 
   // Handle deep-links of the module
-  useDeepLinkHandler(setIsDeepLinkOpened);
+  useDeepLinkHandler(setIsDeepLinkOpened, closePaymentSheet);
 
   // Handle events when module goes foreground
-  useBackgroundHandler(isDeepLinkOpened, setIsDeepLinkOpened);
+  useBackgroundHandler(
+    isDeepLinkOpened,
+    setIsDeepLinkOpened,
+    closePaymentSheet
+  );
 
   // Handle validations of the session
   const { validateSession } = useValidationHandler({
@@ -118,6 +122,7 @@ export const MainStateProvider = (props: KomojuProviderIprops) => {
         createPayment,
         showPaymentSheetUI,
         initializeKomoju,
+        closePaymentSheet,
       }}
     >
       {renderChildren}

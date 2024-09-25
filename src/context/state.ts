@@ -140,6 +140,10 @@ const defaultValue = {
   // TODO: Fix this type error
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   initializeKomoju: (_data: InitPrams) => {},
+  /**
+   * Function to close the payment sheet manually.
+   */
+  closePaymentSheet: noop,
 };
 /**
  * State context for the Komoju payment system.

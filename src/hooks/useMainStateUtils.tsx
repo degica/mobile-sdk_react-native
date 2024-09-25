@@ -1,27 +1,53 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 import { Actions, DispatchContext, StateContext } from "../context/state";
 import {
-  initialState,
   ResponseScreenStatuses,
   CreatePaymentFuncType,
+  sessionDataType,
+  PaymentMode,
 } from "../util/types";
 import sessionShow from "../services/sessionShow";
+import { getInitialStateWithoutProviderPropsData } from "../util/helpers";
+
+let timeoutId: NodeJS.Timeout;
 
 const useMainStateUtils = () => {
   const dispatch = useContext(DispatchContext);
   const { providerPropsData, sessionData } = useContext(StateContext);
-  const SessionData = sessionData as CreatePaymentFuncType;
+  const SessionData = sessionData as CreatePaymentFuncType & sessionDataType;
 
-  const resetGlobalStates = () =>
-    dispatch({
-      type: Actions.RESET_STATES,
-      payload: initialState,
-    });
+  const isCustomerMode = SessionData?.mode === PaymentMode.Customer;
+
+  useEffect(() => {
+    () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, []);
+
+  const resetGlobalStates = (withTimeout = false) => {
+    if (withTimeout) {
+      timeoutId = setTimeout(
+        () =>
+          dispatch({
+            type: Actions.RESET_STATES,
+            payload: getInitialStateWithoutProviderPropsData(),
+          }),
+        3000
+      );
+    } else {
+      dispatch({
+        type: Actions.RESET_STATES,
+        payload: getInitialStateWithoutProviderPropsData(),
+      });
+    }
+  };
 
   // when payment is success global state is rest and invoking the success screen
   const onPaymentSuccess = () => {
-    resetGlobalStates();
+    resetGlobalStates(isCustomerMode);
     dispatch({
       type: Actions.SET_PAYMENT_STATE,
       payload: ResponseScreenStatuses.SUCCESS,
@@ -37,7 +63,7 @@ const useMainStateUtils = () => {
 
   // when payment is cancelled by the user
   const onPaymentCancelled = () => {
-    resetGlobalStates();
+    resetGlobalStates(isCustomerMode);
     dispatch({
       type: Actions.SET_PAYMENT_STATE,
       payload: ResponseScreenStatuses.CANCELLED,
@@ -80,14 +106,29 @@ const useMainStateUtils = () => {
   const startLoading = () =>
     dispatch({
       type: Actions.SET_LOADING,
-      payload: true,
+      payload: {
+        app: true,
+        payment: false,
+      },
+    });
+
+  const startPaymentLoading = () =>
+    dispatch({
+      type: Actions.SET_LOADING,
+      payload: {
+        app: false,
+        payment: true,
+      },
     });
 
   // Hiding overlay loading indicator
   const stopLoading = () =>
     dispatch({
       type: Actions.SET_LOADING,
-      payload: false,
+      payload: {
+        app: false,
+        payment: false,
+      },
     });
 
   return {
@@ -98,6 +139,7 @@ const useMainStateUtils = () => {
     onSessionExpired,
     onUserCancel,
     startLoading,
+    startPaymentLoading,
     stopLoading,
     resetGlobalStates,
   };

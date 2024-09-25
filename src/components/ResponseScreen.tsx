@@ -12,7 +12,7 @@ import { resizeFonts, responsiveScale } from "../theme/scalling";
 import { useCurrentTheme } from "../theme/useCurrentTheme";
 
 import KomojuText from "./KomojuText";
-import SubmitButton from "./SubmitButton";
+import Button from "./Button";
 
 import successIcon from "../assets/images/success.png";
 import errorIcon from "../assets/images/error.png";
@@ -104,7 +104,7 @@ const ResponseScreen = ({
       <View style={styles.imageContainer}>{renderIcon}</View>
       {renderMessageContent}
       <View style={styles.bottomButton}>
-        <SubmitButton onPress={memoizedOnPress} label={onPressLabel} />
+        <Button onPress={memoizedOnPress} label={onPressLabel} />
       </View>
     </View>
   );

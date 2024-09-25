@@ -1,6 +1,7 @@
 const darkTheme = {
   PRIMARY_COLOR: "#0071D7",
   BACKGROUND_COLOR: "#1E1E1E",
+  SUCCESS_COLOR: "#3CC239",
   ERROR: "#fc4747",
   TEXT_COLOR: "#fff",
   INPUT_BACKGROUND: "#2C2C2C",
@@ -18,6 +19,7 @@ const darkTheme = {
 const lightTheme = {
   PRIMARY_COLOR: "#0B82EE",
   BACKGROUND_COLOR: "#FFFFFF",
+  SUCCESS_COLOR: "#3CC239",
   ERROR: "#fc5d5d",
   TEXT_COLOR: "#172E44",
   INPUT_BACKGROUND: "#FFFFFF",

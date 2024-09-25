@@ -51,6 +51,7 @@
     "SESSION_EXPIRED_MSG": "This session has already expired. Please try again.",
     "PAYMENT_WAITING": "Awaiting Payment",
     "PAYMENT_WAITING_MSG": "Your payment has not been completed yet. We have e-mailed you the instructions on how to complete your purchase.",
+    "LOADING_TEXT": "Processing...",
 
     "PAYMENT_VIA_ALI_PAY": "Payment via Alipay",
     "ALI_PAY_REDIRECT_MESSAGE": "You will be redirected to Alipay to complete the payment",
