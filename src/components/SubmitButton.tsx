@@ -39,7 +39,7 @@ const SubmitButton = ({ label, labelSuffix, onPress, testID }: Props) => {
 
   const moveToCenter = () => {
     Animated.timing(moveAnim, {
-      toValue: (SCREEN_WIDTH - responsiveScale(40)) * 0.5,
+      toValue: (SCREEN_WIDTH - responsiveScale(60)) * 0.5,
       duration: 400,
       useNativeDriver: false,
     }).start(() => setAnimationComplete(true));
