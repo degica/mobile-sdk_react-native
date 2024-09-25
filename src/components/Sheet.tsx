@@ -1,14 +1,12 @@
 import React, {
   useCallback,
   useImperativeHandle,
-  useContext,
   useRef,
   useEffect,
   ForwardRefRenderFunction,
 } from "react";
 
 import {
-  Alert,
   Image,
   StyleSheet,
   TouchableOpacity,
@@ -19,18 +17,9 @@ import {
 
 import { useTranslation } from "react-i18next";
 
-import { Actions, DispatchContext, StateContext } from "../context/state";
-import { useTheme } from "../context/ThemeContext";
-
-import {
-  paymentFailedCtaText,
-  paymentSuccessCtaText,
-  ThemeModes,
-} from "../util/constants";
-import { ResponseScreenStatuses, ThemeSchemeType } from "../util/types";
+import { ThemeSchemeType } from "../util/types";
 
 import closeIcon from "../assets/images/close.png";
-import closeDMIcon from "../assets/images/close_dm.png";
 
 import { resizeFonts, responsiveScale, WINDOW_HEIGHT } from "../theme/scalling";
 import { useCurrentTheme } from "../theme/useCurrentTheme";
@@ -38,6 +27,7 @@ import { useCurrentTheme } from "../theme/useCurrentTheme";
 import KomojuText from "./KomojuText";
 import ResponseScreen from "./ResponseScreen";
 import SheetContent from "./SheetContent";
+import { usePaymentUiUtils } from "../hooks/usePaymentUiUtils";
 
 const MAX_TRANSLATE_Y = -WINDOW_HEIGHT + responsiveScale(50);
 
@@ -67,11 +57,17 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
   const translateYState = useRef(0);
   const contextState = useRef(0);
 
-  const { paymentState, paymentType } = useContext(StateContext);
-  const dispatch = useContext(DispatchContext);
+  const {
+    paymentState,
+    paymentType,
+    closeSheet,
+    getCtaText,
+    ctaOnPress,
+    shouldShowAlert,
+  } = usePaymentUiUtils(onDismiss);
+
   const theme = useCurrentTheme();
   const styles = getStyles(theme);
-  const { mode } = useTheme();
 
   useEffect(() => {
     const yListener = translateY.addListener(({ value }) => {
@@ -104,32 +100,9 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
     return activeState.current;
   }, []);
 
-  const closeSheet = (showAlert = true) => {
-    Keyboard.dismiss();
-
-    if (showAlert) {
-      // showing an alert when user try to close the SDK modal
-      Alert.alert(`${t("CANCEL_PAYMENT")}?`, "", [
-        {
-          text: t("NO"),
-          onPress: () => scrollTo(MAX_TRANSLATE_Y + 50),
-          style: "cancel",
-        },
-        {
-          text: t("YES"),
-          onPress: () => {
-            // invoking client provided onDismiss() callback when closing the SDK modal
-            onDismiss && onDismiss();
-            scrollTo(0);
-          },
-        },
-      ]);
-    } else {
-      // invoking client provided callback when closing the SDK modal
-      onDismiss && onDismiss();
-      scrollTo(0);
-    }
-  };
+  const handleClose = useCallback((forceClose = false) => {
+    closeSheet(shouldShowAlert() && !forceClose, () => scrollTo(0));
+  }, [closeSheet, shouldShowAlert, scrollTo]);
 
   useImperativeHandle(
     ref,
@@ -138,11 +111,11 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
         Keyboard.dismiss();
         scrollTo(MAX_TRANSLATE_Y + 50);
       },
-      close: closeSheet,
+      close: handleClose,
       scrollTo,
       isActive,
     }),
-    [scrollTo, isActive]
+    [scrollTo, isActive, handleClose]
   );
 
   const panResponder = useRef(
@@ -157,7 +130,7 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
       },
       onPanResponderRelease: () => {
         if (translateYState.current > -WINDOW_HEIGHT / 1.5) {
-          closeSheet(false);
+          handleClose(false);
         } else if (translateYState.current < -WINDOW_HEIGHT / 1.5) {
           scrollTo(MAX_TRANSLATE_Y + 50);
         }
@@ -165,40 +138,11 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
     })
   ).current;
 
-  const getCtaText = () => {
-    switch (paymentState) {
-      case ResponseScreenStatuses.SUCCESS:
-      case ResponseScreenStatuses.COMPLETE:
-      case ResponseScreenStatuses.CANCELLED:
-        return paymentSuccessCtaText;
-      case ResponseScreenStatuses.FAILED:
-        return paymentFailedCtaText;
-      default:
-        return "";
-    }
-  };
-
-  const ctaOnPress = () => {
-    switch (paymentState) {
-      case ResponseScreenStatuses.SUCCESS:
-      case ResponseScreenStatuses.COMPLETE:
-      case ResponseScreenStatuses.CANCELLED:
-        return closeSheet(false);
-      case ResponseScreenStatuses.FAILED:
-        return dispatch({
-          type: Actions.SET_PAYMENT_STATE,
-          payload: "",
-        });
-      default:
-        return "";
-    }
-  };
-
   return (
     <>
       <RNAnimated.View
         onTouchStart={() => {
-          if (swipeClose) closeSheet(false);
+          if (swipeClose) handleClose(true);
         }}
         pointerEvents="none"
         style={[styles.backDrop, { opacity: active }]}
@@ -210,28 +154,20 @@ const Sheet: ForwardRefRenderFunction<SheetRefProps, SheetProps> = (
         ]}
       >
         <RNAnimated.View style={styles.line} {...panResponder.panHandlers}>
-          <KomojuText style={styles.headerLabel}>PAYMENT_OPTIONS</KomojuText>
+          <KomojuText style={styles.headerLabel}>
+            {!paymentState ? t("PAYMENT_OPTIONS") : ""}
+          </KomojuText>
           <TouchableOpacity
             style={styles.crossBtn}
-            onPress={() =>
-              closeSheet(
-                !(
-                  paymentState === ResponseScreenStatuses.SUCCESS ||
-                  paymentState === ResponseScreenStatuses.CANCELLED ||
-                  paymentState === ResponseScreenStatuses.COMPLETE
-                )
-              )
-            }
+            onPress={() => handleClose()}
           >
-            <Image
-              source={mode === ThemeModes.light ? closeIcon : closeDMIcon}
-            />
+            <Image source={closeIcon} />
           </TouchableOpacity>
         </RNAnimated.View>
         {paymentState ? (
           <ResponseScreen
             status={paymentState}
-            onPress={ctaOnPress}
+            onPress={() => ctaOnPress(() => scrollTo(0))}
             onPressLabel={getCtaText()}
             paymentType={paymentType}
           />
