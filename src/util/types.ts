@@ -240,6 +240,11 @@ export type brandType = {
   icon: string;
 };
 
+export type LoadingTypes = {
+  app?: boolean;
+  payment?: boolean;
+};
+
 export type sessionDataType = {
   /**
    * Amount for the payment
@@ -267,7 +272,7 @@ export type State = KonbiniDetailsType & {
   /**
    * Global loading state. to display loading animation over sdk and disable buttons.
    */
-  loading: boolean;
+  loading: LoadingTypes;
   /**
    * All credit card related data
    */
@@ -315,7 +320,10 @@ export type sessionPayProps = {
 // Define the initial state
 export const initialState: State = {
   paymentType: PaymentType.CREDIT,
-  loading: false,
+  loading: {
+    app: false,
+    payment: false,
+  },
 
   /** credit card payment related states start */
   cardData: {
@@ -363,6 +371,7 @@ export type ActionType = { type: string; payload: State[keyof State] };
 export interface ThemeSchemeType {
   PRIMARY_COLOR: string;
   BACKGROUND_COLOR: string;
+  SUCCESS_COLOR: string;
   ERROR: string;
   TEXT_COLOR: string;
   INPUT_BACKGROUND: string;

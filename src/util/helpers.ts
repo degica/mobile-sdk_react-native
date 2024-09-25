@@ -6,6 +6,7 @@ import {
   CardTypes,
   CurrencySign,
   CurrencyTypes,
+  initialState,
   KonbiniType,
   PaymentType,
   sessionShowPaymentMethodType,
@@ -222,3 +223,8 @@ export function fromUserFriendlyTheme(
     return acc;
   }, {} as Partial<ThemeSchemeType>);
 }
+
+export const getInitialStateWithoutProviderPropsData = () => {
+  const { providerPropsData, ...stateWithoutProviderProps } = initialState;
+  return stateWithoutProviderProps;
+};

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 
 import {
   View,
@@ -13,10 +13,11 @@ import {
 
 import { useTranslation } from "react-i18next";
 
-import { ThemeSchemeType } from "../util/types";
+import { ResponseScreenStatuses, ThemeSchemeType } from "../util/types";
 
 import { resizeFonts, responsiveScale } from "../theme/scalling";
 import { useCurrentTheme } from "../theme/useCurrentTheme";
+import { StateContext } from "../context/state";
 
 interface InputProps extends TextInputProps {
   value: string;
@@ -42,6 +43,8 @@ const Input: React.FC<InputProps> = ({
   keyboardType,
   ...rest
 }: InputProps) => {
+  const { loading, paymentState } = useContext(StateContext);
+
   const { t } = useTranslation();
   const theme = useCurrentTheme();
   const styles = getStyles(theme);
@@ -57,11 +60,14 @@ const Input: React.FC<InputProps> = ({
         placeholderTextColor={theme.INPUT_PLACEHOLDER}
         style={[
           styles.input,
-          styles.withBorder,
           error && styles.withErrorBorder,
+          (loading?.payment ||
+            paymentState === ResponseScreenStatuses.SUCCESS) &&
+            styles.disabledStyles,
           inputStyle,
         ]}
         testID={testID}
+        editable={!loading?.payment}
         {...rest}
       />
       {error && errorText && (
@@ -99,7 +105,9 @@ const getStyles = (theme: ThemeSchemeType) => {
       color: theme.ERROR,
       zIndex: 2,
     },
-    withBorder: {},
+    disabledStyles: {
+      color: theme.INPUT_PLACEHOLDER,
+    },
   });
 };
 

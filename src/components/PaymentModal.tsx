@@ -1,14 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
 
-import {
-  TouchableOpacity,
-  Modal,
-  View,
-  Image,
-  StyleSheet,
-} from "react-native";
+import { TouchableOpacity, Modal, View, Image, StyleSheet } from "react-native";
 
-import { ThemeSchemeType } from "../util/types";
+import { PaymentMode, sessionDataType, ThemeSchemeType } from "../util/types";
 
 import closeIcon from "../assets/images/close.png";
 
@@ -34,6 +28,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   const {
     paymentState,
     paymentType,
+    sessionData,
     closeSheet,
     getCtaText,
     ctaOnPress,
@@ -42,6 +37,9 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
 
   const theme = useCurrentTheme();
   const styles = getStyles(theme);
+
+  const SessionData = sessionData as sessionDataType;
+  const isCustomerMode = SessionData?.mode === PaymentMode.Customer;
 
   const handleClose = () => {
     closeSheet(shouldShowAlert(), () => setModalVisible(false));
@@ -59,13 +57,13 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
       <View style={styles.bottomSheetContainer}>
         <View style={styles.line}>
           <KomojuText style={styles.headerLabel}>
-            {!paymentState ? "PAYMENT_OPTIONS" : ""}
+            {!paymentState || isCustomerMode ? "PAYMENT_OPTIONS" : ""}
           </KomojuText>
           <TouchableOpacity style={styles.crossBtn} onPress={handleClose}>
             <Image source={closeIcon} />
           </TouchableOpacity>
         </View>
-        {paymentState ? (
+        {paymentState && !isCustomerMode ? (
           <ResponseScreen
             status={paymentState}
             onPress={() => ctaOnPress(() => setModalVisible(false))}

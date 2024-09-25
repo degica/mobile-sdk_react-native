@@ -45,8 +45,6 @@ const SheetContent = () => {
     dispatch({ type: Actions.SET_PAYMENT_OPTION, payload: type });
   };
 
-  const renderLoading = loading ? <Loader /> : null;
-
   const getBaseScreenByPaymentType = (paymentType: PaymentType) => {
     switch (paymentType) {
       case PaymentType.CREDIT:
@@ -76,9 +74,17 @@ const SheetContent = () => {
   const renderItem = () => {
     return (
       <View style={styles.item}>
-        <PillContainer onSelect={handlePillSelect} selectedItem={paymentType} />
-        {getBaseScreenByPaymentType(paymentType)}
-        {renderLoading}
+        {loading?.app ? (
+          <Loader />
+        ) : (
+          <>
+            <PillContainer
+              onSelect={handlePillSelect}
+              selectedItem={paymentType}
+            />
+            {getBaseScreenByPaymentType(paymentType)}
+          </>
+        )}
       </View>
     );
   };

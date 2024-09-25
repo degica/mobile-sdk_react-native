@@ -60,7 +60,7 @@ const CardSection = (): JSX.Element => {
 
     if (isValid) {
       const cardDataObj: CardDetailsType = {
-        cardholderName: cardData?.cardNumber,
+        cardholderName: cardData?.cardholderName,
         cardCVV: cardData?.cardCVV,
         cardNumber: cardData?.cardNumber,
         cardExpiredDate: cardData?.cardExpiredDate,

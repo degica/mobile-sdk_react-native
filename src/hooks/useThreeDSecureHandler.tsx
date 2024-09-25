@@ -15,11 +15,12 @@ const useThreeDSecureHandler = () => {
   const dispatch = useContext(DispatchContext);
 
   const { sessionData, providerPropsData } = useContext(StateContext);
-  const { startLoading, stopLoading, onPaymentFailed } = useMainStateUtils();
+  const { startPaymentLoading, stopLoading, onPaymentFailed } =
+    useMainStateUtils();
   const SessionData = sessionData as sessionDataType;
 
   const threeDSecurePayment = async (paymentDetails: CardDetailsType) => {
-    startLoading();
+    startPaymentLoading();
 
     const { month, year } = getMonthYearFromExpiry(
       paymentDetails?.cardExpiredDate || ""

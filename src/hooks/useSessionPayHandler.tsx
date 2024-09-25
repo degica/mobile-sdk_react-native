@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 import {
   CreatePaymentFuncType,
@@ -7,17 +7,29 @@ import {
   sessionPayProps,
   TokenResponseStatuses,
 } from "../util/types";
-import { StateContext } from "../context/state";
+import { StateContext, KomojuContext } from "../context/state";
 import { openURL } from "../util/helpers";
 import payForSession from "../services/payForSessionService";
 import useMainStateUtils from "./useMainStateUtils";
 
+let timeoutId: NodeJS.Timeout;
+
 const useSessionPayHandler = () => {
   const { sessionData, providerPropsData } = useContext(StateContext);
+  const { closePaymentSheet } = useContext(KomojuContext);
+
   const SessionData = sessionData as CreatePaymentFuncType;
 
+  useEffect(() => {
+    () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, []);
+
   const {
-    startLoading,
+    startPaymentLoading,
     stopLoading,
     onPaymentAwaiting,
     onPaymentFailed,
@@ -30,7 +42,7 @@ const useSessionPayHandler = () => {
     paymentDetails,
   }: sessionPayProps) => {
     // Start of the payment handling method
-    startLoading();
+    startPaymentLoading();
 
     // initiate payment for the session ID with payment details
     const response = await payForSession({
@@ -50,6 +62,9 @@ const useSessionPayHandler = () => {
         response?.customer?.resource === PaymentMode.Customer
       ) {
         onPaymentSuccess();
+        if (response?.customer?.resource === PaymentMode.Customer) {
+          timeoutId = setTimeout(() => closePaymentSheet(), 2000);
+        }
       } else if (response?.payment?.payment_details?.instructions_url) {
         openURL(response?.payment?.payment_details?.instructions_url);
         onPaymentAwaiting();
