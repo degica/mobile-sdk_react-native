@@ -114,7 +114,9 @@
       "publish": true
     },
     "github": {
-      "release": true
+      "release": true,
+      "web": true,
+      "autoGenerate": true
     },
     "plugins": {
       "@release-it/conventional-changelog": {
