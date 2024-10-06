@@ -1,6 +1,6 @@
 {
   "name": "@komoju/komoju-react-native",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "degica payment SDK",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",

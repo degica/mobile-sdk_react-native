@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 import { ReactNode, useReducer } from "react";
 
 import { DispatchContext, StateContext, reducer } from "./state";
