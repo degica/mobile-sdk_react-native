@@ -27,13 +27,18 @@ react-i18next
 
 ## Usage example
 
+For a complete example, [visit our docs](https://doc.komoju.com/docs/react-native).
+
 ```tsx
 // App.ts
 import { KomojuSDK } from "@komoju/komoju-react-native";
 
 function App() {
   return (
-    <KomojuSDK.KomojuProvider publishable={PUBLISHABLE_KEY}>
+    <KomojuSDK.KomojuProvider
+      publishableKey={PUBLISHABLE_KEY}
+      urlScheme="your-url-scheme"
+    >
       <PaymentScreen />
     </KomojuSDK.KomojuProvider>
   );
@@ -77,7 +82,7 @@ Several payment methods require a `return_url`. If this is not provided, we won'
 
 To initialize Komoju in your React Native app, use the `KomojuSDK.KomojuProvider` component in the root component of your application.
 
-`KomojuProvider` can accept `publishableKey`, `paymentMethods` and `language` as props. Only `publishableKey` is required.
+`KomojuProvider` can accept `publishableKey`, `paymentMethods`, `language` and `theme` as props. Only `publishableKey` is required.
 
 ```tsx
 import {
@@ -98,11 +103,21 @@ function App() {
     fetchpublishableKey();
   }, []);
 
+    const theme = {
+    primaryColor: '#007AFF',
+    backgroundColor: '#FFFFFF',
+    errorColor: '#FF3B30',
+    textColor: '#000000',
+    // ... other theme properties
+  };
+
   return (
     <KomojuSDK.KomojuProvider
       publishableKey={publishableKey}
+      urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
       paymentMethods={[PaymentTypes.KONBINI]} // explicitly set the payment method(s) for purchase
       language={LanguageTypes.JAPANESE} // explicitly set the language, if not set language will be picked from your session Id
+      theme={theme} // set custom theme
     >
       // Your app code here
     </KomojuSDK.KomojuProvider>
@@ -115,5 +130,32 @@ function App() {
 | property           | type                     | description                                                                                                   |
 | ------------------ | ------------------------ | ------------------------------------------------------------------------------------------------------------- |
 | **publishableKey** | `string`                 | Your publishable key from the KOMOJU [merchant settings page](https://komoju.com/sign_in/) (this is mandtory) |
+| **urlScheme**      | `string`                 | Your return url for customers to return to the app after completing browser authentications                   |
 | **paymentMethods** | `Array <PaymentTypes>`   | explicitly set the payment method(s) for purchase. (optional)                                                 |
 | **language**       | `string (LanguageTypes)` | explicitly set the language, if not set language will be picked from your session Id (optional)               |
+| **theme**       | `UserFriendlyTheme` | Custom theme object to style the SDK (optional)               |
+
+
+### Theme Structure
+The theme prop accepts an object with the following structure:
+
+```tsx
+interface UserFriendlyTheme {
+  primaryColor: string;
+  backgroundColor: string;
+  errorColor: string;
+  textColor: string;
+  inputBackground: string;
+  inputText: string;
+  inputPlaceholder: string;
+  invertedContent: string;
+  transparentWhite: string;
+  cardBackground: string;
+  cardBorder: string;
+  lightBox: string;
+  cardShadowIOS: string;
+  cardShadowAndroid: string;
+}
+```
+
+You can customize any or all of these properties to match your app's design. If a property is not specified, the SDK will use its default values.
