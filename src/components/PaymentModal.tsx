@@ -8,6 +8,29 @@
  * - modalVisible: boolean - Controls the visibility of the modal.
  * - setModalVisible: Dispatch<SetStateAction<boolean>> - Function to update the modal visibility state.
  * - onDismiss?: () => void - Optional callback function called when the modal is dismissed.
+ *
+ * Usage:
+ * ```jsx
+ * import React, { useState } from 'react';
+ * import PaymentModal from './PaymentModal';
+ *
+ * const App = () => {
+ *   const [modalVisible, setModalVisible] = useState(false);
+ *
+ *   return (
+ *     <div>
+ *       <button onClick={() => setModalVisible(true)}>Show Payment Modal</button>
+ *       <PaymentModal
+ *         modalVisible={modalVisible}
+ *         setModalVisible={setModalVisible}
+ *         onDismiss={() => console.log('Modal dismissed')}
+ *       />
+ *     </div>
+ *   );
+ * };
+ *
+ * export default App;
+ * ```
  */
 import { Dispatch, SetStateAction } from "react";
 import { TouchableOpacity, Modal, View, Image, StyleSheet } from "react-native";
