@@ -1,3 +1,19 @@
+/**
+ * This component is responsible for displaying the response status.
+ * This is used to render failed, cancelled, succes, and warning messages to the end user.
+ *
+ * Props:
+ * - status: ResponseScreenStatuses - The current status of the response screen.
+ * - message?: string - An optional message to be displayed on the response screen.
+ * - onPressLabel: string - The label for the button that triggers an action when pressed.
+ *
+ * Example usage:
+ * <ResponseScreen
+ *   status={ResponseScreenStatuses.FAILED}
+ *   message="Payment Failed"
+ *   onPressLabel="Return to Merchant"
+ * />
+ */
 import { useCallback, useMemo } from "react";
 
 import { Image, StyleSheet, View, ImageSourcePropType } from "react-native";
