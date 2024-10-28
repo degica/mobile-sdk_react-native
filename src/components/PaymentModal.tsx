@@ -1,18 +1,24 @@
+/**
+ * This is the main popup modal which animates in using "slide" animation.
+ *
+ * The modal conditionally renders either <ResponseScreen> or <SheetContent> component
+ * depending on the application state.
+ *
+ * Props:
+ * - modalVisible: boolean - Controls the visibility of the modal.
+ * - setModalVisible: Dispatch<SetStateAction<boolean>> - Function to update the modal visibility state.
+ * - onDismiss?: () => void - Optional callback function called when the modal is dismissed.
+ */
 import { Dispatch, SetStateAction } from "react";
-
 import { TouchableOpacity, Modal, View, Image, StyleSheet } from "react-native";
-
 import { PaymentMode, sessionDataType, ThemeSchemeType } from "../util/types";
-
-import closeIcon from "../assets/images/close.png";
-
 import { resizeFonts, responsiveScale, WINDOW_HEIGHT } from "../theme/scalling";
 import { useCurrentTheme } from "../theme/useCurrentTheme";
-
 import KomojuText from "./KomojuText";
 import ResponseScreen from "./ResponseScreen";
 import SheetContent from "./SheetContent";
 import { usePaymentUiUtils } from "../hooks/usePaymentUiUtils";
+import closeIcon from "../assets/images/close.png";
 
 type PaymentModalProps = {
   modalVisible: boolean;
