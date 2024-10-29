@@ -1,25 +1,41 @@
 import { Dispatch, SetStateAction } from "react";
-
 import { TouchableOpacity, Modal, View, Image, StyleSheet } from "react-native";
-
 import { PaymentMode, sessionDataType, ThemeSchemeType } from "../util/types";
-
-import closeIcon from "../assets/images/close.png";
-
 import { resizeFonts, responsiveScale, WINDOW_HEIGHT } from "../theme/scalling";
 import { useCurrentTheme } from "../theme/useCurrentTheme";
-
 import KomojuText from "./KomojuText";
 import ResponseScreen from "./ResponseScreen";
 import SheetContent from "./SheetContent";
 import { usePaymentUiUtils } from "../hooks/usePaymentUiUtils";
+import closeIcon from "../assets/images/close.png";
 
 type PaymentModalProps = {
+  /**
+   * Boolean to determine visibility of the modal
+   */
   modalVisible: boolean;
+  /**
+   * Set the visibility of the modal
+   */
   setModalVisible: Dispatch<SetStateAction<boolean>>;
+  /**
+   * Callback to call when modal is dismissed
+   */
   onDismiss?: () => void;
 };
 
+/**
+ * This is the main popup modal which animates in using "slide" animation.
+ *
+ * @example
+ * ```jsx`
+ *  <PaymentModal
+ *    modalVisible={modalVisible}
+ *    setModalVisible={setModalVisible}
+ *    onDismiss={() => console.log('Modal dismissed')}
+ *  />
+ * ````
+ */
 const PaymentModal: React.FC<PaymentModalProps> = ({
   modalVisible,
   setModalVisible,

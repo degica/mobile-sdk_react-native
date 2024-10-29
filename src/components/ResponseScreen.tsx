@@ -1,19 +1,14 @@
 import { useCallback, useMemo } from "react";
-
 import { Image, StyleSheet, View, ImageSourcePropType } from "react-native";
-
 import {
   ResponseScreenStatuses,
   ThemeSchemeType,
   PaymentType,
 } from "../util/types";
-
 import { resizeFonts, responsiveScale } from "../theme/scalling";
 import { useCurrentTheme } from "../theme/useCurrentTheme";
-
 import KomojuText from "./KomojuText";
 import Button from "./Button";
-
 import successIcon from "../assets/images/success.png";
 import errorIcon from "../assets/images/error.png";
 import awaitingPaymentIcon from "../assets/images/awaitingPayment.png";
@@ -54,13 +49,38 @@ const statusConfigs: Partial<Record<ResponseScreenStatuses, StatusConfig>> = {
 };
 
 type Props = {
+ /**
+  * The current status of the response screen.
+  */
   status: ResponseScreenStatuses;
+  /**
+   * An optional message to be displayed on the response screen.
+   */
   message?: string;
+  /**
+   * The label for the button that triggers an action when pressed.
+   */
   onPressLabel: string;
+  /**
+   * The label for the button that triggers an action when pressed.
+   */
   onPress: () => void;
+  /**
+   * The payment type e.g. Credit Card, Konbini, etc.
+   */
   paymentType: PaymentType;
 };
 
+/**
+ * This component is responsible for displaying the payment response to users.
+ *
+ * @example
+ * <ResponseScreen
+ *   status={ResponseScreenStatuses.FAILED}
+ *   message="Payment Failed"
+ *   onPressLabel="Return to Merchant"
+ * />
+ */
 const ResponseScreen = ({
   status,
   message,
@@ -110,8 +130,6 @@ const ResponseScreen = ({
   );
 };
 
-export default ResponseScreen;
-
 const getStyles = (theme: ThemeSchemeType) => {
   return StyleSheet.create({
     parentContainer: {
@@ -150,3 +168,5 @@ const getStyles = (theme: ThemeSchemeType) => {
     },
   });
 };
+
+export default ResponseScreen;

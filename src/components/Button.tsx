@@ -9,15 +9,46 @@ import { useCurrentTheme } from "../theme/useCurrentTheme";
 import { ReactNode } from "react";
 
 type Props = {
+  /**
+   * Action to take on button press
+   */
   onPress: () => void;
+  /**
+   * The button label
+   */
   label: string;
+  /**
+   * Suffix for the end of the label e.g. "JPY" label would be "Pay 1000 JPY"
+   */
   labelSuffix?: string;
+  /**
+   * Annotation for testing purposes
+   */
   testID?: string;
+  /**
+   * Style override
+   */
   style?: object;
+  /**
+   * Whether the button is disabled or not
+   */
   disabled?: boolean;
+  /**
+   * Node to embed within the button
+   */
   children?: ReactNode;
 };
 
+/**
+ * Default UI Button
+ *
+ * @example
+ * <Button
+ *   label="Pay 1000"
+ *   labelSuffix="JPY"
+ *   onPress={someAction}
+*  />
+ */
 const Button = ({
   label,
   labelSuffix,

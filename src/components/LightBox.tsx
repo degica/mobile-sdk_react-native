@@ -1,18 +1,25 @@
 import { Image, StyleSheet, Text, View } from "react-native";
-
 import { useTranslation } from "react-i18next";
-
 import { ThemeSchemeType } from "../util/types";
-
 import Thunder from "../assets/images/thunder.png";
-
 import { resizeFonts, responsiveScale } from "../theme/scalling";
 import { useCurrentTheme } from "../theme/useCurrentTheme";
 
 type Props = {
+  /**
+   * Message to the notice box
+   */
   content: string;
 };
 
+/**
+ * This component renders a light notice block text is
+ * used for highlighting text or warnings to the end user
+ *
+ * @example
+ * ```jsx
+ * <LightBox content={myContent}/>
+ */
 const LightBox = ({ content }: Props) => {
   const { t } = useTranslation();
   const theme = useCurrentTheme();
