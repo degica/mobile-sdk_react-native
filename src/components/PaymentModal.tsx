@@ -1,37 +1,3 @@
-/**
- * This is the main popup modal which animates in using "slide" animation.
- *
- * The modal conditionally renders either <ResponseScreen> or <SheetContent> component
- * depending on the application state.
- *
- * Props:
- * - modalVisible: boolean - Controls the visibility of the modal.
- * - setModalVisible: Dispatch<SetStateAction<boolean>> - Function to update the modal visibility state.
- * - onDismiss?: () => void - Optional callback function called when the modal is dismissed.
- *
- * Usage:
- * ```jsx
- * import React, { useState } from 'react';
- * import PaymentModal from './PaymentModal';
- *
- * const App = () => {
- *   const [modalVisible, setModalVisible] = useState(false);
- *
- *   return (
- *     <div>
- *       <button onClick={() => setModalVisible(true)}>Show Payment Modal</button>
- *       <PaymentModal
- *         modalVisible={modalVisible}
- *         setModalVisible={setModalVisible}
- *         onDismiss={() => console.log('Modal dismissed')}
- *       />
- *     </div>
- *   );
- * };
- *
- * export default App;
- * ```
- */
 import { Dispatch, SetStateAction } from "react";
 import { TouchableOpacity, Modal, View, Image, StyleSheet } from "react-native";
 import { PaymentMode, sessionDataType, ThemeSchemeType } from "../util/types";
@@ -44,11 +10,32 @@ import { usePaymentUiUtils } from "../hooks/usePaymentUiUtils";
 import closeIcon from "../assets/images/close.png";
 
 type PaymentModalProps = {
+  /**
+   * Boolean to determine visibility of the modal
+   */
   modalVisible: boolean;
+  /**
+   * Set the visibility of the modal
+   */
   setModalVisible: Dispatch<SetStateAction<boolean>>;
+  /**
+   * Callback to call when modal is dismissed
+   */
   onDismiss?: () => void;
 };
 
+/**
+ * This is the main popup modal which animates in using "slide" animation.
+ *
+ * @example
+ * ```jsx`
+ *  <PaymentModal
+ *    modalVisible={modalVisible}
+ *    setModalVisible={setModalVisible}
+ *    onDismiss={() => console.log('Modal dismissed')}
+ *  />
+ * ````
+ */
 const PaymentModal: React.FC<PaymentModalProps> = ({
   modalVisible,
   setModalVisible,
